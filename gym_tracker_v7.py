@@ -678,54 +678,298 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 🎨 CLEAN MOBILE-OPTIMIZED CSS - Simplified & Readable
+# 🎨 ULTRA-CLEAN MOBILE CSS - High Contrast & Simple
 st.markdown("""
 <style>
-    /* Clean dark theme */
+    /* Ultra-clean dark theme */
     .stApp {
-        background-color: #1a1a1a;
+        background-color: #000000;
         color: #ffffff;
     }
     
-    /* Simple readable header */
+    /* Simple, readable header */
     .main-header {
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-weight: bold;
         text-align: center;
-        color: #4CAF50;
-        margin-bottom: 1.5rem;
+        color: #ffffff;
+        margin-bottom: 1rem;
         padding: 1rem;
+        background-color: #333333;
+        border-radius: 8px;
     }
     
-    /* Clean, readable buttons */
+    /* Ultra-clean buttons */
     .stButton > button {
         width: 100% !important;
-        height: 3.5rem !important;
-        font-size: 1.1rem !important;
+        height: 3rem !important;
+        font-size: 1rem !important;
         font-weight: bold !important;
-        border-radius: 10px !important;
-        border: 2px solid #4CAF50 !important;
-        background-color: #4CAF50 !important;
-        color: white !important;
+        border-radius: 6px !important;
+        border: 2px solid #ffffff !important;
+        background-color: #333333 !important;
+        color: #ffffff !important;
         transition: all 0.2s ease !important;
     }
     
     .stButton > button:hover {
-        background-color: #45a049 !important;
-        transform: translateY(-2px) !important;
+        background-color: #555555 !important;
     }
     
-    /* Primary button for LOG SET */
+    /* Primary button - simple blue */
     .stButton > button[kind="primary"] {
-        background-color: #2196F3 !important;
-        border: 2px solid #2196F3 !important;
-        font-size: 1.2rem !important;
-        height: 4rem !important;
+        background-color: #0066cc !important;
+        border: 2px solid #0066cc !important;
+        color: #ffffff !important;
+        font-size: 1.1rem !important;
+        height: 3.5rem !important;
     }
     
     .stButton > button[kind="primary"]:hover {
-        background-color: #1976D2 !important;
+        background-color: #0052a3 !important;
     }
+    
+    /* Simple date header */
+    .date-header {
+        background-color: #222222;
+        color: #ffffff;
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: bold;
+        border: 1px solid #444444;
+    }
+    
+    /* Ultra-clean cards */
+    .workout-card {
+        background-color: #111111;
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+        border: 1px solid #333333;
+        color: #ffffff;
+    }
+    
+    .program-card {
+        background-color: #111111;
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+        border: 1px solid #0066cc;
+        color: #ffffff;
+    }
+    
+    /* High contrast stats cards */
+    .stats-card {
+        background-color: #222222;
+        color: #ffffff;
+        padding: 1rem;
+        border-radius: 6px;
+        text-align: center;
+        margin: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: bold;
+        border: 1px solid #444444;
+    }
+    
+    /* Ultra-readable set items */
+    .set-item {
+        background-color: #222222;
+        padding: 0.75rem;
+        border-radius: 4px;
+        margin: 0.5rem 0;
+        border-left: 3px solid #0066cc;
+        color: #ffffff;
+        font-size: 0.9rem;
+    }
+    
+    /* High contrast inputs */
+    .stSelectbox > div > div {
+        font-size: 1rem !important;
+        padding: 0.5rem !important;
+        background-color: #222222 !important;
+        color: #ffffff !important;
+        border-radius: 4px !important;
+        border: 2px solid #666666 !important;
+    }
+    
+    .stNumberInput > div > div > input {
+        font-size: 1rem !important;
+        height: 2.5rem !important;
+        background-color: #222222 !important;
+        color: #ffffff !important;
+        border-radius: 4px !important;
+        border: 2px solid #666666 !important;
+        text-align: center !important;
+        font-weight: bold !important;
+    }
+    
+    .stTextInput > div > div > input {
+        font-size: 1rem !important;
+        padding: 0.5rem !important;
+        background-color: #222222 !important;
+        color: #ffffff !important;
+        border-radius: 4px !important;
+        border: 2px solid #666666 !important;
+    }
+    
+    .stTextArea > div > div > textarea {
+        font-size: 1rem !important;
+        padding: 0.5rem !important;
+        background-color: #222222 !important;
+        color: #ffffff !important;
+        border-radius: 4px !important;
+        border: 2px solid #666666 !important;
+    }
+    
+    /* Simple delete buttons */
+    .stButton button[title*="Delete"], .stButton button[aria-label*="Delete"] {
+        background-color: #cc0000 !important;
+        color: #ffffff !important;
+        font-size: 0.8rem !important;
+        padding: 0.25rem !important;
+        border-radius: 4px !important;
+        border: 1px solid #cc0000 !important;
+        height: 2rem !important;
+    }
+    
+    /* Simple notes section */
+    .notes-section {
+        background-color: #111111;
+        padding: 0.75rem;
+        border-radius: 4px;
+        border-left: 3px solid #0066cc;
+        margin: 0.5rem 0;
+        color: #ffffff;
+        font-size: 0.9rem;
+        border: 1px solid #333333;
+    }
+    
+    /* Ultra-clean tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 2px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        height: 2.5rem;
+        font-size: 0.9rem;
+        font-weight: bold;
+        border-radius: 4px;
+        background-color: #222222;
+        color: #ffffff;
+        border: 1px solid #444444;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background-color: #0066cc !important;
+        color: #ffffff !important;
+        border: 1px solid #0066cc !important;
+    }
+    
+    /* High contrast messages */
+    .stSuccess {
+        background-color: #006600 !important;
+        color: #ffffff !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        border-radius: 4px !important;
+        border: 1px solid #008800 !important;
+    }
+    
+    .stError {
+        background-color: #cc0000 !important;
+        color: #ffffff !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        border-radius: 4px !important;
+        border: 1px solid #ff0000 !important;
+    }
+    
+    .stWarning {
+        background-color: #cc6600 !important;
+        color: #ffffff !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        border-radius: 4px !important;
+        border: 1px solid #ff8800 !important;
+    }
+    
+    .stInfo {
+        background-color: #0066cc !important;
+        color: #ffffff !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        border-radius: 4px !important;
+        border: 1px solid #0088ff !important;
+    }
+    
+    /* Simple form styling */
+    .stForm {
+        background-color: #111111;
+        padding: 1rem;
+        border-radius: 6px;
+        border: 1px solid #333333;
+        margin: 1rem 0;
+    }
+    
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 1.5rem;
+        }
+        
+        .stButton > button {
+            height: 2.8rem !important;
+            font-size: 0.9rem !important;
+        }
+        
+        .stButton > button[kind="primary"] {
+            height: 3.2rem !important;
+            font-size: 1rem !important;
+        }
+    }
+    
+    /* Simple progress bars */
+    .stProgress > div > div > div {
+        background-color: #0066cc !important;
+        border-radius: 2px !important;
+        height: 0.5rem !important;
+    }
+    
+    /* Simple expander */
+    .streamlit-expanderHeader {
+        background-color: #222222 !important;
+        color: #ffffff !important;
+        font-size: 1rem !important;
+        font-weight: bold !important;
+        border-radius: 4px !important;
+        padding: 0.75rem !important;
+        border: 1px solid #444444 !important;
+    }
+    
+    /* Simple metrics */
+    [data-testid="metric-container"] {
+        background-color: #222222;
+        border-radius: 4px;
+        padding: 0.75rem;
+        border: 1px solid #444444;
+    }
+    
+    [data-testid="metric-container"] label {
+        color: #ffffff !important;
+        font-size: 0.8rem !important;
+        font-weight: bold !important;
+    }
+    
+    [data-testid="metric-container"] div[data-testid="metric-value"] {
+        color: #ffffff !important;
+        font-size: 1.2rem !important;
+        font-weight: bold !important;
+    }
+</style>
+""", unsafe_allow_html=True)
     
     /* Simple date header */
     .date-header {
@@ -1058,7 +1302,7 @@ def create_sample_data():
         return
 
 def clean_old_sample_data():
-    """Remove any old sample data that shouldn't be there"""
+    """Aggressively remove ALL sample data that shouldn't be there"""
     tracker = st.session_state.tracker
     
     # Get all data
@@ -1067,39 +1311,67 @@ def clean_old_sample_data():
     if df.empty:
         return "No data to clean"
     
-    # Sample data patterns to identify and remove
-    sample_patterns = [
+    # AGGRESSIVE sample data identification
+    sample_workout_notes = [
         "Great leg session! Gym was quiet, felt strong.",
-        "Finished with leg press, good pump",
+        "Finished with leg press, good pump"
+    ]
+    
+    sample_set_notes = [
         "Warm up set, felt good",
-        "Working weight",
+        "Working weight", 
         "Heavy set, good depth",
         "Full range of motion",
         "Slight fatigue"
     ]
     
-    # Find rows that match sample data patterns
-    sample_rows = df[
-        df['workout_notes'].isin(sample_patterns) | 
-        df['set_notes'].isin(sample_patterns) |
-        ((df['exercise'] == 'Hack Squat') & (df['weight'].isin([80, 90, 100]))) |
-        ((df['exercise'] == 'Leg Press') & (df['weight'].isin([150, 170])))
+    # Find ALL suspicious rows - be very aggressive
+    suspicious_rows = df[
+        # Match exact sample notes
+        df['workout_notes'].isin(sample_workout_notes) | 
+        df['set_notes'].isin(sample_set_notes) |
+        # Match specific sample data patterns from screenshot
+        ((df['exercise'] == 'Hack Squat') & (df['weight'].isin([80.0, 90.0, 100.0])) & (df['reps'].isin([12, 10, 8]))) |
+        ((df['exercise'] == 'Leg Press') & (df['weight'].isin([150.0, 170.0])) & (df['reps'].isin([15, 12]))) |
+        # Match any data with these exact RPE and weight combinations (very specific to sample data)
+        ((df['exercise'] == 'Hack Squat') & (df['rpe'] == 7) & (df['weight'] == 80.0)) |
+        ((df['exercise'] == 'Hack Squat') & (df['rpe'] == 8) & (df['weight'] == 90.0)) |
+        ((df['exercise'] == 'Hack Squat') & (df['rpe'] == 9) & (df['weight'] == 100.0)) |
+        ((df['exercise'] == 'Leg Press') & (df['rpe'] == 7) & (df['weight'] == 150.0)) |
+        ((df['exercise'] == 'Leg Press') & (df['rpe'] == 8) & (df['weight'] == 170.0))
     ]
     
-    if sample_rows.empty:
-        return "No sample data found to clean"
+    if suspicious_rows.empty:
+        return "✅ No sample data found to clean"
     
-    # Delete sample data rows
+    # Delete ALL suspicious rows
     conn = sqlite3.connect(tracker.db_name)
     cursor = conn.cursor()
     
-    for row_id in sample_rows['id'].values:
+    deleted_count = 0
+    for row_id in suspicious_rows['id'].values:
         cursor.execute('DELETE FROM workouts WHERE id = ?', (row_id,))
+        deleted_count += 1
     
     conn.commit()
     conn.close()
     
-    return f"✅ Removed {len(sample_rows)} sample data entries"
+    return f"✅ Removed {deleted_count} sample data entries - refresh the page!"
+
+def nuclear_data_reset():
+    """NUCLEAR OPTION: Clear ALL workout data (keep templates and exercises)"""
+    tracker = st.session_state.tracker
+    
+    conn = sqlite3.connect(tracker.db_name)
+    cursor = conn.cursor()
+    
+    # Delete ALL workout data
+    cursor.execute('DELETE FROM workouts')
+    
+    conn.commit()
+    conn.close()
+    
+    return "🚨 ALL WORKOUT DATA DELETED - Fresh start!"
 
 def show_enhanced_success_animation():
     """Show clean success feedback"""
@@ -1110,22 +1382,22 @@ def show_enhanced_success_animation():
 # ===== PAGE FUNCTIONS =====
 
 def todays_workout_page():
-    """Today's workout with enhanced mobile layout"""
-    st.header("🔥 Today's Beast Mode Workout")
+    """Today's workout with clean mobile layout"""
+    st.header("🔥 Today's Workout")
     
-    # Date selection with enhanced styling
+    # Date selection with clean styling
     selected_date = st.date_input(
         "📅 Workout Date", 
         value=date.today(),
         help="Select the date for this workout"
     )
     
-    # Enhanced date header with current streak
+    # Clean date header
     if selected_date == date.today():
-        st.markdown('<div class="date-header">🔥 <strong>TODAY\'S BEAST MODE ACTIVATED</strong><br>' + 
+        st.markdown('<div class="date-header">🔥 <strong>TODAY\'S WORKOUT</strong><br>' + 
                    selected_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="date-header">📅 <strong>WORKOUT REVIEW MODE</strong><br>' + 
+        st.markdown('<div class="date-header">📅 <strong>WORKOUT REVIEW</strong><br>' + 
                    selected_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
     
     date_str = selected_date.strftime('%Y-%m-%d')
@@ -1273,31 +1545,28 @@ def todays_workout_page():
                     st.error(f"🔴 MAXIMUM BEAST MODE - Average RPE: {avg_rpe:.1f}")
 
 def enhanced_quick_log_page():
-    """Enhanced mobile-optimized quick log with one-tap logging"""
-    st.header("⚡ Lightning Beast Mode Quick Log")
+    """Clean mobile-optimized quick log"""
+    st.header("⚡ Quick Log")
     
-    # Date selection with enhanced styling
+    # Date selection with clean styling
     log_date = st.date_input(
-        "📅 Select Beast Mode Date", 
+        "📅 Select Date", 
         value=date.today(),
         help="Choose the date for this workout"
     )
     
     if log_date == date.today():
-        st.markdown('<div class="date-header">🔥 <strong>TODAY\'S LIGHTNING BEAST MODE</strong><br>' + 
+        st.markdown('<div class="date-header">🔥 <strong>TODAY\'S QUICK LOG</strong><br>' + 
                    log_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="date-header">📅 <strong>BEAST MODE REVIEW</strong><br>' + 
+        st.markdown('<div class="date-header">📅 <strong>WORKOUT REVIEW</strong><br>' + 
                    log_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
     
     date_str = log_date.strftime('%Y-%m-%d')
     all_exercises = st.session_state.tracker.get_all_exercises()
     
-    # One-Tap Quick Log Section
-    st.subheader("🚀 One-Tap Beast Mode Logger")
-    
     # Quick access buttons for common exercises
-    st.markdown("**⚡ Quick Beast Buttons:**")
+    st.subheader("🚀 Quick Exercise Buttons")
     
     col1, col2, col3 = st.columns(3)
     
@@ -1315,8 +1584,10 @@ def enhanced_quick_log_page():
                 st.session_state.last_exercise = exercise
                 st.rerun()
     
-    # Enhanced Quick Log Form
-    with st.form("lightning_beast_log", clear_on_submit=True):
+    # Clean Quick Log Form
+    st.subheader("📝 Log Your Set")
+    
+    with st.form("quick_log", clear_on_submit=True):
         # Smart defaults with last exercise highlighted
         exercise_index = 0
         if st.session_state.last_exercise in all_exercises:
@@ -1329,19 +1600,19 @@ def enhanced_quick_log_page():
             last_workout = get_last_workout_for_exercise(exercise)
             if last_workout is not None:
                 last_set = last_workout.iloc[-1]  # Get last set
-                st.info(f"🔥 Last Beast Performance: {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
+                st.info(f"🔥 Last Performance: {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
         
-        # Enhanced input layout
+        # Clean input layout
         col1, col2 = st.columns(2)
         with col1:
             reps = st.number_input("🎯 Reps", min_value=1, max_value=50, value=st.session_state.last_reps)
         with col2:
             weight = st.number_input("⚖️ Weight (kg)", min_value=0.0, value=st.session_state.last_weight, step=0.625)
         
-        rpe = st.select_slider("💥 Beast RPE", options=[6, 7, 8, 9, 10], value=st.session_state.last_rpe)
-        set_notes = st.text_input("📝 Beast Notes", placeholder="How did that feel? Form notes, equipment, etc...")
+        rpe = st.select_slider("💥 RPE", options=[6, 7, 8, 9, 10], value=st.session_state.last_rpe)
+        set_notes = st.text_input("📝 Notes", placeholder="How did that feel? Form notes, equipment, etc...")
         
-        if st.form_submit_button("🚀 LOG BEAST SET NOW!", use_container_width=True, type="primary"):
+        if st.form_submit_button("🚀 LOG SET", use_container_width=True, type="primary"):
             st.session_state.tracker.quick_log(exercise, reps, weight, rpe, set_notes, "", date_str)
             
             # Update smart defaults
@@ -1353,8 +1624,8 @@ def enhanced_quick_log_page():
             show_enhanced_success_animation()
             st.rerun()
     
-    # Enhanced Full Day View Section
-    st.subheader("📋 Today's Complete Beast Mode Session")
+    # Clean Full Day View Section
+    st.subheader("📋 Today's Complete Workout")
     
     daily_workout = st.session_state.tracker.get_daily_workout(date_str)
     
@@ -2405,20 +2676,58 @@ def data_manager_page():
         custom_count = len(custom_exercises) if not custom_exercises.empty else 0
         st.markdown(f'<div class="stats-card">⭐ <strong>Custom</strong><br>{custom_count}</div>', unsafe_allow_html=True)
     
-    # Data Cleaning Section
-    st.subheader("🧹 Data Cleaning")
+    # Enhanced Data Cleaning Section
+    st.subheader("🧹 Data Cleaning & Management")
     
     st.markdown('<div class="program-card">', unsafe_allow_html=True)
-    st.write("**🧹 Clean Old Sample Data**")
-    st.write("If you see old fake workouts (Hack Squats, Leg Presses) that you didn't log, remove them here:")
+    st.write("**🧹 Remove Sample Data**")
+    st.write("If you see fake workouts (Hack Squats with 'Warm up set, felt good' notes), remove them:")
     
-    if st.button("🧹 Remove Sample Data", use_container_width=True):
-        result = clean_old_sample_data()
-        if "✅" in result:
-            st.success(result)
-            st.rerun()
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("🧹 Clean Sample Data", use_container_width=True):
+            result = clean_old_sample_data()
+            if "✅" in result:
+                st.success(result)
+                time.sleep(1)
+                st.rerun()
+            else:
+                st.info(result)
+    
+    with col2:
+        if st.button("🚨 RESET ALL DATA", use_container_width=True):
+            if st.session_state.get('confirm_nuclear', False):
+                result = nuclear_data_reset()
+                st.error(result)
+                st.session_state.pop('confirm_nuclear', None)
+                time.sleep(1)
+                st.rerun()
+            else:
+                st.session_state.confirm_nuclear = True
+                st.warning("⚠️ Tap again to DELETE ALL workout data!")
+    # Debug section to see current data
+    if st.button("🔍 Show Current Data (Debug)", use_container_width=True):
+        if not df.empty:
+            st.subheader("🔍 Current Workout Data")
+            
+            # Show recent entries
+            recent_data = df.head(10)[['date', 'exercise', 'reps', 'weight', 'rpe', 'set_notes', 'workout_notes']]
+            st.dataframe(recent_data, use_container_width=True)
+            
+            # Show suspicious patterns
+            suspicious_notes = df[
+                df['set_notes'].str.contains('Warm up set|Working weight|Heavy set', case=False, na=False) |
+                df['workout_notes'].str.contains('Great leg session|Finished with leg press', case=False, na=False)
+            ]
+            
+            if not suspicious_notes.empty:
+                st.warning(f"🚨 Found {len(suspicious_notes)} suspicious sample data entries:")
+                st.dataframe(suspicious_notes[['exercise', 'reps', 'weight', 'set_notes', 'workout_notes']], use_container_width=True)
+            else:
+                st.success("✅ No obvious sample data detected!")
         else:
-            st.info(result)
+            st.info("📊 No workout data found")
     
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -2560,10 +2869,10 @@ def data_manager_page():
 def main():
     st.markdown('<h1 class="main-header">💪 Gym Tracker</h1>', unsafe_allow_html=True)
     
-    # Clean success message
-    st.success("✅ **UPDATED & OPTIMIZED!** Clean design, readable text, better mobile experience!")
+    # Clean, simple success message
+    st.success("✅ **CLEAN & OPTIMIZED!** High contrast design, aggressive data cleaning, super readable!")
     
-    # Clean mobile navigation
+    # Ultra-clean mobile navigation
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "🔥 Today", 
         "⚡ Quick Log", 
