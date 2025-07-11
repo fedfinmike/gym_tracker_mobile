@@ -11,10 +11,10 @@ import json
 import time
 import os
 
-# ===== PROFESSIONAL BEAST MODE GYM TRACKER V8 - COMPLETE =====
+# ===== PROFESSIONAL GYM TRACKER V8 - CLEAN EDITION =====
 class GymTracker:
     def __init__(self, db_name='gym_tracker_MASTER.db'):
-        """Initialize Professional Gym Tracker - MASTER database"""
+        """Initialize Professional Gym Tracker - Clean Edition"""
         self.db_name = db_name
         self.init_database()
         self.migrate_old_data()
@@ -514,57 +514,58 @@ class GymTracker:
 
 # ===== STREAMLIT APP SETUP =====
 st.set_page_config(
-    page_title="💪 Beast Mode Gym Tracker Pro",
+    page_title="💪 Professional Gym Tracker",
     page_icon="💪",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Professional CSS Styling - Clean and Readable
+# Clean White & Blue Theme - Mobile Optimized
 st.markdown("""
 <style>
     .stApp {
-        background-color: #0e1117;
-        color: #ffffff;
+        background-color: #ffffff;
+        color: #1f2937;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     .main-header {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        background: #2563eb;
         color: white;
         padding: 1.5rem;
-        border-radius: 12px;
+        border-radius: 8px;
         text-align: center;
         font-size: 1.7rem;
         font-weight: 600;
         margin-bottom: 1.5rem;
-        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
-        border: 1px solid rgba(59, 130, 246, 0.2);
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+        border: 1px solid #dbeafe;
     }
     
     .stButton > button {
-        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
-        color: white;
-        border: 1px solid #6b7280;
-        border-radius: 8px;
+        background: #f3f4f6;
+        color: #1f2937;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
         padding: 0.75rem 1rem;
         font-size: 0.9rem;
         font-weight: 500;
         width: 100%;
         height: 3rem;
         transition: all 0.2s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%);
+        background: #e5e7eb;
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        border-color: #9ca3af;
     }
     
     .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        border: 1px solid #3b82f6;
+        background: #2563eb;
+        border: 1px solid #2563eb;
         color: white;
         font-weight: 600;
         height: 3.2rem;
@@ -572,74 +573,76 @@ st.markdown("""
     }
     
     .stButton > button[kind="primary"]:hover {
-        background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        background: #1d4ed8;
+        border-color: #1d4ed8;
+        box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
     }
     
     .workout-card {
-        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        background: #ffffff;
         padding: 1.3rem;
-        border-radius: 10px;
+        border-radius: 8px;
         margin: 1rem 0;
-        border: 1px solid #4b5563;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        color: #1f2937;
     }
     
     .stats-card {
-        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
-        color: white;
+        background: #f8fafc;
+        color: #1f2937;
         padding: 1rem;
-        border-radius: 8px;
+        border-radius: 6px;
         text-align: center;
         margin: 0.5rem;
-        border: 1px solid #6b7280;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         font-size: 0.9rem;
     }
     
     .set-item {
-        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+        background: #f1f5f9;
         padding: 0.8rem;
         border-radius: 6px;
         margin: 0.5rem 0;
-        border-left: 3px solid #3b82f6;
-        color: white;
+        border-left: 3px solid #2563eb;
+        color: #1f2937;
         font-size: 0.85rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
     
     .date-header {
-        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-        color: white;
+        background: #eff6ff;
+        color: #1e40af;
         padding: 1rem;
-        border-radius: 8px;
+        border-radius: 6px;
         text-align: center;
         font-size: 1rem;
-        font-weight: 500;
+        font-weight: 600;
         margin: 1rem 0;
-        border: 1px solid #4b5563;
+        border: 1px solid #bfdbfe;
     }
     
     .search-container {
-        background: #1f2937;
+        background: #f9fafb;
         padding: 0.8rem;
         border-radius: 6px;
-        border: 1px solid #4b5563;
+        border: 1px solid #e5e7eb;
         margin: 0.5rem 0;
     }
     
     .stSelectbox > div > div {
-        background: #374151 !important;
-        color: white !important;
-        border: 1px solid #6b7280 !important;
+        background: #ffffff !important;
+        color: #1f2937 !important;
+        border: 1px solid #d1d5db !important;
         border-radius: 6px !important;
         font-size: 0.9rem !important;
     }
     
     .stNumberInput > div > div > input {
-        background: #374151 !important;
-        color: white !important;
-        border: 1px solid #6b7280 !important;
+        background: #ffffff !important;
+        color: #1f2937 !important;
+        border: 1px solid #d1d5db !important;
         border-radius: 6px !important;
         font-size: 0.95rem !important;
         text-align: center !important;
@@ -648,65 +651,65 @@ st.markdown("""
     }
     
     .stTextInput > div > div > input {
-        background: #374151 !important;
-        color: white !important;
-        border: 1px solid #6b7280 !important;
+        background: #ffffff !important;
+        color: #1f2937 !important;
+        border: 1px solid #d1d5db !important;
         border-radius: 6px !important;
         font-size: 0.85rem !important;
         padding: 0.6rem !important;
     }
     
     .stTextArea > div > div > textarea {
-        background: #374151 !important;
-        color: white !important;
-        border: 1px solid #6b7280 !important;
+        background: #ffffff !important;
+        color: #1f2937 !important;
+        border: 1px solid #d1d5db !important;
         border-radius: 6px !important;
         font-size: 0.85rem !important;
         padding: 0.6rem !important;
     }
     
     .stSuccess {
-        background: linear-gradient(135deg, #065f46 0%, #047857 100%) !important;
-        color: white !important;
-        border: 1px solid #047857 !important;
+        background: #f0fdf4 !important;
+        color: #166534 !important;
+        border: 1px solid #bbf7d0 !important;
         border-radius: 6px !important;
         padding: 0.8rem !important;
         font-size: 0.9rem !important;
     }
     
     .stError {
-        background: linear-gradient(135deg, #991b1b 0%, #dc2626 100%) !important;
-        color: white !important;
-        border: 1px solid #dc2626 !important;
+        background: #fef2f2 !important;
+        color: #dc2626 !important;
+        border: 1px solid #fecaca !important;
         border-radius: 6px !important;
         padding: 0.8rem !important;
         font-size: 0.9rem !important;
     }
     
     .stWarning {
-        background: linear-gradient(135deg, #92400e 0%, #d97706 100%) !important;
-        color: white !important;
-        border: 1px solid #d97706 !important;
+        background: #fffbeb !important;
+        color: #d97706 !important;
+        border: 1px solid #fed7aa !important;
         border-radius: 6px !important;
         padding: 0.8rem !important;
         font-size: 0.9rem !important;
     }
     
     .stInfo {
-        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%) !important;
-        color: white !important;
-        border: 1px solid #3b82f6 !important;
+        background: #eff6ff !important;
+        color: #1d4ed8 !important;
+        border: 1px solid #bfdbfe !important;
         border-radius: 6px !important;
         padding: 0.8rem !important;
         font-size: 0.9rem !important;
     }
     
     .stTabs [data-baseweb="tab-list"] {
-        gap: 6px;
-        background: rgba(31, 41, 55, 0.8);
+        gap: 4px;
+        background: #f8fafc;
         padding: 6px;
-        border-radius: 10px;
-        backdrop-filter: blur(10px);
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
     }
     
     .stTabs [data-baseweb="tab"] {
@@ -715,62 +718,85 @@ st.markdown("""
         font-weight: 500;
         border-radius: 6px;
         background: transparent;
-        color: rgba(255, 255, 255, 0.7);
+        color: #64748b;
         border: 1px solid transparent;
         transition: all 0.2s ease;
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%) !important;
+        background: #2563eb !important;
         color: white !important;
-        border: 1px solid #3b82f6 !important;
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
+        border: 1px solid #2563eb !important;
+        box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3) !important;
     }
     
     [data-testid="metric-container"] {
-        background: #374151;
+        background: #f8fafc;
         border-radius: 6px;
         padding: 0.8rem;
-        border: 1px solid #6b7280;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
     
     [data-testid="metric-container"] label {
-        color: rgba(255, 255, 255, 0.8) !important;
+        color: #64748b !important;
         font-size: 0.75rem !important;
         font-weight: 500 !important;
     }
     
     [data-testid="metric-container"] div[data-testid="metric-value"] {
-        color: #3b82f6 !important;
+        color: #2563eb !important;
         font-size: 1.2rem !important;
         font-weight: 700 !important;
     }
     
     .stForm {
-        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        background: #ffffff;
         padding: 1.2rem;
         border-radius: 8px;
-        border: 1px solid #4b5563;
+        border: 1px solid #e5e7eb;
         margin: 0.8rem 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
     
     .stExpander {
-        background: #1f2937;
-        border: 1px solid #4b5563;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 6px;
     }
     
     .streamlit-expanderHeader {
-        background: #374151 !important;
-        color: white !important;
+        background: #f9fafb !important;
+        color: #1f2937 !important;
         font-size: 0.9rem !important;
         font-weight: 500 !important;
         border-radius: 6px !important;
         padding: 0.8rem !important;
+        border-bottom: 1px solid #e5e7eb !important;
     }
     
+    /* Input focus states */
+    .stSelectbox > div > div:focus-within {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    }
+    
+    .stNumberInput > div > div > input:focus {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    }
+    
+    .stTextInput > div > div > input:focus {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    }
+    
+    .stTextArea > div > div > textarea:focus {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    }
+    
+    /* Mobile optimizations */
     @media (max-width: 768px) {
         .main-header {
             font-size: 1.4rem;
@@ -796,6 +822,31 @@ st.markdown("""
             margin: 0.3rem;
             padding: 0.8rem;
             font-size: 0.8rem;
+        }
+        
+        .stTabs [data-baseweb="tab"] {
+            font-size: 0.8rem;
+            height: 2.3rem;
+        }
+    }
+    
+    /* Clean up default Streamlit styles */
+    .main .block-container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    /* Better button spacing on mobile */
+    @media (max-width: 480px) {
+        .stButton > button {
+            height: 2.6rem;
+            font-size: 0.8rem;
+            margin: 0.2rem 0;
+        }
+        
+        .stButton > button[kind="primary"] {
+            height: 2.8rem;
+            font-size: 0.85rem;
         }
     }
 </style>
@@ -1227,14 +1278,14 @@ def progress_page():
                 xaxis_title='Date',
                 yaxis_title='Weight (kg)',
                 height=400,
-                paper_bgcolor='#0e1117',
-                plot_bgcolor='#1f2937',
-                font=dict(color='white', size=12),
-                xaxis=dict(gridcolor='#374151'),
-                yaxis=dict(gridcolor='#374151'),
+                paper_bgcolor='#ffffff',
+                plot_bgcolor='#f8fafc',
+                font=dict(color='#1f2937', size=12),
+                xaxis=dict(gridcolor='#e2e8f0'),
+                yaxis=dict(gridcolor='#e2e8f0'),
                 legend=dict(
-                    bgcolor='rgba(31, 41, 55, 0.8)',
-                    bordercolor='#4b5563',
+                    bgcolor='rgba(248, 250, 252, 0.9)',
+                    bordercolor='#e2e8f0',
                     borderwidth=1
                 )
             )
@@ -1259,11 +1310,11 @@ def progress_page():
                 xaxis_title='Date',
                 yaxis_title='Volume (kg)',
                 height=400,
-                paper_bgcolor='#0e1117',
-                plot_bgcolor='#1f2937',
-                font=dict(color='white', size=12),
-                xaxis=dict(gridcolor='#374151'),
-                yaxis=dict(gridcolor='#374151')
+                paper_bgcolor='#ffffff',
+                plot_bgcolor='#f8fafc',
+                font=dict(color='#1f2937', size=12),
+                xaxis=dict(gridcolor='#e2e8f0'),
+                yaxis=dict(gridcolor='#e2e8f0')
             )
             st.plotly_chart(fig2, use_container_width=True)
         
@@ -1773,13 +1824,13 @@ def data_manager_page():
 
 def info_page():
     """Information and help page"""
-    st.header("ℹ️ About Beast Mode Gym Tracker Pro")
+    st.header("ℹ️ About Professional Gym Tracker")
     
     st.markdown("""
     ## 🏆 **Professional Fitness Tracking Platform**
     
-    **Version:** Pro v8.0 - Complete Edition  
-    **Status:** ✅ Stable, Professional, Production-Ready
+    **Version:** Professional v8.0 - Clean Edition  
+    **Status:** ✅ Stable, Clean UI, Production-Ready
     
     ---
     
@@ -1868,7 +1919,8 @@ def info_page():
     
     ### 📞 **Support & Updates**
     
-    **Current Status:** ✅ **Stable & Professional**  
+    **Current Status:** ✅ **Clean & Professional**  
+    **Theme:** White & blue with black text for perfect mobile readability
     **Update Policy:** Continuous improvement with backward compatibility  
     **Data Safety:** 🔒 All previous versions' data automatically migrated  
     **Performance:** 🚀 Optimized for speed and reliability
@@ -1881,10 +1933,10 @@ def main():
     """Main application entry point"""
     
     # Header
-    st.markdown('<div class="main-header">💪 Beast Mode Gym Tracker Pro</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">💪 Professional Gym Tracker</div>', unsafe_allow_html=True)
     
     # Success message
-    st.success("✅ **Professional Edition Active** - Searchable exercises, clean UI, robust data management!")
+    st.success("✅ **Clean Professional Edition** - White & blue theme, perfect mobile readability!")
     
     # Main navigation tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
