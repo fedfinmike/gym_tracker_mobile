@@ -678,355 +678,297 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 🎨 ENHANCED MOBILE-OPTIMIZED CSS - Dark Theme + GIANT Buttons + Audio Feedback
+# 🎨 CLEAN MOBILE-OPTIMIZED CSS - Simplified & Readable
 st.markdown("""
 <style>
-    /* Dark theme with custom colors */
+    /* Clean dark theme */
     .stApp {
-        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+        background-color: #1a1a1a;
         color: #ffffff;
     }
     
-    /* Enhanced main header with glowing effect */
+    /* Simple readable header */
     .main-header {
-        font-size: 3.5rem;
-        font-weight: 900;
+        font-size: 2.5rem;
+        font-weight: bold;
         text-align: center;
-        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #FF4757 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 2rem;
-        text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
-        animation: glow 2s ease-in-out infinite alternate;
+        color: #4CAF50;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
     }
     
-    @keyframes glow {
-        from { text-shadow: 0 0 20px rgba(255, 107, 53, 0.5); }
-        to { text-shadow: 0 0 40px rgba(255, 107, 53, 0.8); }
-    }
-    
-    /* GIANT BEAST MODE BUTTONS */
+    /* Clean, readable buttons */
     .stButton > button {
         width: 100% !important;
-        height: 5.5rem !important;
-        font-size: 2rem !important;
-        font-weight: 900 !important;
-        border-radius: 20px !important;
-        transition: all 0.4s ease !important;
-        border: 3px solid #FF6B35 !important;
-        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%) !important;
+        height: 3.5rem !important;
+        font-size: 1.1rem !important;
+        font-weight: bold !important;
+        border-radius: 10px !important;
+        border: 2px solid #4CAF50 !important;
+        background-color: #4CAF50 !important;
         color: white !important;
-        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4) !important;
-        text-transform: uppercase !important;
-        letter-spacing: 1px !important;
+        transition: all 0.2s ease !important;
     }
     
     .stButton > button:hover {
-        transform: translateY(-5px) scale(1.02) !important;
-        box-shadow: 0 15px 35px rgba(255, 107, 53, 0.6) !important;
-        background: linear-gradient(135deg, #F7931E 0%, #FF4757 100%) !important;
+        background-color: #45a049 !important;
+        transform: translateY(-2px) !important;
     }
     
-    /* SUPER PRIMARY button for LOG SET */
+    /* Primary button for LOG SET */
     .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #00D2FF 0%, #3A7BD5 50%, #667eea 100%) !important;
-        border: 3px solid #00D2FF !important;
-        box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4) !important;
-        font-size: 2.2rem !important;
-        height: 6rem !important;
-        animation: pulse 2s infinite;
+        background-color: #2196F3 !important;
+        border: 2px solid #2196F3 !important;
+        font-size: 1.2rem !important;
+        height: 4rem !important;
     }
     
-    @keyframes pulse {
-        0% { box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4); }
-        50% { box-shadow: 0 12px 35px rgba(0, 210, 255, 0.7); }
-        100% { box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4); }
+    .stButton > button[kind="primary"]:hover {
+        background-color: #1976D2 !important;
     }
     
-    /* Enhanced date header with gradient */
+    /* Simple date header */
     .date-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ff9a9e 100%);
+        background-color: #333333;
         color: white;
-        padding: 2.5rem;
-        border-radius: 25px;
-        margin: 2rem 0;
+        padding: 1rem;
+        border-radius: 10px;
+        margin: 1rem 0;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        font-size: 1.6rem;
+        font-size: 1.1rem;
         font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 2px;
     }
     
-    /* Beast Mode workout cards */
+    /* Clean workout cards */
     .workout-card {
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
-        padding: 2.5rem;
-        border-radius: 25px;
-        margin: 2rem 0;
-        border-left: 10px solid #FF6B35;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        background-color: #2d2d2d;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 1rem 0;
+        border-left: 4px solid #4CAF50;
         color: white;
-        transition: transform 0.3s ease;
-    }
-    
-    .workout-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
     
     .program-card {
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
-        padding: 2.5rem;
-        border-radius: 25px;
-        margin: 2rem 0;
-        border-left: 10px solid #00D2FF;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-        color: white;
-        transition: transform 0.3s ease;
-    }
-    
-    .program-card:hover {
-        transform: translateY(-5px);
-    }
-    
-    /* Enhanced stats cards with glow effects */
-    .stats-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 2.5rem;
-        border-radius: 25px;
-        text-align: center;
-        margin: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        font-size: 1.4rem;
-        font-weight: bold;
-        transition: all 0.3s ease;
-    }
-    
-    .stats-card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
-    }
-    
-    /* Enhanced set items */
-    .set-item {
-        background: linear-gradient(135deg, #4A5568 0%, #2D3748 100%);
+        background-color: #2d2d2d;
         padding: 1.5rem;
-        border-radius: 15px;
+        border-radius: 10px;
         margin: 1rem 0;
-        border-left: 6px solid #00D2FF;
+        border-left: 4px solid #2196F3;
         color: white;
-        font-size: 1.2rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
     
-    /* GIANT mobile-optimized inputs */
+    /* Simple stats cards */
+    .stats-card {
+        background-color: #333333;
+        color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        margin: 0.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+    
+    /* Readable set items */
+    .set-item {
+        background-color: #3d3d3d;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        border-left: 3px solid #2196F3;
+        color: white;
+        font-size: 1rem;
+    }
+    
+    /* Clean mobile inputs */
     .stSelectbox > div > div {
-        font-size: 1.6rem !important;
-        padding: 1.5rem !important;
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        font-size: 1rem !important;
+        padding: 0.75rem !important;
+        background-color: #2d2d2d !important;
         color: white !important;
-        border-radius: 15px !important;
-        border: 3px solid #4A5568 !important;
-        height: 4.5rem !important;
+        border-radius: 8px !important;
+        border: 2px solid #555 !important;
+        height: auto !important;
     }
     
     .stNumberInput > div > div > input {
-        font-size: 2rem !important;
-        height: 5rem !important;
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        font-size: 1.1rem !important;
+        height: 2.5rem !important;
+        background-color: #2d2d2d !important;
         color: white !important;
-        border-radius: 15px !important;
-        border: 3px solid #4A5568 !important;
+        border-radius: 8px !important;
+        border: 2px solid #555 !important;
         text-align: center !important;
         font-weight: bold !important;
     }
     
     .stTextInput > div > div > input {
-        font-size: 1.4rem !important;
-        padding: 1.5rem !important;
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        font-size: 1rem !important;
+        padding: 0.75rem !important;
+        background-color: #2d2d2d !important;
         color: white !important;
-        border-radius: 15px !important;
-        border: 3px solid #4A5568 !important;
+        border-radius: 8px !important;
+        border: 2px solid #555 !important;
     }
     
     .stTextArea > div > div > textarea {
-        font-size: 1.4rem !important;
-        padding: 1.5rem !important;
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        font-size: 1rem !important;
+        padding: 0.75rem !important;
+        background-color: #2d2d2d !important;
         color: white !important;
-        border-radius: 15px !important;
-        border: 3px solid #4A5568 !important;
+        border-radius: 8px !important;
+        border: 2px solid #555 !important;
     }
     
-    /* Enhanced delete buttons */
+    /* Clean delete buttons */
     .stButton button[title*="Delete"], .stButton button[aria-label*="Delete"] {
-        background: linear-gradient(135deg, #FF4757 0%, #C44569 100%) !important;
+        background-color: #f44336 !important;
         color: white !important;
-        font-size: 1.6rem !important;
-        padding: 1.2rem !important;
-        border-radius: 15px !important;
-        border: 3px solid #FF4757 !important;
-        height: 4rem !important;
-        font-weight: bold !important;
+        font-size: 0.9rem !important;
+        padding: 0.5rem !important;
+        border-radius: 6px !important;
+        border: 2px solid #f44336 !important;
+        height: 2.5rem !important;
     }
     
-    /* Enhanced notes section */
+    /* Clean notes section */
     .notes-section {
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
-        padding: 2rem;
-        border-radius: 20px;
-        border-left: 8px solid #00D2FF;
-        margin: 2rem 0;
+        background-color: #2d2d2d;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #2196F3;
+        margin: 1rem 0;
         color: white;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        font-size: 0.95rem;
     }
     
-    /* Enhanced tab styling */
+    /* Simple tab styling */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 12px;
+        gap: 4px;
     }
     
     .stTabs [data-baseweb="tab"] {
-        height: 5rem;
-        font-size: 1.4rem;
+        height: 3rem;
+        font-size: 1rem;
         font-weight: bold;
-        border-radius: 15px;
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+        border-radius: 8px;
+        background-color: #2d2d2d;
         color: white;
-        border: 3px solid #4A5568;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        border: 2px solid #555;
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%) !important;
+        background-color: #4CAF50 !important;
         color: white !important;
-        border: 3px solid #FF6B35 !important;
-        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4) !important;
+        border: 2px solid #4CAF50 !important;
     }
     
-    /* Enhanced success/error messages */
+    /* Clean success/error messages */
     .stSuccess {
-        background: linear-gradient(135deg, #38A169 0%, #48BB78 100%) !important;
+        background-color: #4CAF50 !important;
         color: white !important;
-        font-size: 1.4rem !important;
-        padding: 2rem !important;
-        border-radius: 15px !important;
-        font-weight: bold !important;
-        box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3) !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        border-radius: 8px !important;
     }
     
     .stError {
-        background: linear-gradient(135deg, #E53E3E 0%, #FC8181 100%) !important;
+        background-color: #f44336 !important;
         color: white !important;
-        font-size: 1.4rem !important;
-        padding: 2rem !important;
-        border-radius: 15px !important;
-        font-weight: bold !important;
-        box-shadow: 0 5px 15px rgba(229, 62, 62, 0.3) !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        border-radius: 8px !important;
     }
     
     .stWarning {
-        background: linear-gradient(135deg, #D69E2E 0%, #F6E05E 100%) !important;
-        color: #1A202C !important;
-        font-size: 1.4rem !important;
-        padding: 2rem !important;
-        border-radius: 15px !important;
-        font-weight: bold !important;
-        box-shadow: 0 5px 15px rgba(214, 158, 46, 0.3) !important;
+        background-color: #ff9800 !important;
+        color: white !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        border-radius: 8px !important;
     }
     
     .stInfo {
-        background: linear-gradient(135deg, #3182CE 0%, #63B3ED 100%) !important;
+        background-color: #2196F3 !important;
         color: white !important;
-        font-size: 1.4rem !important;
-        padding: 2rem !important;
-        border-radius: 15px !important;
-        font-weight: bold !important;
-        box-shadow: 0 5px 15px rgba(49, 130, 206, 0.3) !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        border-radius: 8px !important;
     }
     
-    /* Enhanced form styling */
+    /* Clean form styling */
     .stForm {
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
-        padding: 2.5rem;
-        border-radius: 25px;
-        border: 3px solid #4A5568;
-        margin: 2rem 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    }
-    
-    /* RPE slider styling */
-    .stSlider > div > div > div {
-        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%) !important;
+        background-color: #2d2d2d;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 2px solid #555;
+        margin: 1rem 0;
     }
     
     /* Mobile responsive adjustments */
     @media (max-width: 768px) {
         .main-header {
-            font-size: 2.8rem;
+            font-size: 2rem;
         }
         
         .stButton > button {
-            height: 6rem !important;
-            font-size: 2.2rem !important;
+            height: 3rem !important;
+            font-size: 1rem !important;
         }
         
         .stButton > button[kind="primary"] {
-            height: 7rem !important;
-            font-size: 2.5rem !important;
+            height: 3.5rem !important;
+            font-size: 1.1rem !important;
         }
         
         .date-header {
-            padding: 2rem;
-            font-size: 1.4rem;
+            padding: 0.75rem;
+            font-size: 1rem;
         }
         
         .stats-card {
-            margin: 1rem 0.5rem;
-            padding: 2rem;
+            margin: 0.25rem;
+            padding: 1rem;
+            font-size: 0.9rem;
         }
     }
     
     /* Progress bars */
     .stProgress > div > div > div {
-        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%) !important;
-        border-radius: 10px !important;
-        height: 1.5rem !important;
+        background-color: #4CAF50 !important;
+        border-radius: 4px !important;
+        height: 0.75rem !important;
     }
     
     /* Expander styling */
     .streamlit-expanderHeader {
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        background-color: #2d2d2d !important;
         color: white !important;
-        font-size: 1.3rem !important;
+        font-size: 1rem !important;
         font-weight: bold !important;
-        border-radius: 15px !important;
-        padding: 1.5rem !important;
+        border-radius: 8px !important;
+        padding: 1rem !important;
     }
     
     /* Metric styling */
     [data-testid="metric-container"] {
-        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
-        border-radius: 15px;
-        padding: 1.5rem;
-        border-left: 6px solid #00D2FF;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        background-color: #2d2d2d;
+        border-radius: 8px;
+        padding: 1rem;
+        border-left: 3px solid #2196F3;
     }
     
     [data-testid="metric-container"] label {
         color: white !important;
-        font-size: 1.2rem !important;
+        font-size: 0.9rem !important;
         font-weight: bold !important;
     }
     
     [data-testid="metric-container"] div[data-testid="metric-value"] {
-        color: #00D2FF !important;
-        font-size: 2rem !important;
-        font-weight: 900 !important;
+        color: #2196F3 !important;
+        font-size: 1.5rem !important;
+        font-weight: bold !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -1094,45 +1036,75 @@ def get_last_workout_for_exercise(exercise):
     return last_workout
 
 def create_sample_data():
-    """Create sample data with enhanced features - only once"""
+    """Create sample data ONLY if database is completely empty"""
     tracker = st.session_state.tracker
     
-    # Check if we've already created sample data before
+    # Check if we've already created sample data
     if st.session_state.get('sample_data_created', False):
         return
     
+    # Check if there's ANY real data in the database
     df = tracker.get_data()
+    
+    # If there's already data, don't create sample data
     if not df.empty:
         st.session_state.sample_data_created = True
         return
     
-    # Only create sample data on very first run
-    yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-    today = date.today().strftime('%Y-%m-%d')
+    # Only create sample data on completely fresh installation
+    # Check if user specifically wants sample data
+    if not st.session_state.get('user_wants_sample_data', False):
+        st.session_state.sample_data_created = True  # Skip sample data creation
+        return
+
+def clean_old_sample_data():
+    """Remove any old sample data that shouldn't be there"""
+    tracker = st.session_state.tracker
     
-    # Sample workouts with notes
-    tracker.log_workout(yesterday, 'Hack Squat', [
-        {'reps': 12, 'weight': 80, 'rpe': 7, 'set_notes': 'Warm up set, felt good'},
-        {'reps': 10, 'weight': 90, 'rpe': 8, 'set_notes': 'Working weight'},
-        {'reps': 8, 'weight': 100, 'rpe': 9, 'set_notes': 'Heavy set, good depth'}
-    ], "Great leg session! Gym was quiet, felt strong.")
+    # Get all data
+    df = tracker.get_data()
     
-    tracker.log_workout(yesterday, 'Leg Press', [
-        {'reps': 15, 'weight': 150, 'rpe': 7, 'set_notes': 'Full range of motion'},
-        {'reps': 12, 'weight': 170, 'rpe': 8, 'set_notes': 'Slight fatigue'}
-    ], "Finished with leg press, good pump")
+    if df.empty:
+        return "No data to clean"
     
-    # Mark that we've created sample data
-    st.session_state.sample_data_created = True
+    # Sample data patterns to identify and remove
+    sample_patterns = [
+        "Great leg session! Gym was quiet, felt strong.",
+        "Finished with leg press, good pump",
+        "Warm up set, felt good",
+        "Working weight",
+        "Heavy set, good depth",
+        "Full range of motion",
+        "Slight fatigue"
+    ]
+    
+    # Find rows that match sample data patterns
+    sample_rows = df[
+        df['workout_notes'].isin(sample_patterns) | 
+        df['set_notes'].isin(sample_patterns) |
+        ((df['exercise'] == 'Hack Squat') & (df['weight'].isin([80, 90, 100]))) |
+        ((df['exercise'] == 'Leg Press') & (df['weight'].isin([150, 170])))
+    ]
+    
+    if sample_rows.empty:
+        return "No sample data found to clean"
+    
+    # Delete sample data rows
+    conn = sqlite3.connect(tracker.db_name)
+    cursor = conn.cursor()
+    
+    for row_id in sample_rows['id'].values:
+        cursor.execute('DELETE FROM workouts WHERE id = ?', (row_id,))
+    
+    conn.commit()
+    conn.close()
+    
+    return f"✅ Removed {len(sample_rows)} sample data entries"
 
 def show_enhanced_success_animation():
-    """Show enhanced success feedback with audio"""
-    st.success("🎉 **BEAST MODE ACTIVATED!** SET LOGGED SUCCESSFULLY! 🎉")
-    try:
-        play_success_sound()
-    except:
-        pass  # Fallback if audio doesn't work
-    time.sleep(0.5)
+    """Show clean success feedback"""
+    st.success("✅ SET LOGGED SUCCESSFULLY!")
+    time.sleep(0.3)
     st.balloons()
 
 # ===== PAGE FUNCTIONS =====
@@ -2404,11 +2376,11 @@ def add_exercises_page():
                     st.error(result)
 
 def data_manager_page():
-    """Enhanced mobile-optimized data manager with analytics"""
-    st.header("💾 Beast Mode Data Manager")
+    """Enhanced mobile-optimized data manager with analytics and cleaning"""
+    st.header("💾 Data Manager")
     
     # Enhanced current data overview
-    st.subheader("📊 Your Beast Mode Data Overview")
+    st.subheader("📊 Your Data Overview")
     
     df = st.session_state.tracker.get_data()
     templates = st.session_state.tracker.get_templates()
@@ -2433,9 +2405,26 @@ def data_manager_page():
         custom_count = len(custom_exercises) if not custom_exercises.empty else 0
         st.markdown(f'<div class="stats-card">⭐ <strong>Custom</strong><br>{custom_count}</div>', unsafe_allow_html=True)
     
-    # Beast Mode Analytics
+    # Data Cleaning Section
+    st.subheader("🧹 Data Cleaning")
+    
+    st.markdown('<div class="program-card">', unsafe_allow_html=True)
+    st.write("**🧹 Clean Old Sample Data**")
+    st.write("If you see old fake workouts (Hack Squats, Leg Presses) that you didn't log, remove them here:")
+    
+    if st.button("🧹 Remove Sample Data", use_container_width=True):
+        result = clean_old_sample_data()
+        if "✅" in result:
+            st.success(result)
+            st.rerun()
+        else:
+            st.info(result)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Analytics (only if real data exists)
     if not df.empty:
-        st.subheader("🔥 Beast Mode Analytics")
+        st.subheader("📊 Analytics")
         
         total_volume = (df['reps'] * df['weight']).sum()
         total_days = len(df['date'].unique())
@@ -2451,34 +2440,33 @@ def data_manager_page():
         
         with col3:
             if avg_rpe > 0:
-                rpe_color = "#FF4757" if avg_rpe > 8.5 else "#FF6B35" if avg_rpe > 7.5 else "#F7931E"
-                st.markdown(f'<div class="stats-card" style="background: linear-gradient(135deg, {rpe_color} 0%, {rpe_color}88 100%);">💥 <strong>Avg RPE</strong><br>{avg_rpe:.1f}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="stats-card">💥 <strong>Avg RPE</strong><br>{avg_rpe:.1f}</div>', unsafe_allow_html=True)
     
     # Enhanced data backup section
-    st.subheader("💾 Beast Mode Backup & Restore")
+    st.subheader("💾 Backup & Restore")
     
     st.markdown(f'<div class="program-card">', unsafe_allow_html=True)
-    st.write("**📤 Export Your Beast Mode Data**")
+    st.write("**📤 Export Your Data**")
     st.write("💡 Keep your gains safe! Export includes all workouts, templates, and custom exercises.")
     
-    export_filename = st.text_input("Backup filename", value=f"beast_backup_{date.today().strftime('%Y%m%d')}.json")
+    export_filename = st.text_input("Backup filename", value=f"gym_backup_{date.today().strftime('%Y%m%d')}.json")
     
-    if st.button("📤 Export Beast Data", use_container_width=True):
+    if st.button("📤 Export Data", use_container_width=True):
         result = st.session_state.tracker.export_data(export_filename)
         if "✅" in result:
             st.success(result)
             st.balloons()
-            st.info("💡 Save this file safely - it contains all your beast mode progress!")
+            st.info("💡 Save this file safely - it contains all your progress!")
         else:
             st.error(result)
     
     st.write("---")
-    st.write("**📥 Import Beast Mode Data**")
+    st.write("**📥 Import Data**")
     st.write("⚠️ This will add to your existing data (won't overwrite)")
     
-    import_filename = st.text_input("Import filename", value="beast_backup.json")
+    import_filename = st.text_input("Import filename", value="gym_backup.json")
     
-    if st.button("📥 Import Beast Data", use_container_width=True):
+    if st.button("📥 Import Data", use_container_width=True):
         result = st.session_state.tracker.import_data(import_filename)
         if "✅" in result:
             st.success(result)
@@ -2490,9 +2478,9 @@ def data_manager_page():
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Enhanced database statistics
-    if st.button("📊 Detailed Beast Statistics", use_container_width=True):
+    if st.button("📊 Detailed Statistics", use_container_width=True):
         if not df.empty:
-            st.subheader("📈 Your Complete Beast Mode Journey")
+            st.subheader("📈 Your Complete Journey")
             
             # Date range
             date_range = f"{df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}"
@@ -2505,13 +2493,10 @@ def data_manager_page():
             df_copy['body_part'] = df_copy['exercise'].apply(st.session_state.tracker.get_exercise_body_part)
             body_part_dist = df_copy['body_part'].value_counts()
             
-            # RPE distribution
-            rpe_dist = df['rpe'].value_counts().sort_index() if df['rpe'].notna().any() else pd.Series()
-            
             col1, col2 = st.columns(2)
             
             with col1:
-                st.write("**📊 Beast Mode Statistics:**")
+                st.write("**📊 Training Statistics:**")
                 st.write(f"- **Training Period:** {date_range}")
                 st.write(f"- **Total Volume:** {total_volume:,.0f} kg")
                 st.write(f"- **Total Reps:** {df['reps'].sum():,}")
@@ -2522,7 +2507,7 @@ def data_manager_page():
                     st.write(f"- **Average RPE:** {avg_rpe:.1f}")
             
             with col2:
-                st.write("**🏆 Top Beast Exercises:**")
+                st.write("**🏆 Top Exercises:**")
                 for i, (exercise, count) in enumerate(top_exercises.items(), 1):
                     st.write(f"{i}. **{exercise}:** {count} sets")
                 
@@ -2532,53 +2517,53 @@ def data_manager_page():
                         percentage = (count / len(df)) * 100
                         st.write(f"- **{body_part}:** {percentage:.1f}%")
             
-            # Beast Mode Achievements
-            st.subheader("🏆 Beast Mode Achievements Unlocked")
+            # Achievements
+            st.subheader("🏆 Achievements Unlocked")
             
             achievements = []
             
             if total_volume >= 50000:
-                achievements.append("🔥 Volume Beast - 50,000+ kg moved!")
+                achievements.append("🔥 Volume Master - 50,000+ kg moved!")
             elif total_volume >= 25000:
-                achievements.append("💪 Volume Warrior - 25,000+ kg moved!")
+                achievements.append("💪 Volume Pro - 25,000+ kg moved!")
             elif total_volume >= 10000:
                 achievements.append("🏋️ Volume Crusher - 10,000+ kg moved!")
             
             if len(df) >= 500:
                 achievements.append("🎯 Set Master - 500+ sets logged!")
             elif len(df) >= 250:
-                achievements.append("🎯 Set Crusher - 250+ sets logged!")
+                achievements.append("🎯 Set Pro - 250+ sets logged!")
             elif len(df) >= 100:
-                achievements.append("🎯 Set Warrior - 100+ sets logged!")
+                achievements.append("🎯 Set Crusher - 100+ sets logged!")
             
             if total_days >= 100:
-                achievements.append("📅 Consistency Legend - 100+ training days!")
+                achievements.append("📅 Consistency Legend - 100+ days!")
             elif total_days >= 50:
-                achievements.append("📅 Consistency Master - 50+ training days!")
+                achievements.append("📅 Consistency Master - 50+ days!")
             elif total_days >= 25:
-                achievements.append("📅 Consistency Beast - 25+ training days!")
+                achievements.append("📅 Consistent Trainer - 25+ days!")
             
             if exercise_count >= 20:
-                achievements.append("📝 Exercise Explorer - 20+ different exercises!")
+                achievements.append("📝 Exercise Explorer - 20+ exercises!")
             elif exercise_count >= 10:
-                achievements.append("📝 Exercise Variety - 10+ different exercises!")
+                achievements.append("📝 Exercise Variety - 10+ exercises!")
             
             if achievements:
                 for achievement in achievements:
                     st.success(achievement)
             else:
-                st.info("💪 Keep training to unlock Beast Mode achievements!")
+                st.info("💪 Keep training to unlock achievements!")
         else:
-            st.info("📊 No workout data yet. Start your beast mode journey!")
+            st.info("📊 No workout data yet. Start your journey!")
 
 # ===== MAIN APP =====
 def main():
-    st.markdown('<h1 class="main-header">🏋️ Beast Mode Gym Tracker 💪</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">💪 Gym Tracker</h1>', unsafe_allow_html=True)
     
-    # Enhanced success message with version info
-    st.success("🔥 **BEAST MODE V7 ACTIVATED!** ✅ AI Assistant ✅ Enhanced UI ✅ Lightning fast ✅ All data preserved!")
+    # Clean success message
+    st.success("✅ **UPDATED & OPTIMIZED!** Clean design, readable text, better mobile experience!")
     
-    # Enhanced mobile-optimized navigation
+    # Clean mobile navigation
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "🔥 Today", 
         "⚡ Quick Log", 
@@ -2606,9 +2591,9 @@ def main():
     with tab6:
         data_manager_page()
 
-# Only create sample data if this is a new installation
+# Skip sample data creation by default
 if 'sample_data_created' not in st.session_state:
-    create_sample_data()
+    st.session_state.sample_data_created = True  # Skip sample data
 
 # Run the beast mode app
 if __name__ == "__main__":
