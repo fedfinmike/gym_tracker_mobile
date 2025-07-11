@@ -1,3 +1,4 @@
+```python
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -8,6 +9,7 @@ import numpy as np
 import json
 import time
 
+# --- GymTracker Data Layer ---
 class GymTracker:
     def __init__(self, db_name='gym_tracker_MASTER.db'):
         self.db_name = db_name
@@ -55,8 +57,6 @@ class GymTracker:
         conn.commit()
         conn.close()
 
-    # --- Data operations (log, delete, fetch) ---
-
     def log_workout(self, date_str, exercise, sets_data, workout_notes=""):
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
@@ -97,8 +97,6 @@ class GymTracker:
         conn.close()
         return df
 
-    # --- Custom exercises ---
-
     def add_custom_exercise(self, exercise_name, category="Custom", description=""):
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
@@ -113,8 +111,6 @@ class GymTracker:
             result = f"❌ Exercise '{exercise_name}' already exists!"
         conn.close()
         return result
-
-    # --- Templates ---
 
     def save_template(self, template_name, category, description, created_by, exercises_list, is_public=False):
         conn = sqlite3.connect(self.db_name)
@@ -162,8 +158,6 @@ class GymTracker:
         conn.commit()
         conn.close()
         return "✅ Template deleted!" if rows > 0 else "❌ Template not found!"
-
-    # --- Fetch exercises ---
 
     def get_all_exercises(self):
         built_in = [
@@ -233,47 +227,5 @@ class GymTracker:
         for p in patterns:
             cursor.execute('DELETE FROM workouts WHERE set_notes LIKE ? OR workout_notes LIKE ?', (f'%{p}%',f'%{p}%'))
             deleted += cursor.rowcount
-        cursor.execute("DELETE FROM workouts WHERE exercise='Hack Squat' AND weight IN (80.0,90.0,100.0) AND reps IN (12,10,8)")
-        deleted += cursor.rowcount
-        cursor.execute("DELETE FROM workouts WHERE exercise='Leg Press' AND weight IN (150.0,170.0) AND reps IN (15,12)")
-        deleted += cursor.rowcount
-        conn.commit()
-        conn.close()
-        return f"✅ Removed {deleted} fake data entries" if deleted>0 else "✅ No fake data found"
-
-    def reset_all_data(self):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM workouts')
-        conn.commit()
-        conn.close()
-        return "🚨 ALL WORKOUT DATA DELETED"
-
-# --- Streamlit App Setup & Styling ---
-st.set_page_config(page_title="💪 Beast Mode Gym Tracker", page_icon="💪", layout="wide")
-
-st.markdown("""
-<style>
-  .stApp { background-color: #0e1117; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-  .main-header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 1.5rem; border-radius: 12px; text-align: center; font-size: 1.8rem; font-weight: 600; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(59,130,246,0.3); }
-  .stButton > button[type="submit"] { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); border: 1px solid #3b82f6; color:white; height:3.5rem; font-weight:600; }
-  .stButton > button[type="submit"]:hover { background: linear-gradient(135deg,#1d4ed8 0%,#2563eb 100%); box-shadow:0 4px 16px rgba(59,130,246,0.4); }
-  /* ... include any additional CSS as before ... */
-</style>
-""", unsafe_allow_html=True)
-
-# Initialize state
-if 'tracker' not in st.session_state: st.session_state.tracker = GymTracker()
-if 'last_exercise' not in st.session_state: st.session_state.last_exercise = 'Bench Press'
-if 'last_reps' not in st.session_state: st.session_state.last_reps = 8
-if 'last_weight' not in st.session_state: st.session_state.last_weight = 0.0
-if 'last_rpe' not in st.session_state: st.session_state.last_rpe = 8
-
-# Remaining functions and main() as before (ensure any form_submit_button calls omit invalid args)
-def main():
-    st.markdown('<div class="main-header">💪 Beast Mode Gym Tracker Pro</div>', unsafe_allow_html=True)
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["⚡ Quick Log","📈 Progress","📋 Templates","➕ Exercises","💾 Data","ℹ️ Info"])
-    # ... call your page functions here ...
-
-if __name__ == '__main__':
-    main()
+        cursor.execute("DELETE FROM workouts WHERE exercise='Hack Squat' AND weight IN (80.0,90.0,100.0) AND reps IN (12,10,8)
+```
