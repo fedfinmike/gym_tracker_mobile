@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -62,8 +61,7 @@ class GymTracker:
         cursor = conn.cursor()
         for i, set_data in enumerate(sets_data, 1):
             cursor.execute(
-                '''INSERT INTO workouts (date, exercise, set_number, reps, weight, rpe, set_notes, workout_notes)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                'INSERT INTO workouts (date, exercise, set_number, reps, weight, rpe, set_notes, workout_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                 (date_str, exercise, i, set_data['reps'], set_data['weight'], set_data.get('rpe'), set_data.get('set_notes', ''), workout_notes)
             )
         conn.commit()
@@ -88,8 +86,7 @@ class GymTracker:
         conn = sqlite3.connect(self.db_name)
         try:
             df = pd.read_sql_query(
-                '''SELECT id, exercise, set_number, reps, weight, rpe, set_notes, workout_notes, created_at
-                   FROM workouts WHERE date = ? ORDER BY exercise, set_number''',
+                'SELECT id, exercise, set_number, reps, weight, rpe, set_notes, workout_notes, created_at FROM workouts WHERE date = ? ORDER BY exercise, set_number',
                 conn, params=(date_str,)
             )
         except Exception:
@@ -101,10 +98,8 @@ class GymTracker:
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
         try:
-            cursor.execute(
-                'INSERT INTO custom_exercises (exercise_name, category, description) VALUES (?, ?, ?)',
-                (exercise_name, category, description)
-            )
+            cursor.execute('INSERT INTO custom_exercises (exercise_name, category, description) VALUES (?, ?, ?)',
+                           (exercise_name, category, description))
             conn.commit()
             result = f"✅ Added: {exercise_name}"
         except sqlite3.IntegrityError:
@@ -204,7 +199,7 @@ class GymTracker:
         ex = df[df['exercise'] == exercise]
         daily_stats = ex.groupby('date').agg({'weight':['max','mean'],'reps':['sum','mean'],'set_number':'count'}).round(2)
         daily_stats.columns = ['max_weight','avg_weight','total_reps','avg_reps','total_sets']
-        daily_stats['volume'] = ex.groupby('date').apply(lambda x:(x['reps']*x['weight']).sum())
+        daily_stats['volume'] = ex.groupby('date').apply(lambda x: (x['reps']*x['weight']).sum())
         daily_stats.reset_index(inplace=True)
         return {
             'daily_stats': daily_stats,
@@ -225,4 +220,53 @@ class GymTracker:
         ]
         deleted = 0
         for p in patterns:
-            cursor.execute('DELETE FROM workouts WHERE set_notes LIKE ? OR workout_notes LIKE ?',
+            cursor.execute('DELETE FROM workouts WHERE set_notes LIKE ? OR workout_notes LIKE ?', (f'%{p}%', f'%{p}%'))
+            deleted += cursor.rowcount
+        cursor.execute('DELETE FROM workouts WHERE exercise="Hack Squat" AND weight IN (80.0,90.0,100.0) AND reps IN (12,10,8)')
+        deleted += cursor.rowcount
+        cursor.execute('DELETE FROM workouts WHERE exercise="Leg Press" AND weight IN (150.0,170.0) AND reps IN (15,12)')
+        deleted += cursor.rowcount
+        conn.commit()
+        conn.close()
+        return f"✅ Removed {deleted} fake data entries" if deleted > 0 else "✅ No fake data found"
+
+    def reset_all_data(self):
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM workouts')
+        conn.commit()
+        conn.close()
+        return "🚨 ALL WORKOUT DATA DELETED"
+
+# --- Streamlit App Setup & Styling ---
+st.set_page_config(page_title="💪 Beast Mode Gym Tracker", page_icon="💪", layout="wide")
+
+st.markdown("""
+<style>
+  .stApp { background-color: #0e1117; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  .main-header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 1.5rem; border-radius: 12px; text-align: center; font-size: 1.8rem; font-weight: 600; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(59,130,246,0.3); }
+  .stButton > button[type="submit"] { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); border: 1px solid #3b82f6; color:white; height:3.5rem; font-weight:600; }
+  .stButton > button[type="submit"]:hover { background: linear-gradient(135deg,#1d4ed8 0%,#2563eb 100%); box-shadow:0 4px 16px rgba(59,130,246,0.4); }
+</style>
+""", unsafe_allow_html=True)
+
+# Initialize session state
+if 'tracker' not in st.session_state:
+    st.session_state.tracker = GymTracker()
+if 'last_exercise' not in st.session_state:
+    st.session_state.last_exercise = 'Bench Press'
+if 'last_reps' not in st.session_state:
+    st.session_state.last_reps = 8
+if 'last_weight' not in st.session_state:
+    st.session_state.last_weight = 0.0
+if 'last_rpe' not in st.session_state:
+    st.session_state.last_rpe = 8
+
+# Define page functions
+
+def enhanced_quick_log_page():
+    st.header("⚡ Quick Log")
+    log_date = st.date_input("📅 Select Date", value=date.today())
+    date_str = log_date.strftime('%Y-%m-%d')
+    if log_date == date.today():
+        st.markdown(f"<div class=\"main-header\">🔥 TODAY: {log_date.strftime('%A, %B %d, %Y')}<```
