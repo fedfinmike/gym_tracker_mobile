@@ -202,12 +202,12 @@ class GymTracker:
         if df.empty or exercise not in df['exercise'].values:
             return None
         ex = df[df['exercise'] == exercise]
-        daily = ex.groupby('date').agg({'weight':['max','mean'],'reps':['sum','mean'],'set_number':'count'}).round(2)
-        daily.columns = ['max_weight','avg_weight','total_reps','avg_reps','total_sets']
-        daily['volume'] = ex.groupby('date').apply(lambda x:(x['reps']*x['weight']).sum())
-        daily.reset_index(inplace=True)
+        daily_stats = ex.groupby('date').agg({'weight':['max','mean'],'reps':['sum','mean'],'set_number':'count'}).round(2)
+        daily_stats.columns = ['max_weight','avg_weight','total_reps','avg_reps','total_sets']
+        daily_stats['volume'] = ex.groupby('date').apply(lambda x:(x['reps']*x['weight']).sum())
+        daily_stats.reset_index(inplace=True)
         return {
-            'daily_stats': daily,
+            'daily_stats': daily_stats,
             'max_weight': ex['weight'].max(),
             'total_volume': (ex['reps']*ex['weight']).sum(),
             'total_sets': len(ex),
@@ -225,7 +225,4 @@ class GymTracker:
         ]
         deleted = 0
         for p in patterns:
-            cursor.execute('DELETE FROM workouts WHERE set_notes LIKE ? OR workout_notes LIKE ?', (f'%{p}%',f'%{p}%'))
-            deleted += cursor.rowcount
-        cursor.execute("DELETE FROM workouts WHERE exercise='Hack Squat' AND weight IN (80.0,90.0,100.0) AND reps IN (12,10,8)
-```
+            cursor.execute('DELETE FROM workouts WHERE set_notes LIKE ? OR workout_notes LIKE ?',
