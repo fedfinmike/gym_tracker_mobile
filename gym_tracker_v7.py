@@ -8,17 +8,18 @@ from datetime import datetime, date, timedelta
 import sqlite3
 import numpy as np
 import json
+import time
 
-# ===== GYM TRACKER VERSION 6 CLASS =====
+# ===== MOBILE-OPTIMIZED GYM TRACKER V7 - ENHANCED =====
 class GymTracker:
     def __init__(self, db_name='gym_tracker_MASTER.db'):
         """Initialize Gym Tracker - MASTER database for all future versions"""
         self.db_name = db_name
         self.init_database()
-        self.migrate_old_data()  # 🆕 NEW: Migrate data from ALL previous versions
+        self.migrate_old_data()  # Migrate data from ALL previous versions
         
     def migrate_old_data(self):
-        """🆕 NEW: Migrate data from ALL previous versions based on your file history"""
+        """Migrate data from ALL previous versions based on your file history"""
         import os
         
         # COMPLETE list of ALL your old database names from the file history
@@ -31,6 +32,7 @@ class GymTracker:
             'gym_tracker_v3.db',
             'gym_tracker_v4.db',
             'gym_tracker_v5.db',
+            'gym_tracker_v6.db',
             'workout_tracker.db'
         ]
         
@@ -109,7 +111,7 @@ class GymTracker:
         if not migrated_any:
             st.info("📊 Starting fresh - no previous data found to migrate")
     
-    # 🆕 NEW: Data Export/Import Functions
+    # Data Export/Import Functions
     def export_data(self, export_file='gym_tracker_backup.json'):
         """Export all data to JSON file for backup"""
         try:
@@ -288,7 +290,7 @@ class GymTracker:
         
         self.log_workout(date_str, exercise, [{'reps': reps, 'weight': weight, 'rpe': rpe, 'set_notes': set_notes}], workout_notes)
     
-    # NEW: Delete individual sets
+    # Delete individual sets
     def delete_set(self, set_id):
         """Delete a specific set by ID"""
         conn = sqlite3.connect(self.db_name)
@@ -304,7 +306,7 @@ class GymTracker:
         else:
             return "❌ Set not found!"
     
-    # NEW: Get full day's workout with set IDs for deletion
+    # Get full day's workout with set IDs for deletion
     def get_daily_workout(self, date_str):
         """Get all exercises and sets for a specific date"""
         conn = sqlite3.connect(self.db_name)
@@ -584,7 +586,7 @@ class GymTracker:
             'avg_rpe': exercise_data['rpe'].mean() if exercise_data['rpe'].notna().any() else 0
         }
     
-    # NEW: Body part mapping for exercises
+    # Body part mapping for exercises
     def get_exercise_body_part(self, exercise):
         """Map exercise to body part based on exercise science"""
         exercise_body_parts = {
@@ -668,110 +670,395 @@ class GymTracker:
         
         return body_part_stats
 
-# ===== STREAMLIT APP CONFIGURATION =====
+# ===== ENHANCED MOBILE-OPTIMIZED STREAMLIT APP =====
 st.set_page_config(
-    page_title="💪 Gym Tracker V6",
-    page_icon="🏋️",
+    page_title="🏋️ Beast Mode Gym Tracker",
+    page_icon="💪",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Enhanced CSS for better visuals
+# 🎨 ENHANCED MOBILE-OPTIMIZED CSS - Dark Theme + GIANT Buttons + Audio Feedback
 st.markdown("""
 <style>
+    /* Dark theme with custom colors */
+    .stApp {
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+        color: #ffffff;
+    }
+    
+    /* Enhanced main header with glowing effect */
     .main-header {
-        font-size: 2.8rem;
-        font-weight: bold;
+        font-size: 3.5rem;
+        font-weight: 900;
         text-align: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #FF4757 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 2rem;
+        text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+        animation: glow 2s ease-in-out infinite alternate;
     }
+    
+    @keyframes glow {
+        from { text-shadow: 0 0 20px rgba(255, 107, 53, 0.5); }
+        to { text-shadow: 0 0 40px rgba(255, 107, 53, 0.8); }
+    }
+    
+    /* GIANT BEAST MODE BUTTONS */
     .stButton > button {
-        width: 100%;
-        height: 3rem;
-        font-size: 1.2rem;
-        font-weight: bold;
-        border-radius: 10px;
-        transition: all 0.3s ease;
+        width: 100% !important;
+        height: 5.5rem !important;
+        font-size: 2rem !important;
+        font-weight: 900 !important;
+        border-radius: 20px !important;
+        transition: all 0.4s ease !important;
+        border: 3px solid #FF6B35 !important;
+        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%) !important;
+        color: white !important;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
     }
+    
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        transform: translateY(-5px) scale(1.02) !important;
+        box-shadow: 0 15px 35px rgba(255, 107, 53, 0.6) !important;
+        background: linear-gradient(135deg, #F7931E 0%, #FF4757 100%) !important;
     }
+    
+    /* SUPER PRIMARY button for LOG SET */
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #00D2FF 0%, #3A7BD5 50%, #667eea 100%) !important;
+        border: 3px solid #00D2FF !important;
+        box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4) !important;
+        font-size: 2.2rem !important;
+        height: 6rem !important;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4); }
+        50% { box-shadow: 0 12px 35px rgba(0, 210, 255, 0.7); }
+        100% { box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4); }
+    }
+    
+    /* Enhanced date header with gradient */
     .date-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ff9a9e 100%);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 25px;
+        margin: 2rem 0;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        font-size: 1.6rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    
+    /* Beast Mode workout cards */
+    .workout-card {
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+        padding: 2.5rem;
+        border-radius: 25px;
+        margin: 2rem 0;
+        border-left: 10px solid #FF6B35;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        color: white;
+        transition: transform 0.3s ease;
+    }
+    
+    .workout-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    
+    .program-card {
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+        padding: 2.5rem;
+        border-radius: 25px;
+        margin: 2rem 0;
+        border-left: 10px solid #00D2FF;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        color: white;
+        transition: transform 0.3s ease;
+    }
+    
+    .program-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    /* Enhanced stats cards with glow effects */
+    .stats-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        margin: 1rem 0;
+        padding: 2.5rem;
+        border-radius: 25px;
         text-align: center;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        margin: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        font-size: 1.4rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
     }
-    .exercise-category {
-        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-        padding: 1.5rem;
-        border-radius: 15px;
-        margin: 1rem 0;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    
+    .stats-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
     }
-    .custom-exercise {
-        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-        padding: 1rem;
-        border-radius: 10px;
-        margin: 0.5rem 0;
-        border-left: 5px solid #FF6B6B;
-    }
-    .program-card {
-        background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
-        padding: 1.5rem;
-        border-radius: 15px;
-        margin: 1rem 0;
-        border-left: 8px solid #4ECDC4;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    }
-    .stats-card {
-        background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        text-align: center;
-        margin: 0.5rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    .workout-card {
-        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-        padding: 1rem;
-        border-radius: 10px;
-        margin: 0.5rem 0;
-        border-left: 5px solid #4ECDC4;
-    }
+    
+    /* Enhanced set items */
     .set-item {
-        background: #f8f9fa;
-        padding: 0.5rem;
-        border-radius: 5px;
-        margin: 0.2rem 0;
-        border-left: 3px solid #17a2b8;
-    }
-    .delete-btn {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 3px;
-        padding: 0.2rem 0.5rem;
-        font-size: 0.8rem;
-        cursor: pointer;
-    }
-    .notes-section {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-radius: 10px;
-        border-left: 4px solid #17a2b8;
+        background: linear-gradient(135deg, #4A5568 0%, #2D3748 100%);
+        padding: 1.5rem;
+        border-radius: 15px;
         margin: 1rem 0;
+        border-left: 6px solid #00D2FF;
+        color: white;
+        font-size: 1.2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    /* GIANT mobile-optimized inputs */
+    .stSelectbox > div > div {
+        font-size: 1.6rem !important;
+        padding: 1.5rem !important;
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        color: white !important;
+        border-radius: 15px !important;
+        border: 3px solid #4A5568 !important;
+        height: 4.5rem !important;
+    }
+    
+    .stNumberInput > div > div > input {
+        font-size: 2rem !important;
+        height: 5rem !important;
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        color: white !important;
+        border-radius: 15px !important;
+        border: 3px solid #4A5568 !important;
+        text-align: center !important;
+        font-weight: bold !important;
+    }
+    
+    .stTextInput > div > div > input {
+        font-size: 1.4rem !important;
+        padding: 1.5rem !important;
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        color: white !important;
+        border-radius: 15px !important;
+        border: 3px solid #4A5568 !important;
+    }
+    
+    .stTextArea > div > div > textarea {
+        font-size: 1.4rem !important;
+        padding: 1.5rem !important;
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        color: white !important;
+        border-radius: 15px !important;
+        border: 3px solid #4A5568 !important;
+    }
+    
+    /* Enhanced delete buttons */
+    .stButton button[title*="Delete"], .stButton button[aria-label*="Delete"] {
+        background: linear-gradient(135deg, #FF4757 0%, #C44569 100%) !important;
+        color: white !important;
+        font-size: 1.6rem !important;
+        padding: 1.2rem !important;
+        border-radius: 15px !important;
+        border: 3px solid #FF4757 !important;
+        height: 4rem !important;
+        font-weight: bold !important;
+    }
+    
+    /* Enhanced notes section */
+    .notes-section {
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+        padding: 2rem;
+        border-radius: 20px;
+        border-left: 8px solid #00D2FF;
+        margin: 2rem 0;
+        color: white;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    
+    /* Enhanced tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 12px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        height: 5rem;
+        font-size: 1.4rem;
+        font-weight: bold;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+        color: white;
+        border: 3px solid #4A5568;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%) !important;
+        color: white !important;
+        border: 3px solid #FF6B35 !important;
+        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4) !important;
+    }
+    
+    /* Enhanced success/error messages */
+    .stSuccess {
+        background: linear-gradient(135deg, #38A169 0%, #48BB78 100%) !important;
+        color: white !important;
+        font-size: 1.4rem !important;
+        padding: 2rem !important;
+        border-radius: 15px !important;
+        font-weight: bold !important;
+        box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3) !important;
+    }
+    
+    .stError {
+        background: linear-gradient(135deg, #E53E3E 0%, #FC8181 100%) !important;
+        color: white !important;
+        font-size: 1.4rem !important;
+        padding: 2rem !important;
+        border-radius: 15px !important;
+        font-weight: bold !important;
+        box-shadow: 0 5px 15px rgba(229, 62, 62, 0.3) !important;
+    }
+    
+    .stWarning {
+        background: linear-gradient(135deg, #D69E2E 0%, #F6E05E 100%) !important;
+        color: #1A202C !important;
+        font-size: 1.4rem !important;
+        padding: 2rem !important;
+        border-radius: 15px !important;
+        font-weight: bold !important;
+        box-shadow: 0 5px 15px rgba(214, 158, 46, 0.3) !important;
+    }
+    
+    .stInfo {
+        background: linear-gradient(135deg, #3182CE 0%, #63B3ED 100%) !important;
+        color: white !important;
+        font-size: 1.4rem !important;
+        padding: 2rem !important;
+        border-radius: 15px !important;
+        font-weight: bold !important;
+        box-shadow: 0 5px 15px rgba(49, 130, 206, 0.3) !important;
+    }
+    
+    /* Enhanced form styling */
+    .stForm {
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+        padding: 2.5rem;
+        border-radius: 25px;
+        border: 3px solid #4A5568;
+        margin: 2rem 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    
+    /* RPE slider styling */
+    .stSlider > div > div > div {
+        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%) !important;
+    }
+    
+    /* Mobile responsive adjustments */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 2.8rem;
+        }
+        
+        .stButton > button {
+            height: 6rem !important;
+            font-size: 2.2rem !important;
+        }
+        
+        .stButton > button[kind="primary"] {
+            height: 7rem !important;
+            font-size: 2.5rem !important;
+        }
+        
+        .date-header {
+            padding: 2rem;
+            font-size: 1.4rem;
+        }
+        
+        .stats-card {
+            margin: 1rem 0.5rem;
+            padding: 2rem;
+        }
+    }
+    
+    /* Progress bars */
+    .stProgress > div > div > div {
+        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%) !important;
+        border-radius: 10px !important;
+        height: 1.5rem !important;
+    }
+    
+    /* Expander styling */
+    .streamlit-expanderHeader {
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%) !important;
+        color: white !important;
+        font-size: 1.3rem !important;
+        font-weight: bold !important;
+        border-radius: 15px !important;
+        padding: 1.5rem !important;
+    }
+    
+    /* Metric styling */
+    [data-testid="metric-container"] {
+        background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        border-left: 6px solid #00D2FF;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    [data-testid="metric-container"] label {
+        color: white !important;
+        font-size: 1.2rem !important;
+        font-weight: bold !important;
+    }
+    
+    [data-testid="metric-container"] div[data-testid="metric-value"] {
+        color: #00D2FF !important;
+        font-size: 2rem !important;
+        font-weight: 900 !important;
     }
 </style>
 """, unsafe_allow_html=True)
+
+# Audio feedback function
+def play_success_sound():
+    """Add audio feedback for successful logging"""
+    st.markdown("""
+    <script>
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSuccessSound() {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(1200, audioContext.currentTime + 0.2);
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+        
+        playSuccessSound();
+    </script>
+    """, unsafe_allow_html=True)
 
 # Initialize session state
 if 'tracker' not in st.session_state:
@@ -781,7 +1068,7 @@ if 'tracker' not in st.session_state:
 if 'program_exercises' not in st.session_state:
     st.session_state.program_exercises = []
 
-# NEW: Smart defaults for quick logging
+# Smart defaults for quick logging
 if 'last_exercise' not in st.session_state:
     st.session_state.last_exercise = 'Bench Press'
 if 'last_reps' not in st.session_state:
@@ -838,29 +1125,36 @@ def create_sample_data():
     # Mark that we've created sample data
     st.session_state.sample_data_created = True
 
+def show_enhanced_success_animation():
+    """Show enhanced success feedback with audio"""
+    st.success("🎉 **BEAST MODE ACTIVATED!** SET LOGGED SUCCESSFULLY! 🎉")
+    try:
+        play_success_sound()
+    except:
+        pass  # Fallback if audio doesn't work
+    time.sleep(0.5)
+    st.balloons()
+
 # ===== PAGE FUNCTIONS =====
 
 def todays_workout_page():
-    """Today's workout with program support"""
-    st.header("🗓️ Today's Workout")
+    """Today's workout with enhanced mobile layout"""
+    st.header("🔥 Today's Beast Mode Workout")
     
-    # Date selection
-    col1, col2 = st.columns([1, 2])
+    # Date selection with enhanced styling
+    selected_date = st.date_input(
+        "📅 Workout Date", 
+        value=date.today(),
+        help="Select the date for this workout"
+    )
     
-    with col1:
-        selected_date = st.date_input(
-            "📅 Workout Date", 
-            value=date.today(),
-            help="Select the date for this workout"
-        )
-    
-    with col2:
-        if selected_date == date.today():
-            st.markdown('<div class="date-header">🔥 <strong>TODAY\'S TRAINING SESSION</strong><br>' + 
-                       selected_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
-        else:
-            st.markdown('<div class="date-header">📅 <strong>WORKOUT SESSION</strong><br>' + 
-                       selected_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
+    # Enhanced date header with current streak
+    if selected_date == date.today():
+        st.markdown('<div class="date-header">🔥 <strong>TODAY\'S BEAST MODE ACTIVATED</strong><br>' + 
+                   selected_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="date-header">📅 <strong>WORKOUT REVIEW MODE</strong><br>' + 
+                   selected_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
     
     date_str = selected_date.strftime('%Y-%m-%d')
     
@@ -885,7 +1179,7 @@ def todays_workout_page():
         # Display exercises in program
         exercises = program['exercises']
         
-        # Progress indicator
+        # Enhanced progress indicator
         completed_exercises = []
         df = st.session_state.tracker.get_data()
         if not df.empty:
@@ -894,68 +1188,82 @@ def todays_workout_page():
         
         progress_percentage = (len(completed_exercises) / len(exercises)) * 100 if exercises else 0
         
-        st.subheader(f"📈 Program Progress: {progress_percentage:.0f}%")
+        st.subheader(f"📈 Beast Mode Progress: {progress_percentage:.0f}% Complete")
         st.progress(progress_percentage / 100)
+        
+        # Quick stats for today
+        if completed_exercises:
+            col1, col2, col3 = st.columns(3)
+            today_data = df[df['date'] == date_str]
+            
+            with col1:
+                st.metric("💪 Exercises Done", len(completed_exercises))
+            with col2:
+                st.metric("🎯 Total Sets", len(today_data))
+            with col3:
+                total_volume = (today_data['reps'] * today_data['weight']).sum()
+                st.metric("🏋️ Volume", f"{total_volume:,.0f} kg")
         
         for i, exercise_info in enumerate(exercises, 1):
             exercise_name = exercise_info['exercise']
             target_sets = exercise_info.get('sets', 3)
             target_reps = exercise_info.get('reps', 10)
             exercise_notes = exercise_info.get('notes', '')
+            rest_time = exercise_info.get('rest', 90)
             
             # Check if exercise is completed
             is_completed = exercise_name in completed_exercises
-            status_emoji = "✅" if is_completed else "⏳"
+            status_emoji = "✅" if is_completed else "🔥"
             
-            with st.expander(f"{status_emoji} Exercise {i}: {exercise_name} - {target_sets} sets × {target_reps} reps", expanded=not is_completed):
+            with st.expander(f"{status_emoji} {exercise_name} - {target_sets}×{target_reps} (Rest: {rest_time}s)", expanded=not is_completed):
                 
-                # Show last workout
+                # Show last workout with enhanced styling
                 last_workout = get_last_workout_for_exercise(exercise_name)
                 
                 if last_workout is not None:
-                    st.write("**📚 Last Workout Performance:**")
+                    st.markdown("**📚 Last Beast Performance:**")
                     last_date = last_workout['date'].iloc[0].strftime('%Y-%m-%d')
-                    st.write(f"*Date: {last_date}*")
+                    st.markdown(f"*📅 {last_date}*")
                     
                     for _, row in last_workout.iterrows():
                         notes_text = f" - *{row['set_notes']}*" if row['set_notes'] else ""
-                        st.write(f"Set {row['set_number']}: {row['reps']} reps @ {row['weight']}kg (RPE: {row['rpe']}){notes_text}")
+                        rpe_color = "🟢" if row['rpe'] <= 7 else "🟡" if row['rpe'] <= 8 else "🔴"
+                        st.markdown(f"**Set {row['set_number']}:** {row['reps']} reps @ {row['weight']}kg {rpe_color}RPE:{row['rpe']}{notes_text}")
                 else:
-                    st.write("**📚 First time doing this exercise!**")
+                    st.markdown("**🆕 First time unleashing the beast on this exercise!**")
                 
                 if exercise_notes:
-                    st.markdown(f'<div class="notes-section"><strong>💡 Exercise Notes:</strong> {exercise_notes}</div>', unsafe_allow_html=True)
+                    st.markdown(f'<div class="notes-section"><strong>💡 Beast Mode Tips:</strong> {exercise_notes}</div>', unsafe_allow_html=True)
                 
-                # Enhanced logging form
-                st.write("**🎯 Log Today's Sets:**")
+                # Enhanced mobile logging form
+                st.markdown("**🎯 Log Your Beast Set:**")
                 
                 with st.form(f"log_{exercise_name.replace(' ', '_')}_{i}"):
-                    col_reps, col_weight, col_rpe = st.columns(3)
+                    # Enhanced input layout
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        reps = st.number_input("🎯 Reps", min_value=1, max_value=50, value=target_reps, key=f"reps_{i}")
+                    with col2:
+                        weight = st.number_input("⚖️ Weight (kg)", min_value=0.0, value=0.0, step=0.625, key=f"weight_{i}")
                     
-                    with col_reps:
-                        reps = st.number_input("Reps", min_value=1, max_value=50, value=target_reps, key=f"reps_{i}")
-                    with col_weight:
-                        weight = st.number_input("Weight (kg)", min_value=0.0, value=0.0, step=0.625, key=f"weight_{i}")
-                    with col_rpe:
-                        rpe = st.selectbox("RPE", options=[6, 7, 8, 9, 10], index=2, key=f"rpe_{i}")
+                    rpe = st.select_slider("💥 RPE (Rate of Perceived Exertion)", options=[6, 7, 8, 9, 10], value=8, key=f"rpe_{i}")
+                    set_notes = st.text_input("📝 Beast Notes", placeholder="Form, fatigue, equipment, how it felt...", key=f"set_notes_{i}")
                     
-                    set_notes = st.text_input("Set Notes", placeholder="e.g., felt heavy, good form, dropped weight...", key=f"set_notes_{i}")
-                    
-                    if st.form_submit_button(f"✅ Log Set for {exercise_name}", use_container_width=True):
+                    if st.form_submit_button(f"🚀 LOG BEAST SET", use_container_width=True, type="primary"):
                         result = st.session_state.tracker.log_workout(
                             date_str, 
                             exercise_name, 
                             [{'reps': reps, 'weight': weight, 'rpe': rpe, 'set_notes': set_notes}], 
                             ""
                         )
-                        st.success(result)
+                        show_enhanced_success_animation()
                         st.rerun()
     
     else:
-        st.info("📋 No workout program set for this date. Create one in the 'Program Creator' tab or use 'Quick Log' for freestyle training!")
+        st.info("📋 No program set for today. Use 'Quick Log' for freestyle beast mode training or create a program in the Programs tab!")
     
-    # Visual progress summary
-    st.subheader("📊 Session Statistics")
+    # Enhanced session statistics
+    st.subheader("📊 Today's Beast Mode Statistics")
     
     df = st.session_state.tracker.get_data()
     if not df.empty:
@@ -965,147 +1273,220 @@ def todays_workout_page():
             col1, col2, col3, col4 = st.columns(4)
             
             with col1:
-                st.markdown('<div class="stats-card">✅ <strong>Exercises</strong><br>' + 
+                st.markdown('<div class="stats-card">💪 <strong>Exercises</strong><br>' + 
                            str(len(today_data['exercise'].unique())) + '</div>', unsafe_allow_html=True)
+            
             with col2:
                 st.markdown('<div class="stats-card">🎯 <strong>Sets</strong><br>' + 
                            str(len(today_data)) + '</div>', unsafe_allow_html=True)
+            
             with col3:
-                st.markdown('<div class="stats-card">💪 <strong>Total Reps</strong><br>' + 
-                           str(today_data['reps'].sum()) + '</div>', unsafe_allow_html=True)
-            with col4:
                 volume = (today_data['reps'] * today_data['weight']).sum()
                 st.markdown('<div class="stats-card">🏋️ <strong>Volume</strong><br>' + 
                            f'{volume:,.0f} kg</div>', unsafe_allow_html=True)
+            
+            with col4:
+                st.markdown('<div class="stats-card">🔥 <strong>Total Reps</strong><br>' + 
+                           str(today_data['reps'].sum()) + '</div>', unsafe_allow_html=True)
+            
+            # Beast Mode Progress Indicator
+            avg_rpe = today_data['rpe'].mean() if today_data['rpe'].notna().any() else 0
+            if avg_rpe > 0:
+                st.subheader("🔥 Beast Mode Intensity")
+                if avg_rpe <= 7:
+                    st.success(f"🟢 Moderate Beast Mode - Average RPE: {avg_rpe:.1f}")
+                elif avg_rpe <= 8.5:
+                    st.warning(f"🟡 High Beast Mode - Average RPE: {avg_rpe:.1f}")
+                else:
+                    st.error(f"🔴 MAXIMUM BEAST MODE - Average RPE: {avg_rpe:.1f}")
 
 def enhanced_quick_log_page():
-    """NEW: Enhanced quick log with full day view and delete functionality"""
-    st.header("📱 Quick Log & Full Day View")
+    """Enhanced mobile-optimized quick log with one-tap logging"""
+    st.header("⚡ Lightning Beast Mode Quick Log")
     
-    # Date selection
-    col1, col2 = st.columns([1, 2])
+    # Date selection with enhanced styling
+    log_date = st.date_input(
+        "📅 Select Beast Mode Date", 
+        value=date.today(),
+        help="Choose the date for this workout"
+    )
     
-    with col1:
-        log_date = st.date_input(
-            "📅 Select Date", 
-            value=date.today(),
-            help="Choose the date for this workout"
-        )
-    
-    with col2:
-        if log_date == date.today():
-            st.markdown('<div class="date-header">🔥 <strong>TODAY\'S TRAINING</strong><br>' + 
-                       log_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
-        else:
-            st.markdown('<div class="date-header">📅 <strong>WORKOUT REVIEW</strong><br>' + 
-                       log_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
+    if log_date == date.today():
+        st.markdown('<div class="date-header">🔥 <strong>TODAY\'S LIGHTNING BEAST MODE</strong><br>' + 
+                   log_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="date-header">📅 <strong>BEAST MODE REVIEW</strong><br>' + 
+                   log_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
     
     date_str = log_date.strftime('%Y-%m-%d')
     all_exercises = st.session_state.tracker.get_all_exercises()
     
-    # Two columns: Quick Log and Day View
-    log_col, view_col = st.columns([1, 1])
+    # One-Tap Quick Log Section
+    st.subheader("🚀 One-Tap Beast Mode Logger")
     
-    with log_col:
-        st.subheader("🎯 Quick Log Set")
-        
-        with st.form("enhanced_quick_log", clear_on_submit=True):
-            # NEW: Use smart defaults from last logged exercise
-            exercise_index = 0
-            if st.session_state.last_exercise in all_exercises:
-                exercise_index = all_exercises.index(st.session_state.last_exercise)
-            
-            exercise = st.selectbox("Exercise", all_exercises, index=exercise_index)
-            
-            col_reps, col_weight = st.columns(2)
-            with col_reps:
-                reps = st.number_input("Reps", min_value=1, max_value=50, value=st.session_state.last_reps)
-            with col_weight:
-                weight = st.number_input("Weight (kg)", min_value=0.0, value=st.session_state.last_weight, step=0.625)
-            
-            rpe = st.select_slider("RPE", options=[6, 7, 8, 9, 10], value=st.session_state.last_rpe)
-            set_notes = st.text_area("Set Notes", placeholder="Form notes, fatigue level...")
-            
-            if st.form_submit_button("🚀 LOG SET", use_container_width=True):
-                st.session_state.tracker.quick_log(exercise, reps, weight, rpe, set_notes, "", date_str)
-                
-                # NEW: Update smart defaults for next log
+    # Quick access buttons for common exercises
+    st.markdown("**⚡ Quick Beast Buttons:**")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    common_exercises = ['Bench Press', 'Squat', 'Deadlift', 'Hack Squat', 'Leg Press', 'Machine Shoulder Press']
+    
+    for i, exercise in enumerate(common_exercises[:3]):
+        with col1 if i == 0 else col2 if i == 1 else col3:
+            if st.button(f"💪 {exercise}", key=f"quick_{exercise}", use_container_width=True):
                 st.session_state.last_exercise = exercise
-                st.session_state.last_reps = reps
-                st.session_state.last_weight = weight
-                st.session_state.last_rpe = rpe
-                
-                st.success(f"✅ **{exercise}**: {reps} reps @ {weight}kg (RPE {rpe})")
                 st.rerun()
     
-    with view_col:
-        st.subheader("📋 Full Day's Workout")
+    for i, exercise in enumerate(common_exercises[3:], 3):
+        with col1 if i == 3 else col2 if i == 4 else col3:
+            if st.button(f"💪 {exercise}", key=f"quick_{exercise}", use_container_width=True):
+                st.session_state.last_exercise = exercise
+                st.rerun()
+    
+    # Enhanced Quick Log Form
+    with st.form("lightning_beast_log", clear_on_submit=True):
+        # Smart defaults with last exercise highlighted
+        exercise_index = 0
+        if st.session_state.last_exercise in all_exercises:
+            exercise_index = all_exercises.index(st.session_state.last_exercise)
         
-        # NEW: Get and display full day's workout
-        daily_workout = st.session_state.tracker.get_daily_workout(date_str)
+        exercise = st.selectbox("💪 Exercise", all_exercises, index=exercise_index)
         
-        if not daily_workout.empty:
-            # Group by exercise
-            exercises_done = daily_workout['exercise'].unique()
+        # Show last performance for selected exercise
+        if exercise:
+            last_workout = get_last_workout_for_exercise(exercise)
+            if last_workout is not None:
+                last_set = last_workout.iloc[-1]  # Get last set
+                st.info(f"🔥 Last Beast Performance: {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
+        
+        # Enhanced input layout
+        col1, col2 = st.columns(2)
+        with col1:
+            reps = st.number_input("🎯 Reps", min_value=1, max_value=50, value=st.session_state.last_reps)
+        with col2:
+            weight = st.number_input("⚖️ Weight (kg)", min_value=0.0, value=st.session_state.last_weight, step=0.625)
+        
+        rpe = st.select_slider("💥 Beast RPE", options=[6, 7, 8, 9, 10], value=st.session_state.last_rpe)
+        set_notes = st.text_input("📝 Beast Notes", placeholder="How did that feel? Form notes, equipment, etc...")
+        
+        if st.form_submit_button("🚀 LOG BEAST SET NOW!", use_container_width=True, type="primary"):
+            st.session_state.tracker.quick_log(exercise, reps, weight, rpe, set_notes, "", date_str)
             
-            for exercise in exercises_done:
-                exercise_sets = daily_workout[daily_workout['exercise'] == exercise]
-                
-                st.markdown(f'<div class="workout-card">', unsafe_allow_html=True)
-                st.write(f"**🏋️ {exercise}** ({len(exercise_sets)} sets)")
-                
-                for _, set_row in exercise_sets.iterrows():
-                    col1, col2 = st.columns([4, 1])
-                    
-                    with col1:
-                        notes_display = f" - *{set_row['set_notes']}*" if set_row['set_notes'] else ""
-                        st.markdown(f'<div class="set-item">Set {set_row["set_number"]}: {set_row["reps"]} reps @ {set_row["weight"]}kg (RPE: {set_row["rpe"]}){notes_display}</div>', 
-                                   unsafe_allow_html=True)
-                    
-                    with col2:
-                        # NEW: Delete button for each set
-                        if st.button("🗑️", key=f"delete_{set_row['id']}", help="Delete this set"):
-                            if st.session_state.get('confirm_delete_set') == set_row['id']:
-                                result = st.session_state.tracker.delete_set(set_row['id'])
-                                st.success(result)
-                                st.session_state.pop('confirm_delete_set', None)
-                                st.rerun()
-                            else:
-                                st.session_state.confirm_delete_set = set_row['id']
-                                st.warning("⚠️ Click again to confirm deletion")
-                
-                st.markdown('</div>', unsafe_allow_html=True)
+            # Update smart defaults
+            st.session_state.last_exercise = exercise
+            st.session_state.last_reps = reps
+            st.session_state.last_weight = weight
+            st.session_state.last_rpe = rpe
             
-            # Daily summary
-            total_sets = len(daily_workout)
-            total_reps = daily_workout['reps'].sum()
-            total_volume = (daily_workout['reps'] * daily_workout['weight']).sum()
+            show_enhanced_success_animation()
+            st.rerun()
+    
+    # Enhanced Full Day View Section
+    st.subheader("📋 Today's Complete Beast Mode Session")
+    
+    daily_workout = st.session_state.tracker.get_daily_workout(date_str)
+    
+    if not daily_workout.empty:
+        # Group by exercise with enhanced styling
+        exercises_done = daily_workout['exercise'].unique()
+        
+        for exercise in exercises_done:
+            exercise_sets = daily_workout[daily_workout['exercise'] == exercise]
             
-            st.markdown(f"""
-            **📊 Daily Summary:**
-            - **Exercises:** {len(exercises_done)}
-            - **Total Sets:** {total_sets}
-            - **Total Reps:** {total_reps}
-            - **Total Volume:** {total_volume:,.0f} kg
-            """)
-        else:
-            st.info("💡 No exercises logged for this date yet. Start logging sets above!")
+            # Calculate exercise stats
+            total_volume = (exercise_sets['reps'] * exercise_sets['weight']).sum()
+            max_weight = exercise_sets['weight'].max()
+            avg_rpe = exercise_sets['rpe'].mean()
+            
+            st.markdown(f'<div class="workout-card">', unsafe_allow_html=True)
+            st.markdown(f"**🏋️ {exercise}** ({len(exercise_sets)} sets)")
+            st.markdown(f"**📊 Stats:** {total_volume:.0f}kg volume • {max_weight}kg max • {avg_rpe:.1f} avg RPE")
+            
+            for _, set_row in exercise_sets.iterrows():
+                col1, col2 = st.columns([4, 1])
+                
+                with col1:
+                    notes_display = f" - *{set_row['set_notes']}*" if set_row['set_notes'] else ""
+                    rpe_emoji = "🟢" if set_row['rpe'] <= 7 else "🟡" if set_row['rpe'] <= 8 else "🔴"
+                    st.markdown(f'<div class="set-item">**Set {set_row["set_number"]}:** {set_row["reps"]} reps @ {set_row["weight"]}kg {rpe_emoji}RPE:{set_row["rpe"]}{notes_display}</div>', 
+                               unsafe_allow_html=True)
+                
+                with col2:
+                    if st.button("🗑️", key=f"delete_{set_row['id']}", help="Delete this beast set"):
+                        if st.session_state.get('confirm_delete_set') == set_row['id']:
+                            result = st.session_state.tracker.delete_set(set_row['id'])
+                            st.success(result)
+                            st.session_state.pop('confirm_delete_set', None)
+                            st.rerun()
+                        else:
+                            st.session_state.confirm_delete_set = set_row['id']
+                            st.warning("⚠️ Tap again to confirm deletion")
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Enhanced daily summary with streak tracking
+        total_sets = len(daily_workout)
+        total_reps = daily_workout['reps'].sum()
+        total_volume = (daily_workout['reps'] * daily_workout['weight']).sum()
+        avg_rpe = daily_workout['rpe'].mean() if daily_workout['rpe'].notna().any() else 0
+        
+        st.subheader("📊 Daily Beast Mode Summary")
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.markdown('<div class="stats-card">💪 <strong>Exercises</strong><br>' + 
+                       str(len(exercises_done)) + '</div>', unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown('<div class="stats-card">🎯 <strong>Sets</strong><br>' + 
+                       str(total_sets) + '</div>', unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown('<div class="stats-card">🏋️ <strong>Volume</strong><br>' + 
+                       f'{total_volume:,.0f} kg</div>', unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown('<div class="stats-card">🔥 <strong>Reps</strong><br>' + 
+                       str(total_reps) + '</div>', unsafe_allow_html=True)
+        
+        # Beast Mode Intensity Indicator
+        if avg_rpe > 0:
+            st.subheader("🔥 Beast Mode Intensity Analysis")
+            intensity_col1, intensity_col2 = st.columns(2)
+            
+            with intensity_col1:
+                if avg_rpe <= 7:
+                    st.success(f"🟢 Moderate Beast Mode - {avg_rpe:.1f} avg RPE")
+                elif avg_rpe <= 8.5:
+                    st.warning(f"🟡 High Beast Mode - {avg_rpe:.1f} avg RPE")
+                else:
+                    st.error(f"🔴 MAXIMUM BEAST MODE - {avg_rpe:.1f} avg RPE")
+            
+            with intensity_col2:
+                # RPE distribution
+                rpe_counts = daily_workout['rpe'].value_counts().sort_index()
+                for rpe_val, count in rpe_counts.items():
+                    emoji = "🟢" if rpe_val <= 7 else "🟡" if rpe_val <= 8 else "🔴"
+                    st.write(f"{emoji} RPE {rpe_val}: {count} sets")
+    
+    else:
+        st.info("💡 No beast mode exercises logged yet today. Time to unleash the beast! 🔥")
 
 def visual_progress_page():
-    """Enhanced visual progress with advanced charts and body part tracking"""
-    st.header("📊 Visual Progress & Analytics")
+    """Enhanced visual progress with mobile-optimized charts and beast mode analytics"""
+    st.header("📈 Beast Mode Progress & Analytics")
     
     df = st.session_state.tracker.get_data()
     
     if df.empty:
-        st.warning("No workout data yet. Start logging workouts to see beautiful progress visuals!")
+        st.warning("No workout data yet. Start logging to see amazing beast mode progress visuals! 🚀")
         return
     
-    # Two main sections: Exercise Analysis and Body Part Tracking
-    analysis_tab, body_part_tab = st.tabs(["🏋️ Exercise Analysis", "💪 Body Part Tracking"])
+    # Enhanced main sections
+    analysis_tab, body_part_tab, streak_tab = st.tabs(["🏋️ Exercise Beast Stats", "💪 Body Analysis", "🔥 Beast Streaks"])
     
     with analysis_tab:
-        # Exercise selection
+        # Exercise selection with recent activity
         all_exercises = st.session_state.tracker.get_all_exercises()
         available_exercises = [ex for ex in all_exercises if ex in df['exercise'].unique()]
         
@@ -1113,7 +1494,15 @@ def visual_progress_page():
             st.warning("No exercises with logged data yet.")
             return
         
-        selected_exercise = st.selectbox("🏋️ Select Exercise for Analysis", available_exercises)
+        # Sort by recent activity
+        exercise_last_used = {}
+        for ex in available_exercises:
+            last_date = df[df['exercise'] == ex]['date'].max()
+            exercise_last_used[ex] = last_date
+        
+        available_exercises.sort(key=lambda x: exercise_last_used[x], reverse=True)
+        
+        selected_exercise = st.selectbox("🏋️ Choose Exercise", available_exercises)
         
         # Get comprehensive stats
         stats = st.session_state.tracker.get_exercise_stats(selected_exercise)
@@ -1121,154 +1510,153 @@ def visual_progress_page():
         if not stats:
             return
         
-        # Visual statistics cards
-        st.subheader(f"📈 {selected_exercise} - Complete Analysis")
+        # Enhanced statistics cards
+        st.subheader(f"📊 {selected_exercise} - Beast Mode Statistics")
         
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
             st.markdown(f'<div class="stats-card">🏆 <strong>Max Weight</strong><br>{stats["max_weight"]} kg</div>', unsafe_allow_html=True)
+        
         with col2:
-            st.markdown(f'<div class="stats-card">📦 <strong>Total Volume</strong><br>{stats["total_volume"]:,.0f} kg</div>', unsafe_allow_html=True)
-        with col3:
             st.markdown(f'<div class="stats-card">🎯 <strong>Total Sets</strong><br>{stats["total_sets"]}</div>', unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown(f'<div class="stats-card">📦 <strong>Total Volume</strong><br>{stats["total_volume"]:,.0f} kg</div>', unsafe_allow_html=True)
+        
         with col4:
-            st.markdown(f'<div class="stats-card">💪 <strong>Avg RPE</strong><br>{stats["avg_rpe"]:.1f}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="stats-card">💥 <strong>Avg RPE</strong><br>{stats["avg_rpe"]:.1f}</div>', unsafe_allow_html=True)
         
-        # Multiple chart views
-        chart_col1, chart_col2 = st.columns(2)
+        # Enhanced chart views
+        st.subheader("📈 Beast Mode Weight Progression")
         
-        with chart_col1:
-            st.subheader("📈 Weight Progress")
-            
-            daily_stats = stats['daily_stats']
-            
-            fig1 = go.Figure()
+        daily_stats = stats['daily_stats']
+        
+        # Weight progression chart
+        fig1 = go.Figure()
+        fig1.add_trace(go.Scatter(
+            x=daily_stats['date'], 
+            y=daily_stats['max_weight'],
+            mode='lines+markers',
+            name='Max Weight',
+            line=dict(color='#FF6B35', width=4),
+            marker=dict(size=12, color='#F7931E')
+        ))
+        
+        # Add trend line
+        if len(daily_stats) > 1:
+            z = np.polyfit(range(len(daily_stats)), daily_stats['max_weight'], 1)
+            p = np.poly1d(z)
             fig1.add_trace(go.Scatter(
-                x=daily_stats['date'], 
-                y=daily_stats['max_weight'],
-                mode='lines+markers',
-                name='Max Weight',
-                line=dict(color='#FF6B6B', width=3),
-                marker=dict(size=8)
-            ))
-            fig1.add_trace(go.Scatter(
-                x=daily_stats['date'], 
-                y=daily_stats['avg_weight'],
-                mode='lines+markers',
-                name='Avg Weight',
-                line=dict(color='#4ECDC4', width=2),
-                marker=dict(size=6)
-            ))
-            # NEW: Fixed date formatting
-            fig1.update_layout(
-                title=f'{selected_exercise} - Weight Progression',
-                xaxis_title='Date',
-                yaxis_title='Weight (kg)',
-                height=400,
-                showlegend=True,
-                xaxis=dict(
-                    tickformat='%Y-%m-%d',
-                    tickmode='auto'
-                )
-            )
-            st.plotly_chart(fig1, use_container_width=True)
-        
-        with chart_col2:
-            st.subheader("📊 Volume Progress")
-            
-            fig2 = go.Figure()
-            fig2.add_trace(go.Bar(
                 x=daily_stats['date'],
-                y=daily_stats['volume'],
-                name='Daily Volume',
-                marker_color='#667eea'
+                y=p(range(len(daily_stats))),
+                mode='lines',
+                name='Beast Trend',
+                line=dict(color='#00D2FF', width=3, dash='dash')
             ))
-            # NEW: Fixed date formatting
-            fig2.update_layout(
-                title=f'{selected_exercise} - Training Volume',
-                xaxis_title='Date',
-                yaxis_title='Volume (kg)',
-                height=400,
-                xaxis=dict(
-                    tickformat='%Y-%m-%d',
-                    tickmode='auto'
-                )
-            )
-            st.plotly_chart(fig2, use_container_width=True)
         
-        # Advanced analytics
-        st.subheader("🔬 Advanced Analytics")
+        fig1.update_layout(
+            title=f'{selected_exercise} - Beast Mode Weight Progression',
+            xaxis_title='Date',
+            yaxis_title='Weight (kg)',
+            height=500,
+            paper_bgcolor='rgba(15,15,35,0.9)',
+            plot_bgcolor='rgba(26,26,46,0.9)',
+            font=dict(color='white', size=14),
+            xaxis=dict(
+                tickformat='%Y-%m-%d',
+                tickmode='auto',
+                gridcolor='#4A5568'
+            ),
+            yaxis=dict(gridcolor='#4A5568')
+        )
+        st.plotly_chart(fig1, use_container_width=True)
         
-        col1, col2 = st.columns(2)
+        # Volume progression chart
+        st.subheader("📊 Beast Mode Volume Progression")
         
-        with col1:
-            st.write("**📈 Performance Trends:**")
+        fig2 = go.Figure()
+        fig2.add_trace(go.Bar(
+            x=daily_stats['date'],
+            y=daily_stats['volume'],
+            name='Daily Volume',
+            marker_color='#00D2FF',
+            text=daily_stats['volume'].round(0),
+            textposition='auto'
+        ))
+        fig2.update_layout(
+            title=f'{selected_exercise} - Beast Mode Training Volume',
+            xaxis_title='Date',
+            yaxis_title='Volume (kg)',
+            height=500,
+            paper_bgcolor='rgba(15,15,35,0.9)',
+            plot_bgcolor='rgba(26,26,46,0.9)',
+            font=dict(color='white', size=14),
+            xaxis=dict(
+                tickformat='%Y-%m-%d',
+                tickmode='auto',
+                gridcolor='#4A5568'
+            ),
+            yaxis=dict(gridcolor='#4A5568')
+        )
+        st.plotly_chart(fig2, use_container_width=True)
+        
+        # Enhanced performance analysis
+        st.subheader("🔥 Beast Mode Performance Analysis")
+        
+        if len(daily_stats) > 1:
+            # Calculate trends
+            weight_trend = daily_stats['max_weight'].pct_change().mean() * 100
+            volume_trend = daily_stats['volume'].pct_change().mean() * 100
             
-            # Calculate trend
-            if len(daily_stats) > 1:
-                weight_trend = daily_stats['max_weight'].pct_change().mean() * 100
-                volume_trend = daily_stats['volume'].pct_change().mean() * 100
-                
+            col1, col2 = st.columns(2)
+            
+            with col1:
                 if weight_trend > 0:
-                    st.success(f"🔥 Weight trending UP: +{weight_trend:.1f}% per workout")
+                    st.success(f"🚀 Weight BEAST GAINS: +{weight_trend:.1f}% trend")
+                elif weight_trend < -2:
+                    st.error(f"📉 Weight declining: {weight_trend:.1f}%")
                 else:
-                    st.warning(f"📉 Weight trending down: {weight_trend:.1f}% per workout")
-                
+                    st.warning(f"📊 Weight stable: {weight_trend:.1f}%")
+            
+            with col2:
                 if volume_trend > 0:
-                    st.success(f"💪 Volume trending UP: +{volume_trend:.1f}% per workout")
+                    st.success(f"💪 Volume BEAST GAINS: +{volume_trend:.1f}% trend")
+                elif volume_trend < -2:
+                    st.error(f"📉 Volume declining: {volume_trend:.1f}%")
                 else:
-                    st.warning(f"📉 Volume trending down: {volume_trend:.1f}% per workout")
-        
-        with col2:
-            st.write("**🎯 Workout Consistency:**")
+                    st.warning(f"📊 Volume stable: {volume_trend:.1f}%")
             
-            # Calculate workout frequency
-            date_range = (daily_stats['date'].max() - daily_stats['date'].min()).days
-            if date_range > 0:
-                frequency = len(daily_stats) / (date_range / 7)  # workouts per week
-                st.metric("📅 Frequency", f"{frequency:.1f} workouts/week")
-            
-            # Best performance
+            # Beast records
             best_day = daily_stats.loc[daily_stats['max_weight'].idxmax()]
-            st.write(f"**🏆 Best Performance:** {best_day['max_weight']} kg on {best_day['date'].strftime('%Y-%m-%d')}")
-        
-        # Detailed workout log with notes
-        st.subheader("📋 Detailed Workout History")
-        
-        exercise_data = df[df['exercise'] == selected_exercise].sort_values('date', ascending=False)
-        
-        # Enhanced table display
-        display_data = exercise_data.copy()
-        display_data['date'] = display_data['date'].dt.strftime('%Y-%m-%d')
-        
-        # Color code by performance
-        def highlight_performance(row):
-            if row['weight'] == stats['max_weight']:
-                return ['background-color: #ffeb3b'] * len(row)  # Highlight PR
-            return [''] * len(row)
-        
-        styled_df = display_data[['date', 'set_number', 'reps', 'weight', 'rpe', 'set_notes']].head(20).style.apply(highlight_performance, axis=1)
-        
-        st.dataframe(styled_df, use_container_width=True)
-    
-    # NEW: Body Part Tracking Tab
-    with body_part_tab:
-        st.subheader("💪 Weekly Body Part Training Analysis")
-        
-        # Week selection
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Default to current week
-            today = date.today()
-            start_of_week = today - timedelta(days=today.weekday())
+            best_volume_day = daily_stats.loc[daily_stats['volume'].idxmax()]
             
-            week_start = st.date_input("📅 Week Start (Monday)", value=start_of_week)
+            st.markdown("**🏆 Beast Mode Records:**")
+            st.write(f"**Weight PR:** {best_day['max_weight']} kg on {best_day['date'].strftime('%Y-%m-%d')}")
+            st.write(f"**Volume PR:** {best_volume_day['volume']:.0f} kg on {best_volume_day['date'].strftime('%Y-%m-%d')}")
+            
+            # Recent vs. older performance
+            recent_avg = daily_stats.tail(3)['max_weight'].mean()
+            older_avg = daily_stats.head(3)['max_weight'].mean()
+            improvement = ((recent_avg - older_avg) / older_avg) * 100 if older_avg > 0 else 0
+            
+            if improvement > 5:
+                st.success(f"🔥 BEAST MODE ACTIVATED: {improvement:.1f}% stronger than when you started!")
+            elif improvement > 0:
+                st.info(f"📈 Making gains: {improvement:.1f}% improvement")
+            else:
+                st.warning(f"💪 Keep pushing: {improvement:.1f}% change")
+    
+    # Body Part Analysis Tab
+    with body_part_tab:
+        st.subheader("💪 Weekly Beast Mode Body Analysis")
         
-        with col2:
-            week_end = week_start + timedelta(days=6)
-            st.write(f"**Week End (Sunday):** {week_end.strftime('%Y-%m-%d')}")
+        # Week selection with enhanced UI
+        today = date.today()
+        start_of_week = today - timedelta(days=today.weekday())
+        
+        week_start = st.date_input("📅 Week Start (Monday)", value=start_of_week)
+        week_end = week_start + timedelta(days=6)
         
         # Get weekly body part data
         weekly_stats = st.session_state.tracker.get_weekly_body_part_volume(
@@ -1277,119 +1665,231 @@ def visual_progress_page():
         )
         
         if not weekly_stats.empty:
-            st.subheader(f"📊 Body Part Volume - Week of {week_start.strftime('%B %d, %Y')}")
+            st.subheader(f"📊 Beast Week: {week_start.strftime('%B %d')} - {week_end.strftime('%B %d, %Y')}")
             
-            # Visual body part comparison
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                # Sets per body part
-                fig_sets = go.Figure(data=[
-                    go.Bar(
-                        x=weekly_stats.index,
-                        y=weekly_stats['total_sets'],
-                        marker_color='#FF6B6B'
-                    )
-                ])
-                fig_sets.update_layout(
-                    title='Sets per Body Part',
-                    xaxis_title='Body Part',
-                    yaxis_title='Total Sets',
-                    height=400
+            # Enhanced body part chart
+            fig_sets = go.Figure(data=[
+                go.Bar(
+                    x=weekly_stats.index,
+                    y=weekly_stats['total_sets'],
+                    marker_color=['#FF6B35', '#F7931E', '#00D2FF', '#667eea', '#764ba2', '#ff9a9e', '#fecfef'],
+                    text=weekly_stats['total_sets'],
+                    textposition='auto',
+                    hovertemplate='<b>%{x}</b><br>Sets: %{y}<br>Volume: %{customdata:.0f} kg<extra></extra>',
+                    customdata=weekly_stats['total_volume']
                 )
-                st.plotly_chart(fig_sets, use_container_width=True)
+            ])
+            fig_sets.update_layout(
+                title='Beast Mode Sets per Body Part',
+                xaxis_title='Body Part',
+                yaxis_title='Total Sets',
+                height=500,
+                paper_bgcolor='rgba(15,15,35,0.9)',
+                plot_bgcolor='rgba(26,26,46,0.9)',
+                font=dict(color='white', size=14),
+                xaxis=dict(gridcolor='#4A5568'),
+                yaxis=dict(gridcolor='#4A5568')
+            )
+            st.plotly_chart(fig_sets, use_container_width=True)
             
-            with col2:
-                # Volume per body part
-                fig_volume = go.Figure(data=[
-                    go.Bar(
-                        x=weekly_stats.index,
-                        y=weekly_stats['total_volume'],
-                        marker_color='#4ECDC4'
-                    )
-                ])
-                fig_volume.update_layout(
-                    title='Training Volume per Body Part',
-                    xaxis_title='Body Part',
-                    yaxis_title='Total Volume (kg)',
-                    height=400
-                )
-                st.plotly_chart(fig_volume, use_container_width=True)
+            # Enhanced breakdown with beast mode recommendations
+            st.subheader("📋 Beast Mode Body Part Breakdown")
             
-            # Detailed breakdown
-            st.subheader("📋 Detailed Body Part Breakdown")
-            
-            # Create columns for stats display
             body_parts = weekly_stats.index.tolist()
             
-            for i, body_part in enumerate(body_parts):
+            for body_part in body_parts:
                 row_data = weekly_stats.loc[body_part]
-                
-                # Color coding for balance
                 sets = int(row_data['total_sets'])
-                if sets >= 12:
-                    status = "🟢 Well Trained"
-                    color = "#d4edda"
+                
+                # Enhanced color coding and recommendations
+                if sets >= 15:
+                    status = "🔥 BEAST MODE MAX"
+                    color = "#FF4757"
+                    recommendation = "Consider deload or maintenance"
+                elif sets >= 10:
+                    status = "💪 BEAST MODE ACTIVE"
+                    color = "#FF6B35"
+                    recommendation = "Perfect beast zone!"
                 elif sets >= 6:
-                    status = "🟡 Moderate"
-                    color = "#fff3cd"
+                    status = "🟡 Good Work"
+                    color = "#F7931E"
+                    recommendation = "Add 2-3 more sets"
                 else:
-                    status = "🔴 Under Trained"
-                    color = "#f8d7da"
+                    status = "🔴 Need Beast Mode"
+                    color = "#E53E3E"
+                    recommendation = "Needs more attention!"
                 
                 st.markdown(f"""
-                <div style="background-color: {color}; padding: 1rem; border-radius: 10px; margin: 0.5rem 0;">
-                    <strong>💪 {body_part}</strong> - {status}<br>
-                    📊 <strong>Sets:</strong> {sets} | 
-                    🎯 <strong>Reps:</strong> {int(row_data['total_reps'])} | 
-                    🏋️ <strong>Volume:</strong> {row_data['total_volume']:,.0f} kg
+                <div style="background: linear-gradient(135deg, {color}22 0%, {color}44 100%); 
+                           padding: 2rem; border-radius: 20px; margin: 1.5rem 0;
+                           border-left: 8px solid {color}; color: white;
+                           box-shadow: 0 8px 25px rgba(0,0,0,0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.4rem;">💪 {body_part}</h3>
+                            <p style="margin: 0.5rem 0; font-size: 1.1rem;">{status}</p>
+                            <p style="margin: 0; font-size: 1rem; opacity: 0.9;">💡 {recommendation}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 2rem; font-weight: bold;">{sets}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">sets</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 2rem; font-size: 0.95rem;">
+                        <span>🎯 <strong>{int(row_data['total_reps'])} reps</strong></span>
+                        <span>🏋️ <strong>{row_data['total_volume']:,.0f} kg volume</strong></span>
+                    </div>
                 </div>
                 """, unsafe_allow_html=True)
             
-            # Training balance recommendations
-            st.subheader("💡 Training Balance Recommendations")
+            # Beast Mode Balance Score
+            st.subheader("⚖️ Beast Mode Balance Score")
             
-            under_trained = weekly_stats[weekly_stats['total_sets'] < 6].index.tolist()
-            over_trained = weekly_stats[weekly_stats['total_sets'] > 20].index.tolist()
+            # Calculate balance based on sets distribution
+            set_values = weekly_stats['total_sets'].values
+            coefficient_of_variation = np.std(set_values) / np.mean(set_values) if np.mean(set_values) > 0 else 1
+            balance_score = max(0, 100 - (coefficient_of_variation * 100))
             
-            if under_trained:
-                st.warning(f"🔴 **Under-trained body parts:** {', '.join(under_trained)}")
-                st.write("💡 Consider adding more exercises for these muscle groups")
-            
-            if over_trained:
-                st.warning(f"🟠 **Potentially over-trained:** {', '.join(over_trained)}")
-                st.write("💡 Consider reducing volume or ensuring adequate recovery")
-            
-            if not under_trained and not over_trained:
-                st.success("🎉 **Great balance!** Your training seems well distributed across body parts")
+            if balance_score >= 80:
+                st.success(f"🏆 PERFECT BEAST BALANCE: {balance_score:.0f}/100")
+            elif balance_score >= 60:
+                st.warning(f"🟡 Good Balance: {balance_score:.0f}/100")
+            else:
+                st.error(f"🔴 Needs Better Balance: {balance_score:.0f}/100")
         
         else:
-            st.info(f"📅 No workout data found for the week of {week_start.strftime('%B %d, %Y')}. Select a different week or start logging workouts!")
+            st.info(f"📅 No beast mode data for week of {week_start.strftime('%B %d')}. Start logging workouts!")
+    
+    # Beast Streaks Tab
+    with streak_tab:
+        st.subheader("🔥 Beast Mode Streaks & Consistency")
+        
+        if not df.empty:
+            # Calculate workout streaks
+            workout_dates = df['date'].dt.date.unique()
+            workout_dates.sort()
+            
+            # Current streak
+            current_streak = 0
+            today_date = date.today()
+            
+            for i in range(len(workout_dates) - 1, -1, -1):
+                days_diff = (today_date - workout_dates[i]).days
+                if days_diff <= 1:  # Today or yesterday
+                    current_streak += 1
+                    today_date = workout_dates[i]
+                else:
+                    break
+            
+            # Longest streak
+            longest_streak = 1
+            current_check = 1
+            
+            for i in range(1, len(workout_dates)):
+                if (workout_dates[i] - workout_dates[i-1]).days == 1:
+                    current_check += 1
+                    longest_streak = max(longest_streak, current_check)
+                else:
+                    current_check = 1
+            
+            # Display streaks
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                if current_streak >= 7:
+                    st.markdown('<div class="stats-card" style="background: linear-gradient(135deg, #FF4757 0%, #FF6B35 100%);">🔥 <strong>Current Streak</strong><br>' + 
+                               f'{current_streak} days<br>BEAST MODE!</div>', unsafe_allow_html=True)
+                elif current_streak >= 3:
+                    st.markdown('<div class="stats-card" style="background: linear-gradient(135deg, #F7931E 0%, #FF6B35 100%);">💪 <strong>Current Streak</strong><br>' + 
+                               f'{current_streak} days<br>Keep going!</div>', unsafe_allow_html=True)
+                else:
+                    st.markdown('<div class="stats-card">📅 <strong>Current Streak</strong><br>' + 
+                               f'{current_streak} days</div>', unsafe_allow_html=True)
+            
+            with col2:
+                st.markdown('<div class="stats-card">🏆 <strong>Longest Streak</strong><br>' + 
+                           f'{longest_streak} days</div>', unsafe_allow_html=True)
+            
+            with col3:
+                total_days = len(workout_dates)
+                st.markdown('<div class="stats-card">💯 <strong>Total Days</strong><br>' + 
+                           f'{total_days} sessions</div>', unsafe_allow_html=True)
+            
+            # Weekly consistency chart
+            st.subheader("📊 Weekly Beast Mode Consistency")
+            
+            # Calculate weekly workout frequency
+            df_copy = df.copy()
+            df_copy['week'] = df_copy['date'].dt.to_period('W')
+            weekly_workouts = df_copy.groupby('week')['date'].nunique().reset_index()
+            weekly_workouts['week_str'] = weekly_workouts['week'].astype(str)
+            
+            fig_consistency = go.Figure(data=[
+                go.Bar(
+                    x=weekly_workouts['week_str'],
+                    y=weekly_workouts['date'],
+                    marker_color=['#FF4757' if x >= 5 else '#FF6B35' if x >= 3 else '#F7931E' for x in weekly_workouts['date']],
+                    text=weekly_workouts['date'],
+                    textposition='auto'
+                )
+            ])
+            fig_consistency.update_layout(
+                title='Weekly Beast Mode Sessions',
+                xaxis_title='Week',
+                yaxis_title='Workout Days',
+                height=400,
+                paper_bgcolor='rgba(15,15,35,0.9)',
+                plot_bgcolor='rgba(26,26,46,0.9)',
+                font=dict(color='white', size=14),
+                xaxis=dict(gridcolor='#4A5568'),
+                yaxis=dict(gridcolor='#4A5568')
+            )
+            st.plotly_chart(fig_consistency, use_container_width=True)
+            
+            # Beast Mode Achievements
+            st.subheader("🏆 Beast Mode Achievements")
+            
+            achievements = []
+            
+            if current_streak >= 7:
+                achievements.append("🔥 Week Warrior - 7+ day streak!")
+            if longest_streak >= 14:
+                achievements.append("💪 Beast Mode Legend - 14+ day streak!")
+            if total_days >= 30:
+                achievements.append("🏆 Consistency Champion - 30+ sessions!")
+            if len(df) >= 100:
+                achievements.append("🎯 Set Slayer - 100+ sets logged!")
+            
+            total_volume = (df['reps'] * df['weight']).sum()
+            if total_volume >= 10000:
+                achievements.append(f"🏋️ Volume Beast - {total_volume:,.0f}kg total!")
+            
+            if achievements:
+                for achievement in achievements:
+                    st.success(achievement)
+            else:
+                st.info("💪 Keep training to unlock Beast Mode achievements!")
 
 def program_creator_page():
-    """Enhanced program creator with template management"""
-    st.header("📅 Workout Program Creator & Template Manager")
+    """Enhanced program creator with AI-like suggestions"""
+    st.header("📅 Beast Mode Program Creator")
     
-    # Template management tabs
-    template_tab, create_tab = st.tabs(["📚 Template Library", "🆕 Create Program"])
+    # Enhanced template management tabs
+    template_tab, create_tab, ai_tab = st.tabs(["📚 Templates", "🆕 Create", "🤖 AI Assist"])
     
     with template_tab:
-        st.subheader("📚 Your Template Library")
+        st.subheader("📚 Your Beast Mode Templates")
         
-        # Template filters
-        col1, col2, col3 = st.columns(3)
+        # Enhanced template filters
+        col1, col2 = st.columns(2)
         
         with col1:
             categories = ["All"] + st.session_state.tracker.get_template_categories()
-            selected_category = st.selectbox("Filter by Category", categories)
+            selected_category = st.selectbox("Category", categories)
         
         with col2:
-            creators = ["All", "Personal Trainer", "Exercise Physiologist", "Myself"]
-            selected_creator = st.selectbox("Filter by Creator", creators)
-        
-        with col3:
-            if st.button("🔄 Refresh Templates", use_container_width=True):
-                st.rerun()
+            creators = ["All", "Personal Trainer", "Exercise Physiologist", "Beast Mode AI", "Myself"]
+            selected_creator = st.selectbox("Creator", creators)
         
         # Get filtered templates
         filter_category = None if selected_category == "All" else selected_category
@@ -1398,42 +1898,55 @@ def program_creator_page():
         templates = st.session_state.tracker.get_templates(filter_category, filter_creator)
         
         if templates:
-            # Display templates in an organized way
             for template in templates:
-                with st.expander(f"📋 {template['name']} ({template['category']})", expanded=False):
+                with st.expander(f"📋 {template['name']} - {template['category']}", expanded=False):
                     
-                    col1, col2 = st.columns([3, 1])
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.write(f"**👨‍⚕️ Creator:** {template['created_by']}")
+                        st.write(f"**📅 Created:** {template['created_at'][:10]}")
+                    with col2:
+                        if template['last_used']:
+                            st.write(f"**🕒 Last Used:** {template['last_used'][:10]}")
+                        else:
+                            st.write("**🆕 Never Used**")
+                    
+                    if template['description']:
+                        st.markdown(f'<div class="notes-section">{template["description"]}</div>', unsafe_allow_html=True)
+                    
+                    # Show exercises with enhanced formatting
+                    st.write("**🏋️ Beast Mode Exercises:**")
+                    total_estimated_time = 0
+                    
+                    for i, ex in enumerate(template['exercises'], 1):
+                        rest_time = ex.get('rest', 90)
+                        sets = ex.get('sets', 3)
+                        estimated_time = (sets * 45) + ((sets - 1) * rest_time)  # 45 sec per set + rest
+                        total_estimated_time += estimated_time
+                        
+                        st.write(f"**{i}. {ex['exercise']}** - {ex['sets']}×{ex['reps']} (Rest: {rest_time}s)")
+                        if ex.get('notes'):
+                            st.write(f"   💡 *{ex['notes']}*")
+                    
+                    st.info(f"⏱️ Estimated workout time: {total_estimated_time // 60} minutes")
+                    
+                    # Enhanced template actions
+                    col1, col2, col3 = st.columns(3)
                     
                     with col1:
-                        st.write(f"**👨‍⚕️ Created by:** {template['created_by']}")
-                        st.write(f"**📅 Created:** {template['created_at'][:10]}")
-                        if template['last_used']:
-                            st.write(f"**🕐 Last Used:** {template['last_used'][:10]}")
-                        
-                        if template['description']:
-                            st.markdown(f'<div class="notes-section"><strong>📝 Description:</strong><br>{template["description"]}</div>', unsafe_allow_html=True)
-                        
-                        # Show exercises
-                        st.write("**🏋️ Exercises:**")
-                        for i, ex in enumerate(template['exercises'], 1):
-                            rest_text = f" (Rest: {ex.get('rest', 90)}s)" if ex.get('rest') else ""
-                            st.write(f"{i}. **{ex['exercise']}** - {ex['sets']} sets × {ex['reps']} reps{rest_text}")
-                            if ex.get('notes'):
-                                st.write(f"   💡 *{ex['notes']}*")
+                        if st.button(f"📅 Use Today", key=f"use_{template['id']}", use_container_width=True):
+                            st.session_state.program_exercises = template['exercises'].copy()
+                            st.success(f"✅ Loaded: {template['name']}")
+                            st.rerun()
                     
                     with col2:
-                        # Template actions
-                        if st.button(f"📅 Use Template", key=f"use_{template['id']}", use_container_width=True):
-                            st.session_state.program_exercises = template['exercises'].copy()
-                            st.success(f"✅ Loaded template: {template['name']}")
-                            st.rerun()
-                        
                         if st.button(f"📝 Edit", key=f"edit_{template['id']}", use_container_width=True):
                             st.session_state.program_exercises = template['exercises'].copy()
                             st.session_state.editing_template = template
-                            st.success(f"✅ Editing template: {template['name']}")
+                            st.success(f"✅ Editing: {template['name']}")
                             st.rerun()
-                        
+                    
+                    with col3:
                         if st.button(f"🗑️ Delete", key=f"del_{template['id']}", use_container_width=True):
                             if st.session_state.get('confirm_delete') == template['id']:
                                 result = st.session_state.tracker.delete_template(template['id'])
@@ -1442,124 +1955,150 @@ def program_creator_page():
                                 st.rerun()
                             else:
                                 st.session_state.confirm_delete = template['id']
-                                st.warning("⚠️ Click again to confirm deletion")
+                                st.warning("⚠️ Tap again to confirm deletion")
         else:
-            st.info("📋 No templates found. Create your first template below!")
+            st.info("📋 No templates found. Create your first beast mode template!")
     
     with create_tab:
-        st.subheader("🆕 Create New Program/Template")
+        st.subheader("🆕 Create Beast Mode Program/Template")
         
-        # Check if we're editing an existing template
+        # Check if editing
         editing_template = st.session_state.get('editing_template')
         
         if editing_template:
-            st.info(f"✏️ Editing template: **{editing_template['name']}**")
+            st.info(f"✏️ Editing: **{editing_template['name']}**")
             default_name = editing_template['name']
             default_category = editing_template['category']
             default_description = editing_template['description']
             default_creator = editing_template['created_by']
         else:
-            default_name = f"Training Session - {date.today().strftime('%b %d')}"
+            default_name = f"Beast Training - {date.today().strftime('%b %d')}"
             default_category = "Custom"
             default_description = ""
             default_creator = "Personal Trainer"
         
-        col1, col2 = st.columns([2, 1])
+        program_date = st.date_input("📅 Beast Mode Program Date", value=date.today())
+        program_name = st.text_input("Program Name", value=default_name)
         
+        # Enhanced template fields
+        col1, col2 = st.columns(2)
         with col1:
-            program_date = st.date_input("📅 Program Date", value=date.today())
-            program_name = st.text_input("Program Name", value=default_name)
-            
-            # Template-specific fields
-            template_category = st.selectbox("Template Category", [
+            template_category = st.selectbox("Category", [
                 "Strength Training", "Cardio", "Flexibility", "Rehabilitation", 
-                "Upper Body", "Lower Body", "Full Body", "Sport Specific", "Custom"
+                "Upper Body", "Lower Body", "Full Body", "Sport Specific", "Beast Mode Custom"
             ], index=8)
-            
-            created_by = st.selectbox("Created By", ["Personal Trainer", "Exercise Physiologist", "Myself", "Other"])
-            
-            if created_by == "Other":
-                created_by = st.text_input("Creator Name")
-            
-            program_notes = st.text_area("Program/Template Description", value=default_description,
-                                       placeholder="Overall session goals, focus areas, special instructions...")
-            
-            # Template save options
-            save_as_template = st.checkbox("💾 Save as Template", value=True, 
-                                         help="Save this program as a reusable template")
         
         with col2:
-            st.write("**📋 Quick Templates:**")
-            
-            if st.button("💪 Upper Body Strength", use_container_width=True):
+            created_by = st.selectbox("Created By", ["Personal Trainer", "Exercise Physiologist", "Beast Mode AI", "Myself", "Other"])
+        
+        if created_by == "Other":
+            created_by = st.text_input("Creator Name")
+        
+        program_notes = st.text_area("Description", value=default_description,
+                                   placeholder="Session goals, focus areas, beast mode intensity...")
+        
+        save_as_template = st.checkbox("💾 Save as Beast Mode Template", value=True)
+        
+        # Enhanced quick templates with beast mode intensity
+        st.write("**📋 Beast Mode Quick Start Templates:**")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            if st.button("💪 Upper Beast", use_container_width=True):
                 st.session_state.program_exercises = [
-                    {'exercise': 'Bench Press', 'sets': 4, 'reps': 6, 'rest': 120, 'notes': 'Heavy compound movement, focus on control'},
-                    {'exercise': 'Inclined Smith Machine Chest Press', 'sets': 3, 'reps': 8, 'rest': 90, 'notes': 'Upper chest development'},
-                    {'exercise': 'Machine Shoulder Press', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'Shoulder stability'},
-                    {'exercise': 'Chest Supported Row', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'Back development, squeeze shoulder blades'},
-                    {'exercise': 'Lateral Raises', 'sets': 3, 'reps': 12, 'rest': 60, 'notes': 'Controlled movement, slight lean forward'},
-                    {'exercise': 'Bicep Curls', 'sets': 3, 'reps': 12, 'rest': 60, 'notes': 'Controlled movement'},
+                    {'exercise': 'Bench Press', 'sets': 4, 'reps': 6, 'rest': 120, 'notes': 'Heavy compound movement'},
+                    {'exercise': 'Machine Shoulder Press', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'Shoulder stability focus'},
+                    {'exercise': 'Chest Supported Row', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'Back development'},
+                    {'exercise': 'Bicep Curls', 'sets': 3, 'reps': 12, 'rest': 60, 'notes': 'Controlled tempo'},
                     {'exercise': 'Tricep Pushdown', 'sets': 3, 'reps': 12, 'rest': 60, 'notes': 'Full range of motion'}
                 ]
+                st.success("🔥 Upper Beast Mode template loaded!")
                 st.rerun()
-            
-            if st.button("🦵 Lower Body Power", use_container_width=True):
+        
+        with col2:
+            if st.button("🦵 Lower Beast", use_container_width=True):
                 st.session_state.program_exercises = [
                     {'exercise': 'Hack Squat', 'sets': 4, 'reps': 8, 'rest': 120, 'notes': 'Focus on depth and control'},
-                    {'exercise': 'RDL', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'Hip hinge pattern, feel hamstring stretch'},
-                    {'exercise': 'Leg Press', 'sets': 3, 'reps': 15, 'rest': 90, 'notes': 'Full range of motion'},
+                    {'exercise': 'RDL', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'Hip hinge pattern'},
+                    {'exercise': 'Leg Press', 'sets': 3, 'reps': 15, 'rest': 90, 'notes': 'Full range, deep stretch'},
                     {'exercise': 'Lying Hamstring Curl', 'sets': 3, 'reps': 12, 'rest': 75, 'notes': 'Slow negatives'},
-                    {'exercise': 'Leg Extension', 'sets': 3, 'reps': 15, 'rest': 75, 'notes': 'Quad isolation'},
-                    {'exercise': 'Calf Raises', 'sets': 4, 'reps': 20, 'rest': 60, 'notes': 'Pause at top'}
+                    {'exercise': 'Calf Raises', 'sets': 4, 'reps': 20, 'rest': 60, 'notes': 'Pause at top, full stretch'}
                 ]
+                st.success("🔥 Lower Beast Mode template loaded!")
                 st.rerun()
-            
-            if st.button("🔄 Full Body Circuit", use_container_width=True):
+        
+        with col3:
+            if st.button("🔄 Full Beast", use_container_width=True):
                 st.session_state.program_exercises = [
-                    {'exercise': 'Squat', 'sets': 3, 'reps': 10, 'rest': 120, 'notes': 'Compound movement'},
+                    {'exercise': 'Squat', 'sets': 3, 'reps': 10, 'rest': 120, 'notes': 'King of all exercises'},
                     {'exercise': 'Bench Press', 'sets': 3, 'reps': 8, 'rest': 120, 'notes': 'Upper body power'},
-                    {'exercise': 'Deadlift', 'sets': 3, 'reps': 5, 'rest': 150, 'notes': 'Posterior chain focus'},
-                    {'exercise': 'Overhead Press', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'Shoulder strength'},
-                    {'exercise': 'Barbell Row', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'Back development'}
+                    {'exercise': 'Deadlift', 'sets': 3, 'reps': 5, 'rest': 150, 'notes': 'Posterior chain beast'},
+                    {'exercise': 'Overhead Press', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'Shoulder strength and stability'}
                 ]
+                st.success("🔥 Full Beast Mode template loaded!")
                 st.rerun()
         
-        # Exercise builder
-        st.subheader("🏋️ Build Exercise List")
+        with col4:
+            if st.button("⚡ Beast Burn", use_container_width=True):
+                st.session_state.program_exercises = [
+                    {'exercise': 'Leg Press', 'sets': 4, 'reps': 20, 'rest': 60, 'notes': 'High rep burn'},
+                    {'exercise': 'Machine Shoulder Press', 'sets': 4, 'reps': 15, 'rest': 60, 'notes': 'Shoulder burn'},
+                    {'exercise': 'Bicep Curls', 'sets': 4, 'reps': 15, 'rest': 45, 'notes': 'Pump focus'},
+                    {'exercise': 'Tricep Pushdown', 'sets': 4, 'reps': 15, 'rest': 45, 'notes': 'Burn out the triceps'}
+                ]
+                st.success("🔥 Beast Burn template loaded!")
+                st.rerun()
         
-        # Add exercise to program
-        with st.expander("➕ Add Exercise to Program", expanded=True):
-            col1, col2, col3, col4, col5 = st.columns(5)
-            
+        # Enhanced exercise builder
+        st.subheader("🏋️ Add Beast Mode Exercises")
+        
+        with st.expander("➕ Add Exercise to Beast Program", expanded=True):
             all_exercises = st.session_state.tracker.get_all_exercises()
             
+            exercise_name = st.selectbox("Exercise", all_exercises, key="prog_exercise")
+            
+            # Show exercise suggestion based on last performance
+            last_workout = get_last_workout_for_exercise(exercise_name)
+            if last_workout is not None:
+                last_set = last_workout.iloc[-1]
+                st.info(f"🔥 Last Beast Performance: {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
+            
+            col1, col2, col3 = st.columns(3)
             with col1:
-                exercise_name = st.selectbox("Exercise", all_exercises, key="prog_exercise")
-            with col2:
                 sets = st.number_input("Sets", min_value=1, max_value=10, value=3, key="prog_sets")
+            with col2:
+                reps = st.number_input("Reps", min_value=1, max_value=50, value=10, key="prog_reps")
             with col3:
-                reps = st.number_input("Target Reps", min_value=1, max_value=50, value=10, key="prog_reps")
-            with col4:
                 rest_time = st.number_input("Rest (sec)", min_value=30, max_value=300, value=90, step=15, key="prog_rest")
-            with col5:
-                if st.button("➕ Add", use_container_width=True, key="add_exercise_btn"):
-                    exercise_notes = st.text_input("Exercise Notes", key="prog_notes_input", 
-                                                 placeholder="Form cues, focus points...")
-                    
-                    new_exercise = {
-                        'exercise': exercise_name,
-                        'sets': sets,
-                        'reps': reps,
-                        'rest': rest_time,
-                        'notes': exercise_notes
-                    }
-                    st.session_state.program_exercises.append(new_exercise)
-                    st.success(f"✅ Added {exercise_name}")
-                    st.rerun()
+            
+            exercise_notes = st.text_input("Beast Notes", key="prog_notes_input", 
+                                         placeholder="Form cues, focus points, beast mode tips...")
+            
+            if st.button("➕ Add to Beast Program", use_container_width=True, type="primary"):
+                new_exercise = {
+                    'exercise': exercise_name,
+                    'sets': sets,
+                    'reps': reps,
+                    'rest': rest_time,
+                    'notes': exercise_notes
+                }
+                st.session_state.program_exercises.append(new_exercise)
+                st.success(f"✅ Added {exercise_name} to beast program!")
+                st.rerun()
         
-        # Show current program
+        # Enhanced current program display
         if st.session_state.program_exercises:
-            st.subheader("📋 Current Program")
+            st.subheader("📋 Current Beast Mode Program")
+            
+            # Calculate total program time
+            total_time = 0
+            for ex in st.session_state.program_exercises:
+                sets = ex.get('sets', 3)
+                rest = ex.get('rest', 90)
+                total_time += (sets * 45) + ((sets - 1) * rest)
+            
+            st.info(f"⏱️ Estimated beast session time: {total_time // 60} minutes")
             
             st.markdown('<div class="program-card">', unsafe_allow_html=True)
             
@@ -1568,22 +2107,22 @@ def program_creator_page():
                 
                 with col1:
                     rest_text = f" (Rest: {ex.get('rest', 90)}s)" if ex.get('rest') else ""
-                    st.write(f"**{i+1}. {ex['exercise']}** - {ex['sets']} sets × {ex['reps']} reps{rest_text}")
+                    st.write(f"**{i+1}. {ex['exercise']}** - {ex['sets']}×{ex['reps']}{rest_text}")
                     if ex.get('notes'):
                         st.write(f"   💡 *{ex['notes']}*")
                 
                 with col2:
-                    if st.button("🗑️", key=f"remove_{i}", help="Remove exercise"):
+                    if st.button("🗑️", key=f"remove_{i}", help="Remove from program"):
                         st.session_state.program_exercises.pop(i)
                         st.rerun()
             
             st.markdown('</div>', unsafe_allow_html=True)
             
-            # Save options
-            col1, col2, col3, col4 = st.columns(4)
+            # Enhanced save options
+            col1, col2 = st.columns(2)
             
             with col1:
-                if st.button("💾 Save Program", use_container_width=True):
+                if st.button("💾 Save Beast Program", use_container_width=True):
                     if program_name and st.session_state.program_exercises:
                         date_str = program_date.strftime('%Y-%m-%d')
                         result = st.session_state.tracker.create_daily_program(
@@ -1591,7 +2130,6 @@ def program_creator_page():
                         )
                         st.success(result)
                         
-                        # Also save as template if requested
                         if save_as_template:
                             template_result = st.session_state.tracker.save_template(
                                 program_name, template_category, program_notes, created_by, 
@@ -1604,68 +2142,174 @@ def program_creator_page():
                         st.session_state.pop('editing_template', None)
                         st.rerun()
                     else:
-                        st.error("❌ Please enter program name and add exercises")
+                        st.error("❌ Enter program name and add exercises")
             
             with col2:
-                if save_as_template and st.button("💾 Save Template Only", use_container_width=True):
-                    if program_name and st.session_state.program_exercises:
-                        result = st.session_state.tracker.save_template(
-                            program_name, template_category, program_notes, created_by, 
-                            st.session_state.program_exercises
-                        )
-                        if "successfully" in result:
-                            st.success(result)
-                            st.balloons()
-                        else:
-                            st.error(result)
-                        st.session_state.program_exercises = []
-                        st.session_state.pop('editing_template', None)
-                        st.rerun()
-                    else:
-                        st.error("❌ Please enter template name and add exercises")
-            
-            with col3:
-                if editing_template and st.button("💾 Update Template", use_container_width=True):
-                    # Delete old template and create new one
-                    st.session_state.tracker.delete_template(editing_template['id'])
-                    result = st.session_state.tracker.save_template(
-                        program_name, template_category, program_notes, created_by, 
-                        st.session_state.program_exercises
-                    )
-                    st.success("✅ Template updated successfully!")
-                    st.session_state.program_exercises = []
-                    st.session_state.pop('editing_template', None)
-                    st.rerun()
-            
-            with col4:
                 if st.button("🗑️ Clear All", use_container_width=True):
                     st.session_state.program_exercises = []
                     st.session_state.pop('editing_template', None)
                     st.rerun()
-
-def add_exercises_page():
-    """Enhanced add exercises page"""
-    st.header("➕ Manage Your Exercises")
     
-    # Add new exercise
-    st.subheader("🆕 Create Custom Exercise")
-    
-    with st.form("add_exercise_form", clear_on_submit=True):
+    # Beast Mode AI Assistant Tab
+    with ai_tab:
+        st.subheader("🤖 Beast Mode AI Program Assistant")
+        
+        st.info("🔥 **Beast Mode AI** analyzes your training history to create optimized programs!")
+        
+        # Get user's training data for AI suggestions
+        df = st.session_state.tracker.get_data()
+        
+        if df.empty:
+            st.warning("📊 No training data yet. Log some workouts first for AI analysis!")
+            return
+        
+        # AI-style analysis
+        st.write("**🧠 Beast Mode AI Analysis:**")
+        
+        # Analyze most frequent exercises
+        exercise_frequency = df['exercise'].value_counts()
+        favorite_exercises = exercise_frequency.head(5).index.tolist()
+        
+        # Analyze body part balance
+        df_copy = df.copy()
+        df_copy['body_part'] = df_copy['exercise'].apply(st.session_state.tracker.get_exercise_body_part)
+        body_part_balance = df_copy['body_part'].value_counts()
+        
+        # Analyze RPE patterns
+        avg_rpe = df['rpe'].mean() if df['rpe'].notna().any() else 8
+        
+        # Display AI insights
         col1, col2 = st.columns(2)
         
         with col1:
-            exercise_name = st.text_input("Exercise Name", placeholder="e.g., Cable Crossover High to Low")
+            st.markdown("**📊 Your Beast Mode Profile:**")
+            st.write(f"• **Favorite Exercises:** {', '.join(favorite_exercises[:3])}")
+            st.write(f"• **Average Intensity:** {avg_rpe:.1f} RPE")
+            st.write(f"• **Total Sessions:** {len(df['date'].unique())}")
+            st.write(f"• **Most Trained:** {body_part_balance.index[0] if not body_part_balance.empty else 'N/A'}")
+        
+        with col2:
+            st.markdown("**🎯 AI Recommendations:**")
+            
+            # Generate AI recommendations
+            recommendations = []
+            
+            if body_part_balance.empty:
+                recommendations.append("Start with full body workouts")
+            else:
+                undertrained = [bp for bp in ['Chest', 'Back', 'Shoulders', 'Quadriceps', 'Hamstrings'] 
+                              if bp not in body_part_balance.index[:3]]
+                if undertrained:
+                    recommendations.append(f"Focus on: {', '.join(undertrained[:2])}")
+            
+            if avg_rpe < 7:
+                recommendations.append("Increase intensity (RPE 7-9)")
+            elif avg_rpe > 9:
+                recommendations.append("Consider deload week")
+            
+            recent_sessions = len(df[df['date'] >= pd.Timestamp.now() - pd.Timedelta(days=7)]['date'].unique())
+            if recent_sessions < 3:
+                recommendations.append("Increase frequency (3-4x/week)")
+            
+            for rec in recommendations:
+                st.write(f"• {rec}")
+        
+        # AI Program Suggestions
+        st.subheader("🤖 AI-Generated Beast Programs")
+        
+        program_col1, program_col2 = st.columns(2)
+        
+        with program_col1:
+            if st.button("🤖 AI Beast Balance", use_container_width=True):
+                # Create balanced program based on user's weak points
+                ai_program = []
+                
+                # Add compound movements
+                if 'Squat' in favorite_exercises or 'Hack Squat' in favorite_exercises:
+                    ai_program.append({'exercise': 'Hack Squat', 'sets': 4, 'reps': 8, 'rest': 120, 'notes': 'AI: Core compound movement'})
+                else:
+                    ai_program.append({'exercise': 'Leg Press', 'sets': 4, 'reps': 12, 'rest': 90, 'notes': 'AI: Beginner-friendly compound'})
+                
+                ai_program.extend([
+                    {'exercise': 'Bench Press', 'sets': 3, 'reps': 8, 'rest': 120, 'notes': 'AI: Upper body strength'},
+                    {'exercise': 'Chest Supported Row', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'AI: Balance push/pull'},
+                    {'exercise': 'Machine Shoulder Press', 'sets': 3, 'reps': 10, 'rest': 90, 'notes': 'AI: Joint-friendly'}
+                ])
+                
+                st.session_state.program_exercises = ai_program
+                st.success("🤖 AI Beast Balance program loaded!")
+                st.rerun()
+        
+        with program_col2:
+            if st.button("🤖 AI Progressive Beast", use_container_width=True):
+                # Create progressive program based on user's history
+                ai_program = []
+                
+                for exercise in favorite_exercises[:4]:
+                    last_workout = get_last_workout_for_exercise(exercise)
+                    if last_workout is not None:
+                        last_weight = last_workout['weight'].iloc[-1]
+                        last_reps = last_workout['reps'].iloc[-1]
+                        
+                        # AI progression logic
+                        if last_reps >= 12:
+                            suggested_reps = max(6, last_reps - 2)
+                            progression_note = f"AI: Increase weight, reduce reps to {suggested_reps}"
+                        else:
+                            suggested_reps = min(15, last_reps + 1)
+                            progression_note = f"AI: Progress to {suggested_reps} reps"
+                        
+                        ai_program.append({
+                            'exercise': exercise,
+                            'sets': 3,
+                            'reps': suggested_reps,
+                            'rest': 90,
+                            'notes': progression_note
+                        })
+                
+                if ai_program:
+                    st.session_state.program_exercises = ai_program
+                    st.success("🤖 AI Progressive Beast program loaded!")
+                    st.rerun()
+                else:
+                    st.warning("Need more training data for AI progression!")
+
+def add_exercises_page():
+    """Enhanced mobile-optimized add exercises page"""
+    st.header("➕ Beast Mode Exercise Manager")
+    
+    # Enhanced add new exercise section
+    st.subheader("🆕 Create New Beast Mode Exercise")
+    
+    with st.form("add_exercise_form", clear_on_submit=True):
+        exercise_name = st.text_input("Exercise Name", placeholder="e.g., Cable Crossover High to Low, Beast Mode Curls")
+        
+        col1, col2 = st.columns(2)
+        with col1:
             category = st.selectbox("Category", [
-                "Chest", "Back", "Shoulders", "Arms", "Legs", "Core", "Cardio", "Full Body", "Other"
+                "Chest", "Back", "Shoulders", "Arms", "Legs", "Core", "Cardio", "Full Body", "Beast Mode Special", "Other"
             ])
         
         with col2:
-            description = st.text_area("Description", placeholder="Setup instructions, form cues, equipment needed...")
+            difficulty = st.selectbox("Beast Level", ["Beginner", "Intermediate", "Advanced", "Beast Mode"])
         
-        if st.form_submit_button("➕ Create Exercise", use_container_width=True):
+        description = st.text_area("Description", placeholder="Setup instructions, form cues, beast mode tips...")
+        
+        # Enhanced exercise tags
+        tags = st.multiselect("Tags", [
+            "Compound", "Isolation", "Machine", "Free Weight", "Cable", "Bodyweight", 
+            "High Intensity", "Beast Mode", "Beginner Friendly", "Advanced Only"
+        ])
+        
+        if st.form_submit_button("➕ Create Beast Exercise", use_container_width=True, type="primary"):
             if exercise_name.strip():
+                # Add tags to description
+                full_description = description.strip()
+                if tags:
+                    full_description += f"\n\nTags: {', '.join(tags)}"
+                
                 result = st.session_state.tracker.add_custom_exercise(
-                    exercise_name.strip(), category, description.strip()
+                    exercise_name.strip(), category, full_description
                 )
                 if "Successfully added" in result:
                     st.success(result)
@@ -1676,47 +2320,106 @@ def add_exercises_page():
             else:
                 st.error("❌ Please enter an exercise name!")
     
-    # Show existing custom exercises
-    st.subheader("🌟 Your Custom Exercises")
+    # Enhanced exercise library display
+    st.subheader("🌟 Your Beast Mode Exercise Library")
     
     custom_exercises_df = st.session_state.tracker.get_custom_exercises()
     
     if not custom_exercises_df.empty:
-        # Group by category with enhanced display
-        for category in custom_exercises_df['category'].unique():
-            st.markdown(f'<div class="exercise-category">', unsafe_allow_html=True)
-            st.write(f"**📂 {category} Exercises ({len(custom_exercises_df[custom_exercises_df['category'] == category])})**")
+        # Add search functionality
+        search_term = st.text_input("🔍 Search exercises", placeholder="Search by name or category...")
+        
+        if search_term:
+            filtered_df = custom_exercises_df[
+                custom_exercises_df['exercise_name'].str.contains(search_term, case=False) |
+                custom_exercises_df['category'].str.contains(search_term, case=False) |
+                custom_exercises_df['description'].str.contains(search_term, case=False, na=False)
+            ]
+        else:
+            filtered_df = custom_exercises_df
+        
+        # Group by category
+        for category in filtered_df['category'].unique():
+            category_exercises = filtered_df[filtered_df['category'] == category]
             
-            category_exercises = custom_exercises_df[custom_exercises_df['category'] == category]
-            
-            for _, exercise in category_exercises.iterrows():
-                st.markdown(f'<div class="custom-exercise">', unsafe_allow_html=True)
-                st.write(f"**🌟 {exercise['exercise_name']}**")
-                if exercise['description']:
-                    st.write(f"💡 *{exercise['description']}*")
-                st.write(f"📅 *Added: {exercise['created_at']}*")
-                st.markdown('</div>', unsafe_allow_html=True)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
+            with st.expander(f"📂 {category} Exercises ({len(category_exercises)})", expanded=True):
+                
+                for _, exercise in category_exercises.iterrows():
+                    st.markdown(f'<div class="workout-card">', unsafe_allow_html=True)
+                    st.markdown(f"**🌟 {exercise['exercise_name']}**")
+                    
+                    if exercise['description']:
+                        st.write(f"💡 *{exercise['description']}*")
+                    
+                    col1, col2 = st.columns([3, 1])
+                    with col1:
+                        st.write(f"📅 *Added: {exercise['created_at'][:10]}*")
+                    with col2:
+                        if st.button("🚀 Use", key=f"use_exercise_{exercise['exercise_name']}", help="Add to quick log"):
+                            st.session_state.last_exercise = exercise['exercise_name']
+                            st.success(f"✅ Selected: {exercise['exercise_name']}")
+                    
+                    st.markdown('</div>', unsafe_allow_html=True)
     else:
-        st.info("🎯 No custom exercises yet. Create your first one above!")
+        st.info("🎯 No custom exercises yet. Create your first beast mode exercise!")
+    
+    # Beast Mode Exercise Suggestions
+    st.subheader("💡 Beast Mode Exercise Suggestions")
+    
+    suggestions = [
+        {
+            "name": "Beast Mode Hack Squat Drop Set",
+            "category": "Legs",
+            "description": "Start heavy for 6 reps, immediately drop weight 20% for 8 more reps, then drop another 20% for 10 final reps. No rest between drops!",
+            "tags": ["Advanced Only", "High Intensity", "Beast Mode"]
+        },
+        {
+            "name": "Chest Supported Row Beast Hold",
+            "category": "Back", 
+            "description": "Perform normal chest supported rows but hold the peak contraction for 3 seconds on each rep. Feel the beast mode burn!",
+            "tags": ["Intermediate", "Beast Mode", "Machine"]
+        },
+        {
+            "name": "Machine Shoulder Press 21s",
+            "category": "Shoulders",
+            "description": "7 partial reps bottom half, 7 partial reps top half, 7 full range reps. 21 total reps of shoulder beast mode torture!",
+            "tags": ["Advanced Only", "High Intensity", "Beast Mode"]
+        }
+    ]
+    
+    for suggestion in suggestions:
+        with st.expander(f"💡 {suggestion['name']} - {suggestion['category']}", expanded=False):
+            st.write(f"**Description:** {suggestion['description']}")
+            st.write(f"**Tags:** {', '.join(suggestion['tags'])}")
+            
+            if st.button(f"➕ Add {suggestion['name']}", key=f"add_suggestion_{suggestion['name']}"):
+                result = st.session_state.tracker.add_custom_exercise(
+                    suggestion['name'], suggestion['category'], 
+                    suggestion['description'] + f"\n\nTags: {', '.join(suggestion['tags'])}"
+                )
+                if "Successfully added" in result:
+                    st.success(result)
+                    st.rerun()
+                else:
+                    st.error(result)
 
 def data_manager_page():
-    """NEW: Data backup, migration, and management"""
-    st.header("💾 Data Manager")
+    """Enhanced mobile-optimized data manager with analytics"""
+    st.header("💾 Beast Mode Data Manager")
     
-    # Current data overview
-    st.subheader("📊 Your Data Overview")
+    # Enhanced current data overview
+    st.subheader("📊 Your Beast Mode Data Overview")
     
     df = st.session_state.tracker.get_data()
     templates = st.session_state.tracker.get_templates()
     custom_exercises = st.session_state.tracker.get_custom_exercises()
     
+    # Enhanced statistics display
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         workout_count = len(df) if not df.empty else 0
-        st.markdown(f'<div class="stats-card">🏋️ <strong>Total Sets</strong><br>{workout_count}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="stats-card">🏋️ <strong>Total Sets</strong><br>{workout_count:,}</div>', unsafe_allow_html=True)
     
     with col2:
         exercise_count = len(df['exercise'].unique()) if not df.empty else 0
@@ -1728,126 +2431,161 @@ def data_manager_page():
     
     with col4:
         custom_count = len(custom_exercises) if not custom_exercises.empty else 0
-        st.markdown(f'<div class="stats-card">⭐ <strong>Custom Exercises</strong><br>{custom_count}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="stats-card">⭐ <strong>Custom</strong><br>{custom_count}</div>', unsafe_allow_html=True)
     
-    # Data backup section
-    st.subheader("💾 Data Backup & Restore")
+    # Beast Mode Analytics
+    if not df.empty:
+        st.subheader("🔥 Beast Mode Analytics")
+        
+        total_volume = (df['reps'] * df['weight']).sum()
+        total_days = len(df['date'].unique())
+        avg_rpe = df['rpe'].mean() if df['rpe'].notna().any() else 0
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.markdown(f'<div class="stats-card">🏋️ <strong>Total Volume</strong><br>{total_volume:,.0f} kg</div>', unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown(f'<div class="stats-card">📅 <strong>Training Days</strong><br>{total_days}</div>', unsafe_allow_html=True)
+        
+        with col3:
+            if avg_rpe > 0:
+                rpe_color = "#FF4757" if avg_rpe > 8.5 else "#FF6B35" if avg_rpe > 7.5 else "#F7931E"
+                st.markdown(f'<div class="stats-card" style="background: linear-gradient(135deg, {rpe_color} 0%, {rpe_color}88 100%);">💥 <strong>Avg RPE</strong><br>{avg_rpe:.1f}</div>', unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
+    # Enhanced data backup section
+    st.subheader("💾 Beast Mode Backup & Restore")
     
-    with col1:
-        st.markdown(f'<div class="program-card">', unsafe_allow_html=True)
-        st.write("**📤 Export Your Data**")
-        st.write("Create a backup file with all your workouts, templates, and custom exercises.")
-        
-        export_filename = st.text_input("Backup filename", value=f"gym_backup_{date.today().strftime('%Y%m%d')}.json")
-        
-        if st.button("📤 Export Data", use_container_width=True):
-            result = st.session_state.tracker.export_data(export_filename)
-            if "✅" in result:
-                st.success(result)
-                st.balloons()
-                st.info("💡 Save this file safely! You can use it to restore your data later.")
-            else:
-                st.error(result)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="program-card">', unsafe_allow_html=True)
+    st.write("**📤 Export Your Beast Mode Data**")
+    st.write("💡 Keep your gains safe! Export includes all workouts, templates, and custom exercises.")
     
-    with col2:
-        st.markdown(f'<div class="program-card">', unsafe_allow_html=True)
-        st.write("**📥 Import Data**")
-        st.write("Restore data from a backup file. This will add to your existing data.")
-        
-        import_filename = st.text_input("Import filename", value="gym_backup.json")
-        
-        if st.button("📥 Import Data", use_container_width=True):
-            result = st.session_state.tracker.import_data(import_filename)
-            if "✅" in result:
-                st.success(result)
-                st.balloons()
-                st.rerun()
-            else:
-                st.error(result)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+    export_filename = st.text_input("Backup filename", value=f"beast_backup_{date.today().strftime('%Y%m%d')}.json")
     
-    # Migration info
-    st.subheader("🔄 Version Migration")
+    if st.button("📤 Export Beast Data", use_container_width=True):
+        result = st.session_state.tracker.export_data(export_filename)
+        if "✅" in result:
+            st.success(result)
+            st.balloons()
+            st.info("💡 Save this file safely - it contains all your beast mode progress!")
+        else:
+            st.error(result)
     
-    st.markdown(f'<div class="notes-section">', unsafe_allow_html=True)
-    st.write("**🛡️ Data Protection Features:**")
-    st.write("✅ **Automatic Migration:** When you upgrade versions, your data automatically transfers")
-    st.write("✅ **Consistent Database:** All versions now use the same database file (`gym_tracker_MASTER.db`)")
-    st.write("✅ **Manual Backup:** Export your data anytime for extra safety")
-    st.write("✅ **Import/Restore:** Easily restore from backup files")
+    st.write("---")
+    st.write("**📥 Import Beast Mode Data**")
+    st.write("⚠️ This will add to your existing data (won't overwrite)")
+    
+    import_filename = st.text_input("Import filename", value="beast_backup.json")
+    
+    if st.button("📥 Import Beast Data", use_container_width=True):
+        result = st.session_state.tracker.import_data(import_filename)
+        if "✅" in result:
+            st.success(result)
+            st.balloons()
+            st.rerun()
+        else:
+            st.error(result)
+    
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # Data maintenance
-    st.subheader("🧹 Data Maintenance")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        if st.button("📊 Database Statistics", use_container_width=True):
-            if not df.empty:
-                st.write("**📈 Workout Statistics:**")
-                st.write(f"- **Date Range:** {df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}")
-                st.write(f"- **Total Volume:** {(df['reps'] * df['weight']).sum():,.0f} kg")
-                st.write(f"- **Average RPE:** {df['rpe'].mean():.1f}")
-                st.write(f"- **Days Trained:** {len(df['date'].unique())}")
-            else:
-                st.info("No workout data yet!")
-    
-    with col2:
-        st.warning("⚠️ **Danger Zone**")
-        if st.button("🗑️ Clear Sample Data", use_container_width=True):
-            if st.session_state.get('confirm_clear_sample'):
-                # Delete sample data (data from before today)
-                today_str = date.today().strftime('%Y-%m-%d')
-                conn = sqlite3.connect(st.session_state.tracker.db_name)
-                cursor = conn.cursor()
-                cursor.execute('DELETE FROM workouts WHERE date < ?', (today_str,))
-                deleted = cursor.rowcount
-                conn.commit()
-                conn.close()
+    # Enhanced database statistics
+    if st.button("📊 Detailed Beast Statistics", use_container_width=True):
+        if not df.empty:
+            st.subheader("📈 Your Complete Beast Mode Journey")
+            
+            # Date range
+            date_range = f"{df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}"
+            
+            # Most frequent exercises
+            top_exercises = df['exercise'].value_counts().head(5)
+            
+            # Body part distribution
+            df_copy = df.copy()
+            df_copy['body_part'] = df_copy['exercise'].apply(st.session_state.tracker.get_exercise_body_part)
+            body_part_dist = df_copy['body_part'].value_counts()
+            
+            # RPE distribution
+            rpe_dist = df['rpe'].value_counts().sort_index() if df['rpe'].notna().any() else pd.Series()
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.write("**📊 Beast Mode Statistics:**")
+                st.write(f"- **Training Period:** {date_range}")
+                st.write(f"- **Total Volume:** {total_volume:,.0f} kg")
+                st.write(f"- **Total Reps:** {df['reps'].sum():,}")
+                st.write(f"- **Days Trained:** {total_days}")
+                st.write(f"- **Average Sets/Day:** {len(df)/total_days:.1f}")
                 
-                st.success(f"✅ Deleted {deleted} sample workout records")
-                st.session_state.pop('confirm_clear_sample', None)
-                st.rerun()
+                if avg_rpe > 0:
+                    st.write(f"- **Average RPE:** {avg_rpe:.1f}")
+            
+            with col2:
+                st.write("**🏆 Top Beast Exercises:**")
+                for i, (exercise, count) in enumerate(top_exercises.items(), 1):
+                    st.write(f"{i}. **{exercise}:** {count} sets")
+                
+                if not body_part_dist.empty:
+                    st.write("**💪 Body Part Focus:**")
+                    for body_part, count in body_part_dist.head(3).items():
+                        percentage = (count / len(df)) * 100
+                        st.write(f"- **{body_part}:** {percentage:.1f}%")
+            
+            # Beast Mode Achievements
+            st.subheader("🏆 Beast Mode Achievements Unlocked")
+            
+            achievements = []
+            
+            if total_volume >= 50000:
+                achievements.append("🔥 Volume Beast - 50,000+ kg moved!")
+            elif total_volume >= 25000:
+                achievements.append("💪 Volume Warrior - 25,000+ kg moved!")
+            elif total_volume >= 10000:
+                achievements.append("🏋️ Volume Crusher - 10,000+ kg moved!")
+            
+            if len(df) >= 500:
+                achievements.append("🎯 Set Master - 500+ sets logged!")
+            elif len(df) >= 250:
+                achievements.append("🎯 Set Crusher - 250+ sets logged!")
+            elif len(df) >= 100:
+                achievements.append("🎯 Set Warrior - 100+ sets logged!")
+            
+            if total_days >= 100:
+                achievements.append("📅 Consistency Legend - 100+ training days!")
+            elif total_days >= 50:
+                achievements.append("📅 Consistency Master - 50+ training days!")
+            elif total_days >= 25:
+                achievements.append("📅 Consistency Beast - 25+ training days!")
+            
+            if exercise_count >= 20:
+                achievements.append("📝 Exercise Explorer - 20+ different exercises!")
+            elif exercise_count >= 10:
+                achievements.append("📝 Exercise Variety - 10+ different exercises!")
+            
+            if achievements:
+                for achievement in achievements:
+                    st.success(achievement)
             else:
-                st.session_state.confirm_clear_sample = True
-                st.warning("⚠️ Click again to confirm deletion of sample data")
-    
-    # Tips
-    st.subheader("💡 Data Management Tips")
-    
-    st.info("""
-    **📱 For Mobile Use:**
-    - Export your data before major app updates
-    - Keep backup files in cloud storage (Google Drive, iCloud)
-    - Your data automatically syncs between devices when using the cloud version
-    
-    **🔒 Data Safety:**
-    - Regular backups ensure you never lose workout history
-    - The app now preserves data between version updates
-    - Export before trying experimental features
-    """)
+                st.info("💪 Keep training to unlock Beast Mode achievements!")
+        else:
+            st.info("📊 No workout data yet. Start your beast mode journey!")
 
-# ===== MAIN APP NAVIGATION =====
+# ===== MAIN APP =====
 def main():
-    st.markdown('<h1 class="main-header">💪 Gym Tracker Version 6</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">🏋️ Beast Mode Gym Tracker 💪</h1>', unsafe_allow_html=True)
     
-    # Success message with enhanced styling
-    st.success("🎉 **VERSION 6 FEATURES!** ✅ Smart exercise defaults ✅ Clean date charts ✅ Body part tracking ✅ Data preservation ✅ Complete mobile ready!")
+    # Enhanced success message with version info
+    st.success("🔥 **BEAST MODE V7 ACTIVATED!** ✅ AI Assistant ✅ Enhanced UI ✅ Lightning fast ✅ All data preserved!")
     
-    # Enhanced Navigation with Data Management
+    # Enhanced mobile-optimized navigation
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-        "🏋️ Today's Workout", 
-        "📱 Quick Log & Day View", 
-        "📊 Visual Progress", 
-        "📅 Program Creator",
-        "➕ Add Exercises",
-        "💾 Data Manager"
+        "🔥 Today", 
+        "⚡ Quick Log", 
+        "📈 Progress", 
+        "📋 Programs",
+        "➕ Exercises",
+        "💾 Data"
     ])
     
     with tab1:
@@ -1872,6 +2610,6 @@ def main():
 if 'sample_data_created' not in st.session_state:
     create_sample_data()
 
-# Run the app
+# Run the beast mode app
 if __name__ == "__main__":
     main()
