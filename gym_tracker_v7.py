@@ -632,273 +632,368 @@ st.set_page_config(
 st.markdown("""
 <style>
     .stApp {
-        background-color: #000000;
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
         color: #ffffff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     .main-header {
-        font-size: 2rem;
-        font-weight: bold;
+        font-size: 2.2rem;
+        font-weight: 300;
         text-align: center;
         color: #ffffff;
-        margin-bottom: 1rem;
-        padding: 1rem;
-        background-color: #333333;
-        border-radius: 8px;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .stButton > button {
         width: 100% !important;
-        height: 3rem !important;
-        font-size: 1rem !important;
-        font-weight: bold !important;
-        border-radius: 6px !important;
-        border: 2px solid #ffffff !important;
-        background-color: #333333 !important;
+        height: 3.2rem !important;
+        font-size: 0.95rem !important;
+        font-weight: 500 !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%) !important;
         color: #ffffff !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.3s ease !important;
+        text-transform: none !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
     }
     
     .stButton > button:hover {
-        background-color: #555555 !important;
+        background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3) !important;
     }
     
     .stButton > button[kind="primary"] {
-        background-color: #0066cc !important;
-        border: 2px solid #0066cc !important;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+        border: 1px solid rgba(37, 99, 235, 0.5) !important;
         color: #ffffff !important;
-        font-size: 1.1rem !important;
-        height: 3.5rem !important;
+        font-size: 1rem !important;
+        height: 3.6rem !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4) !important;
     }
     
     .stButton > button[kind="primary"]:hover {
-        background-color: #0052a3 !important;
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+        box-shadow: 0 6px 28px rgba(37, 99, 235, 0.5) !important;
     }
     
     .date-header {
-        background-color: #222222;
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
         color: #ffffff;
-        padding: 1rem;
-        border-radius: 6px;
-        margin: 1rem 0;
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin: 1.5rem 0;
         text-align: center;
-        font-size: 1rem;
-        font-weight: bold;
-        border: 1px solid #444444;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     }
     
     .workout-card {
-        background-color: #111111;
-        padding: 1rem;
-        border-radius: 6px;
-        margin: 1rem 0;
-        border: 1px solid #333333;
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        padding: 1.8rem;
+        border-radius: 16px;
+        margin: 1.5rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
         color: #ffffff;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
     }
     
     .program-card {
-        background-color: #111111;
-        padding: 1rem;
-        border-radius: 6px;
-        margin: 1rem 0;
-        border: 1px solid #0066cc;
+        background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+        padding: 1.8rem;
+        border-radius: 16px;
+        margin: 1.5rem 0;
+        border: 1px solid rgba(37, 99, 235, 0.3);
         color: #ffffff;
+        box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+        backdrop-filter: blur(10px);
     }
     
     .stats-card {
-        background-color: #222222;
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
         color: #ffffff;
-        padding: 1rem;
-        border-radius: 6px;
+        padding: 1.5rem;
+        border-radius: 16px;
         text-align: center;
-        margin: 0.5rem;
-        font-size: 0.9rem;
-        font-weight: bold;
-        border: 1px solid #444444;
+        margin: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
     
     .set-item {
-        background-color: #222222;
-        padding: 0.75rem;
-        border-radius: 4px;
-        margin: 0.5rem 0;
-        border-left: 3px solid #0066cc;
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+        padding: 1rem;
+        border-radius: 12px;
+        margin: 0.75rem 0;
+        border-left: 4px solid #2563eb;
         color: #ffffff;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     
     .stSelectbox > div > div {
         font-size: 1rem !important;
-        padding: 0.5rem !important;
-        background-color: #222222 !important;
+        padding: 0.75rem !important;
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%) !important;
         color: #ffffff !important;
-        border-radius: 4px !important;
-        border: 2px solid #666666 !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
     }
     
     .stNumberInput > div > div > input {
-        font-size: 1rem !important;
-        height: 2.5rem !important;
-        background-color: #222222 !important;
+        font-size: 1.1rem !important;
+        height: 3rem !important;
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%) !important;
         color: #ffffff !important;
-        border-radius: 4px !important;
-        border: 2px solid #666666 !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         text-align: center !important;
-        font-weight: bold !important;
+        font-weight: 600 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
     }
     
     .stTextInput > div > div > input {
         font-size: 1rem !important;
-        padding: 0.5rem !important;
-        background-color: #222222 !important;
+        padding: 0.75rem !important;
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%) !important;
         color: #ffffff !important;
-        border-radius: 4px !important;
-        border: 2px solid #666666 !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
     }
     
     .stTextArea > div > div > textarea {
         font-size: 1rem !important;
-        padding: 0.5rem !important;
-        background-color: #222222 !important;
+        padding: 0.75rem !important;
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%) !important;
         color: #ffffff !important;
-        border-radius: 4px !important;
-        border: 2px solid #666666 !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    .exercise-search {
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 0.5rem 0;
     }
     
     .stButton button[title*="Delete"], .stButton button[aria-label*="Delete"] {
-        background-color: #cc0000 !important;
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
         color: #ffffff !important;
-        font-size: 0.8rem !important;
-        padding: 0.25rem !important;
-        border-radius: 4px !important;
-        border: 1px solid #cc0000 !important;
-        height: 2rem !important;
+        font-size: 0.85rem !important;
+        padding: 0.5rem !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(220, 38, 38, 0.5) !important;
+        height: 2.5rem !important;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3) !important;
     }
     
     .notes-section {
-        background-color: #111111;
-        padding: 0.75rem;
-        border-radius: 4px;
-        border-left: 3px solid #0066cc;
-        margin: 0.5rem 0;
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        padding: 1rem;
+        border-radius: 12px;
+        border-left: 4px solid #2563eb;
+        margin: 1rem 0;
         color: #ffffff;
-        font-size: 0.9rem;
-        border: 1px solid #333333;
+        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     
     .stTabs [data-baseweb="tab-list"] {
-        gap: 2px;
+        gap: 8px;
+        background: rgba(31, 41, 55, 0.5);
+        padding: 8px;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
     }
     
     .stTabs [data-baseweb="tab"] {
-        height: 2.5rem;
-        font-size: 0.9rem;
-        font-weight: bold;
-        border-radius: 4px;
-        background-color: #222222;
-        color: #ffffff;
-        border: 1px solid #444444;
+        height: 3rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        border-radius: 12px;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.7);
+        border: 1px solid transparent;
+        transition: all 0.3s ease;
     }
     
     .stTabs [aria-selected="true"] {
-        background-color: #0066cc !important;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
         color: #ffffff !important;
-        border: 1px solid #0066cc !important;
+        border: 1px solid rgba(37, 99, 235, 0.5) !important;
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3) !important;
     }
     
     .stSuccess {
-        background-color: #006600 !important;
+        background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
         color: #ffffff !important;
         font-size: 1rem !important;
-        padding: 1rem !important;
-        border-radius: 4px !important;
-        border: 1px solid #008800 !important;
+        padding: 1.2rem !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(5, 150, 105, 0.3) !important;
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3) !important;
     }
     
     .stError {
-        background-color: #cc0000 !important;
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
         color: #ffffff !important;
         font-size: 1rem !important;
-        padding: 1rem !important;
-        border-radius: 4px !important;
-        border: 1px solid #ff0000 !important;
+        padding: 1.2rem !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(220, 38, 38, 0.3) !important;
+        box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3) !important;
     }
     
     .stWarning {
-        background-color: #cc6600 !important;
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
         color: #ffffff !important;
         font-size: 1rem !important;
-        padding: 1rem !important;
-        border-radius: 4px !important;
-        border: 1px solid #ff8800 !important;
+        padding: 1.2rem !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(217, 119, 6, 0.3) !important;
+        box-shadow: 0 4px 16px rgba(217, 119, 6, 0.3) !important;
     }
     
     .stInfo {
-        background-color: #0066cc !important;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
         color: #ffffff !important;
         font-size: 1rem !important;
-        padding: 1rem !important;
-        border-radius: 4px !important;
-        border: 1px solid #0088ff !important;
+        padding: 1.2rem !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(37, 99, 235, 0.3) !important;
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3) !important;
     }
     
     .stForm {
-        background-color: #111111;
-        padding: 1rem;
-        border-radius: 6px;
-        border: 1px solid #333333;
-        margin: 1rem 0;
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 1.5rem 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
     }
     
     @media (max-width: 768px) {
         .main-header {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            padding: 1.5rem;
         }
         
         .stButton > button {
-            height: 2.8rem !important;
+            height: 3rem !important;
             font-size: 0.9rem !important;
         }
         
         .stButton > button[kind="primary"] {
-            height: 3.2rem !important;
-            font-size: 1rem !important;
+            height: 3.4rem !important;
+            font-size: 0.95rem !important;
+        }
+        
+        .workout-card, .program-card {
+            padding: 1.2rem;
+            margin: 1rem 0;
+        }
+        
+        .stats-card {
+            margin: 0.5rem;
+            padding: 1.2rem;
         }
     }
     
     .stProgress > div > div > div {
-        background-color: #0066cc !important;
-        border-radius: 2px !important;
-        height: 0.5rem !important;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+        border-radius: 8px !important;
+        height: 0.75rem !important;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
     }
     
     .streamlit-expanderHeader {
-        background-color: #222222 !important;
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%) !important;
         color: #ffffff !important;
-        font-size: 1rem !important;
-        font-weight: bold !important;
-        border-radius: 4px !important;
-        padding: 0.75rem !important;
-        border: 1px solid #444444 !important;
+        font-size: 1.05rem !important;
+        font-weight: 500 !important;
+        border-radius: 12px !important;
+        padding: 1rem !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
     }
     
     [data-testid="metric-container"] {
-        background-color: #222222;
-        border-radius: 4px;
-        padding: 0.75rem;
-        border: 1px solid #444444;
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     }
     
     [data-testid="metric-container"] label {
-        color: #ffffff !important;
-        font-size: 0.8rem !important;
-        font-weight: bold !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
     }
     
     [data-testid="metric-container"] div[data-testid="metric-value"] {
-        color: #ffffff !important;
-        font-size: 1.2rem !important;
-        font-weight: bold !important;
+        color: #2563eb !important;
+        font-size: 1.4rem !important;
+        font-weight: 700 !important;
+    }
+    
+    .search-container {
+        position: relative;
+        margin: 0.5rem 0;
+    }
+    
+    .search-results {
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        max-height: 200px;
+        overflow-y: auto;
+        position: absolute;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+    
+    .search-item {
+        padding: 0.75rem;
+        cursor: pointer;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.2s ease;
+    }
+    
+    .search-item:hover {
+        background: rgba(37, 99, 235, 0.2);
+    }
+    
+    .search-item:last-child {
+        border-bottom: none;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -920,6 +1015,98 @@ if 'last_rpe' not in st.session_state:
     st.session_state.last_rpe = 8
 
 def get_last_workout_for_exercise(exercise):
+    """Get the last workout data for a specific exercise"""
+    df = st.session_state.tracker.get_data()
+    if df.empty:
+        return None
+    
+    exercise_data = df[df['exercise'] == exercise]
+    if exercise_data.empty:
+        return None
+    
+    last_date = exercise_data['date'].max()
+    last_workout = exercise_data[exercise_data['date'] == last_date]
+    return last_workout
+
+def searchable_exercise_selector(exercises, key_prefix="", default_exercise=None):
+    """Create a searchable exercise selector"""
+    
+    # Initialize session state for search
+    search_key = f"exercise_search_{key_prefix}"
+    selected_key = f"exercise_selected_{key_prefix}"
+    
+    if search_key not in st.session_state:
+        st.session_state[search_key] = ""
+    if selected_key not in st.session_state:
+        st.session_state[selected_key] = default_exercise or exercises[0] if exercises else ""
+    
+    # Search input
+    search_term = st.text_input(
+        "🔍 Search Exercise", 
+        value=st.session_state[search_key],
+        placeholder="Type to search exercises...",
+        key=f"search_input_{key_prefix}"
+    )
+    
+    # Update search term
+    if search_term != st.session_state[search_key]:
+        st.session_state[search_key] = search_term
+    
+    # Filter exercises based on search
+    if search_term:
+        filtered_exercises = [ex for ex in exercises if search_term.lower() in ex.lower()]
+    else:
+        filtered_exercises = exercises
+    
+    # Show current selection
+    if st.session_state[selected_key]:
+        st.info(f"📌 Selected: **{st.session_state[selected_key]}**")
+    
+    # Show filtered results
+    if filtered_exercises and search_term:
+        st.write("**🎯 Search Results:**")
+        
+        # Show top 8 results in a grid
+        cols = st.columns(2)
+        for i, exercise in enumerate(filtered_exercises[:8]):
+            col_idx = i % 2
+            with cols[col_idx]:
+                if st.button(
+                    f"✅ {exercise}", 
+                    key=f"select_{exercise}_{key_prefix}_{i}",
+                    use_container_width=True,
+                    help=f"Select {exercise}"
+                ):
+                    st.session_state[selected_key] = exercise
+                    st.session_state[search_key] = ""  # Clear search
+                    st.rerun()
+        
+        if len(filtered_exercises) > 8:
+            st.caption(f"... and {len(filtered_exercises) - 8} more results. Refine your search to see them.")
+    
+    elif search_term and not filtered_exercises:
+        st.warning(f"No exercises found matching '{search_term}'")
+    
+    # Quick select buttons for common exercises
+    if not search_term:
+        st.write("**⚡ Quick Select:**")
+        
+        common_exercises = ['Bench Press', 'Squat', 'Deadlift', 'Hack Squat', 'Leg Press', 'Machine Shoulder Press']
+        available_common = [ex for ex in common_exercises if ex in exercises]
+        
+        cols = st.columns(3)
+        for i, exercise in enumerate(available_common[:6]):
+            col_idx = i % 3
+            with cols[col_idx]:
+                if st.button(
+                    f"💪 {exercise}", 
+                    key=f"quick_select_{exercise}_{key_prefix}",
+                    use_container_width=True
+                ):
+                    st.session_state[selected_key] = exercise
+                    st.rerun()
+    
+    return st.session_state[selected_key]
     """Get the last workout data for a specific exercise"""
     df = st.session_state.tracker.get_data()
     if df.empty:
@@ -1210,37 +1397,47 @@ def enhanced_quick_log_page():
     st.subheader("📝 Log Your Set")
     
     with st.form("quick_log", clear_on_submit=True):
-        exercise_index = 0
-        if st.session_state.last_exercise in all_exercises:
-            exercise_index = all_exercises.index(st.session_state.last_exercise)
         
-        exercise = st.selectbox("💪 Exercise", all_exercises, index=exercise_index)
+        # Searchable exercise selector
+        st.markdown("**💪 Select Exercise:**")
+        exercise = searchable_exercise_selector(
+            all_exercises, 
+            key_prefix="quick_log",
+            default_exercise=st.session_state.last_exercise
+        )
         
+        # Show last performance for selected exercise
         if exercise:
             last_workout = get_last_workout_for_exercise(exercise)
             if last_workout is not None:
                 last_set = last_workout.iloc[-1]
-                st.info(f"🔥 Last Performance: {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
+                st.success(f"🔥 Last Performance: {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
         
+        st.markdown("---")
+        
+        # Input fields in a clean layout
         col1, col2 = st.columns(2)
         with col1:
             reps = st.number_input("🎯 Reps", min_value=1, max_value=50, value=st.session_state.last_reps)
         with col2:
             weight = st.number_input("⚖️ Weight (kg)", min_value=0.0, value=st.session_state.last_weight, step=0.625)
         
-        rpe = st.select_slider("💥 RPE", options=[6, 7, 8, 9, 10], value=st.session_state.last_rpe)
+        rpe = st.select_slider("💥 RPE (Rate of Perceived Exertion)", options=[6, 7, 8, 9, 10], value=st.session_state.last_rpe)
         set_notes = st.text_input("📝 Notes", placeholder="How did that feel? Form notes, equipment, etc...")
         
         if st.form_submit_button("🚀 LOG SET", use_container_width=True, type="primary"):
-            st.session_state.tracker.quick_log(exercise, reps, weight, rpe, set_notes, "", date_str)
-            
-            st.session_state.last_exercise = exercise
-            st.session_state.last_reps = reps
-            st.session_state.last_weight = weight
-            st.session_state.last_rpe = rpe
-            
-            show_enhanced_success_animation()
-            st.rerun()
+            if exercise:
+                st.session_state.tracker.quick_log(exercise, reps, weight, rpe, set_notes, "", date_str)
+                
+                st.session_state.last_exercise = exercise
+                st.session_state.last_reps = reps
+                st.session_state.last_weight = weight
+                st.session_state.last_rpe = rpe
+                
+                show_enhanced_success_animation()
+                st.rerun()
+            else:
+                st.error("Please select an exercise first!")
     
     st.subheader("📋 Today's Complete Workout")
     
@@ -1487,10 +1684,16 @@ def program_creator_page():
         
         st.subheader("🏋️ Add Exercises")
         
-        with st.expander("➕ Add Exercise", expanded=True):
-            all_exercises = st.session_state.tracker.get_all_exercises()
+        with st.expander("➕ Add Exercise to Program", expanded=True):
             
-            exercise_name = st.selectbox("Exercise", all_exercises)
+            # Searchable exercise selector
+            st.markdown("**🏋️ Select Exercise:**")
+            exercise_name = searchable_exercise_selector(
+                all_exercises, 
+                key_prefix="program_creator"
+            )
+            
+            st.markdown("---")
             
             col1, col2, col3 = st.columns(3)
             with col1:
@@ -1500,16 +1703,22 @@ def program_creator_page():
             with col3:
                 rest_time = st.number_input("Rest (sec)", min_value=30, max_value=300, value=90, step=15)
             
+            exercise_notes = st.text_input("Exercise Notes", placeholder="Form cues, focus points...")
+            
             if st.button("➕ Add Exercise", use_container_width=True, type="primary"):
-                new_exercise = {
-                    'exercise': exercise_name,
-                    'sets': sets,
-                    'reps': reps,
-                    'rest': rest_time
-                }
-                st.session_state.program_exercises.append(new_exercise)
-                st.success(f"✅ Added {exercise_name}")
-                st.rerun()
+                if exercise_name:
+                    new_exercise = {
+                        'exercise': exercise_name,
+                        'sets': sets,
+                        'reps': reps,
+                        'rest': rest_time,
+                        'notes': exercise_notes
+                    }
+                    st.session_state.program_exercises.append(new_exercise)
+                    st.success(f"✅ Added {exercise_name}")
+                    st.rerun()
+                else:
+                    st.error("Please select an exercise first!")
         
         if st.session_state.program_exercises:
             st.subheader("📋 Current Program")
@@ -1559,24 +1768,65 @@ def program_creator_page():
                     st.rerun()
 
 def add_exercises_page():
-    """Simple add exercises page"""
+    """Professional add exercises page with enhanced UX"""
     st.header("➕ Exercise Manager")
     
-    st.subheader("🆕 Create Exercise")
+    st.subheader("🆕 Create Custom Exercise")
     
     with st.form("add_exercise_form", clear_on_submit=True):
-        exercise_name = st.text_input("Exercise Name", placeholder="e.g., Cable Crossover")
+        exercise_name = st.text_input(
+            "Exercise Name", 
+            placeholder="e.g., Cable Crossover High to Low"
+        )
         
         col1, col2 = st.columns(2)
         with col1:
-            category = st.selectbox("Category", ["Chest", "Back", "Shoulders", "Arms", "Legs", "Core", "Other"])
+            category = st.selectbox("Category", [
+                "Chest", "Back", "Shoulders", "Arms", "Legs", "Core", "Cardio", "Full Body", "Other"
+            ])
         with col2:
-            description = st.text_area("Description", placeholder="Setup, form cues...")
+            difficulty = st.selectbox("Difficulty Level", [
+                "Beginner", "Intermediate", "Advanced", "Expert"
+            ])
+        
+        description = st.text_area(
+            "Description", 
+            placeholder="Setup instructions, form cues, tips...",
+            height=100
+        )
+        
+        # Enhanced exercise tags
+        st.markdown("**🏷️ Exercise Tags:**")
+        col1, col2 = st.columns(2)
+        with col1:
+            compound = st.checkbox("Compound Movement")
+            machine = st.checkbox("Machine Exercise")
+            bodyweight = st.checkbox("Bodyweight")
+        with col2:
+            isolation = st.checkbox("Isolation Exercise")
+            free_weight = st.checkbox("Free Weight")
+            cable = st.checkbox("Cable Exercise")
         
         if st.form_submit_button("➕ Create Exercise", use_container_width=True, type="primary"):
             if exercise_name.strip():
+                # Build tags list
+                tags = []
+                if compound: tags.append("Compound")
+                if isolation: tags.append("Isolation") 
+                if machine: tags.append("Machine")
+                if free_weight: tags.append("Free Weight")
+                if cable: tags.append("Cable")
+                if bodyweight: tags.append("Bodyweight")
+                
+                # Add tags to description
+                full_description = description.strip()
+                if tags:
+                    full_description += f"\n\nTags: {', '.join(tags)}"
+                if difficulty != "Beginner":
+                    full_description += f"\nDifficulty: {difficulty}"
+                
                 result = st.session_state.tracker.add_custom_exercise(
-                    exercise_name.strip(), category, description.strip()
+                    exercise_name.strip(), category, full_description
                 )
                 if "Successfully added" in result:
                     st.success(result)
@@ -1587,27 +1837,114 @@ def add_exercises_page():
             else:
                 st.error("❌ Please enter an exercise name!")
     
-    st.subheader("🌟 Your Custom Exercises")
+    st.subheader("🌟 Your Custom Exercise Library")
     
     custom_exercises_df = st.session_state.tracker.get_custom_exercises()
     
     if not custom_exercises_df.empty:
-        for category in custom_exercises_df['category'].unique():
-            st.markdown(f'<div class="workout-card">', unsafe_allow_html=True)
-            st.write(f"**📂 {category} Exercises**")
+        # Add search functionality
+        search_term = st.text_input(
+            "🔍 Search Your Exercises", 
+            placeholder="Search by name, category, or description..."
+        )
+        
+        if search_term:
+            filtered_df = custom_exercises_df[
+                custom_exercises_df['exercise_name'].str.contains(search_term, case=False) |
+                custom_exercises_df['category'].str.contains(search_term, case=False) |
+                custom_exercises_df['description'].str.contains(search_term, case=False, na=False)
+            ]
+        else:
+            filtered_df = custom_exercises_df
+        
+        # Group by category with enhanced styling
+        for category in filtered_df['category'].unique():
+            category_exercises = filtered_df[filtered_df['category'] == category]
             
-            category_exercises = custom_exercises_df[custom_exercises_df['category'] == category]
-            
-            for _, exercise in category_exercises.iterrows():
-                st.write(f"**🌟 {exercise['exercise_name']}**")
-                if exercise['description']:
-                    st.write(f"💡 *{exercise['description']}*")
-                st.write(f"📅 *Added: {exercise['created_at'][:10]}*")
-                st.write("---")
-            
-            st.markdown('</div>', unsafe_allow_html=True)
+            with st.expander(f"📂 {category} ({len(category_exercises)} exercises)", expanded=len(filtered_df) <= 10):
+                
+                for _, exercise in category_exercises.iterrows():
+                    st.markdown(f'<div class="workout-card">', unsafe_allow_html=True)
+                    
+                    col1, col2 = st.columns([4, 1])
+                    
+                    with col1:
+                        st.markdown(f"**🌟 {exercise['exercise_name']}**")
+                        
+                        if exercise['description']:
+                            # Parse tags if they exist
+                            desc_parts = exercise['description'].split('\n\nTags:')
+                            main_desc = desc_parts[0]
+                            
+                            st.write(f"💡 *{main_desc}*")
+                            
+                            if len(desc_parts) > 1:
+                                tags = desc_parts[1].split('\n')[0]
+                                st.markdown(f"🏷️ **Tags:** {tags}")
+                        
+                        st.caption(f"📅 Added: {exercise['created_at'][:10]}")
+                    
+                    with col2:
+                        if st.button(
+                            "🚀 Use", 
+                            key=f"use_exercise_{exercise['exercise_name']}", 
+                            help="Add to quick log",
+                            use_container_width=True
+                        ):
+                            st.session_state.last_exercise = exercise['exercise_name']
+                            st.success(f"✅ Selected: {exercise['exercise_name']}")
+                    
+                    st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Exercise statistics
+        st.subheader("📊 Exercise Library Stats")
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric("Total Custom Exercises", len(custom_exercises_df))
+        with col2:
+            st.metric("Categories", len(custom_exercises_df['category'].unique()))
+        with col3:
+            most_common_category = custom_exercises_df['category'].value_counts().index[0]
+            st.metric("Most Common Category", most_common_category)
+    
     else:
-        st.info("🎯 No custom exercises yet. Create your first one!")
+        st.info("🎯 No custom exercises yet. Create your first one above!")
+        
+        # Suggested exercises for first-time users
+        st.subheader("💡 Suggested Custom Exercises")
+        
+        suggestions = [
+            {
+                "name": "Incline Cable Flyes",
+                "category": "Chest",
+                "description": "Cable flyes on incline bench for upper chest development. Focus on stretch and squeeze."
+            },
+            {
+                "name": "Bulgarian Split Squats (Deficit)",
+                "category": "Legs", 
+                "description": "Rear foot elevated split squats with front foot on small platform for increased range."
+            },
+            {
+                "name": "Face Pulls (High Rep)",
+                "category": "Shoulders",
+                "description": "Cable face pulls with focus on rear delt activation. 15-20 reps for shoulder health."
+            }
+        ]
+        
+        for suggestion in suggestions:
+            with st.expander(f"💡 {suggestion['name']} - {suggestion['category']}", expanded=False):
+                st.write(f"**Description:** {suggestion['description']}")
+                
+                if st.button(f"➕ Add {suggestion['name']}", key=f"add_suggestion_{suggestion['name']}"):
+                    result = st.session_state.tracker.add_custom_exercise(
+                        suggestion['name'], suggestion['category'], suggestion['description']
+                    )
+                    if "Successfully added" in result:
+                        st.success(result)
+                        st.rerun()
+                    else:
+                        st.error(result)
 
 def data_manager_page():
     """Clean data manager with cleaning tools"""
@@ -1740,9 +2077,9 @@ def data_manager_page():
     st.markdown('</div>', unsafe_allow_html=True)
 
 def main():
-    st.markdown('<h1 class="main-header">💪 Gym Tracker</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">💪 Professional Gym Tracker</h1>', unsafe_allow_html=True)
     
-    st.success("✅ **CLEAN & OPTIMIZED!** High contrast design, aggressive data cleaning, super readable!")
+    st.success("✨ **PROFESSIONAL EDITION!** Searchable exercises, premium UI, glass morphism design!")
     
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "🔥 Today", 
