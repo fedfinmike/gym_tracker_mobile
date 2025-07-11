@@ -1,12 +1,9 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import plotly.graph_objects as go
-from datetime import datetime, date, timedelta
 import sqlite3
-import numpy as np
+from datetime import date
 import json
-import time
+import plotly.graph_objects as go
 
 # --- GymTracker Data Layer ---
 class GymTracker:
@@ -16,257 +13,101 @@ class GymTracker:
 
     def init_database(self):
         conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        cursor.execute('''
+        c = conn.cursor()
+        c.execute('''
             CREATE TABLE IF NOT EXISTS workouts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                date TEXT NOT NULL,
-                exercise TEXT NOT NULL,
-                set_number INTEGER NOT NULL,
-                reps INTEGER NOT NULL,
-                weight REAL NOT NULL,
+                date TEXT,
+                exercise TEXT,
+                set_number INTEGER,
+                reps INTEGER,
+                weight REAL,
                 rpe INTEGER,
-                set_notes TEXT,
-                workout_notes TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS custom_exercises (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                exercise_name TEXT UNIQUE NOT NULL,
-                category TEXT,
-                description TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS workout_templates (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                template_name TEXT UNIQUE NOT NULL,
-                category TEXT,
-                description TEXT,
-                created_by TEXT,
-                exercises TEXT,
-                is_public INTEGER DEFAULT 0,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                last_used TIMESTAMP
+                set_notes TEXT
             )
         ''')
         conn.commit()
         conn.close()
 
-    def log_workout(self, date_str, exercise, sets_data, workout_notes=""):
+    def log_workout(self, date_str, exercise, sets_data):
         conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        for i, set_data in enumerate(sets_data, 1):
-            cursor.execute(
-                'INSERT INTO workouts (date, exercise, set_number, reps, weight, rpe, set_notes, workout_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-                (date_str, exercise, i, set_data['reps'], set_data['weight'], set_data.get('rpe'), set_data.get('set_notes', ''), workout_notes)
+        c = conn.cursor()
+        for i, s in enumerate(sets_data, start=1):
+            c.execute(
+                'INSERT INTO workouts(date,exercise,set_number,reps,weight,rpe,set_notes) VALUES (?,?,?,?,?,?,?)',
+                (date_str, exercise, i, s['reps'], s['weight'], s.get('rpe'), s.get('set_notes',''))
             )
         conn.commit()
         conn.close()
-        return f"✅ Logged {len(sets_data)} sets for {exercise}"
-
-    def quick_log(self, exercise, reps, weight, rpe=None, set_notes="", workout_notes="", date_str=None):
-        if date_str is None:
-            date_str = date.today().strftime('%Y-%m-%d')
-        return self.log_workout(date_str, exercise, [{'reps': reps, 'weight': weight, 'rpe': rpe, 'set_notes': set_notes}], workout_notes)
-
-    def delete_set(self, set_id):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM workouts WHERE id = ?', (set_id,))
-        rows = cursor.rowcount
-        conn.commit()
-        conn.close()
-        return "✅ Set deleted!" if rows > 0 else "❌ Set not found!"
-
-    def get_daily_workout(self, date_str):
-        conn = sqlite3.connect(self.db_name)
-        try:
-            df = pd.read_sql_query(
-                'SELECT id, exercise, set_number, reps, weight, rpe, set_notes, workout_notes, created_at FROM workouts WHERE date = ? ORDER BY exercise, set_number',
-                conn, params=(date_str,)
-            )
-        except Exception:
-            df = pd.DataFrame()
-        conn.close()
-        return df
-
-    def add_custom_exercise(self, exercise_name, category="Custom", description=""):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        try:
-            cursor.execute('INSERT INTO custom_exercises (exercise_name, category, description) VALUES (?, ?, ?)',
-                           (exercise_name, category, description))
-            conn.commit()
-            result = f"✅ Added: {exercise_name}"
-        except sqlite3.IntegrityError:
-            result = f"❌ Exercise '{exercise_name}' already exists!"
-        conn.close()
-        return result
-
-    def save_template(self, template_name, category, description, created_by, exercises_list, is_public=False):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        exercises_json = json.dumps(exercises_list)
-        try:
-            cursor.execute(
-                'INSERT INTO workout_templates (template_name, category, description, created_by, exercises, is_public) VALUES (?, ?, ?, ?, ?, ?)',
-                (template_name, category, description, created_by, exercises_json, int(is_public))
-            )
-            conn.commit()
-            result = f"✅ Template '{template_name}' saved!"
-        except sqlite3.IntegrityError:
-            result = f"❌ Template '{template_name}' already exists!"
-        conn.close()
-        return result
-
-    def get_templates(self, category=None, created_by=None):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        query = 'SELECT * FROM workout_templates WHERE 1=1'
-        params = []
-        if category:
-            query += ' AND category = ?'; params.append(category)
-        if created_by:
-            query += ' AND created_by = ?'; params.append(created_by)
-        query += ' ORDER BY created_at DESC'
-        cursor.execute(query, params)
-        rows = cursor.fetchall()
-        conn.close()
-        templates = []
-        for row in rows:
-            templates.append({
-                'id': row[0], 'name': row[1], 'category': row[2], 'description': row[3],
-                'created_by': row[4], 'exercises': json.loads(row[5]), 'is_public': bool(row[6]),
-                'created_at': row[7], 'last_used': row[8]
-            })
-        return templates
-
-    def delete_template(self, template_id):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM workout_templates WHERE id = ?', (template_id,))
-        rows = cursor.rowcount
-        conn.commit()
-        conn.close()
-        return "✅ Template deleted!" if rows > 0 else "❌ Template not found!"
-
-    def get_all_exercises(self):
-        built_in = [
-            'Bench Press','Squat','Deadlift','Overhead Press','Barbell Row','Incline Bench Press',
-            'Machine Shoulder Press','Lat Pulldown','Pull-ups','Hack Squat','Leg Press','Romanian Deadlift',
-            'Hip Thrust','Leg Curl','Leg Extension','Calf Raises','Bicep Curls','Tricep Pushdown','Dips',
-            'Lateral Raises','Face Pulls','Bulgarian Split Squats','Walking Lunges','Close Grip Bench Press',
-            'Wide Grip Pulldown','T-Bar Row','Hammer Curls','Chest Supported Row','Front Squat','Military Press','Chin Up'
-        ]
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        cursor.execute('SELECT exercise_name FROM custom_exercises ORDER BY exercise_name')
-        custom = [r[0] for r in cursor.fetchall()]
-        conn.close()
-        return sorted(set(built_in + custom))
-
-    def get_custom_exercises(self):
-        conn = sqlite3.connect(self.db_name)
-        try:
-            df = pd.read_sql_query(
-                'SELECT exercise_name, category, description, created_at FROM custom_exercises ORDER BY created_at DESC',
-                conn
-            )
-        except Exception:
-            df = pd.DataFrame()
-        conn.close()
-        return df
 
     def get_data(self):
         conn = sqlite3.connect(self.db_name)
-        try:
-            df = pd.read_sql_query('SELECT * FROM workouts ORDER BY date DESC, exercise, set_number', conn)
-            if not df.empty:
-                df['date'] = pd.to_datetime(df['date'])
-        except Exception:
-            df = pd.DataFrame()
+        df = pd.read_sql('SELECT * FROM workouts ORDER BY date', conn)
         conn.close()
         return df
 
-    def get_exercise_stats(self, exercise):
-        df = self.get_data()
-        if df.empty or exercise not in df['exercise'].values:
-            return None
-        ex = df[df['exercise'] == exercise]
-        daily_stats = ex.groupby('date').agg({'weight':['max','mean'],'reps':['sum','mean'],'set_number':'count'}).round(2)
-        daily_stats.columns = ['max_weight','avg_weight','total_reps','avg_reps','total_sets']
-        daily_stats['volume'] = ex.groupby('date').apply(lambda x: (x['reps']*x['weight']).sum())
-        daily_stats.reset_index(inplace=True)
-        return {
-            'daily_stats': daily_stats,
-            'max_weight': ex['weight'].max(),
-            'total_volume': (ex['reps']*ex['weight']).sum(),
-            'total_sets': len(ex),
-            'workout_count': ex['date'].nunique(),
-            'avg_rpe': ex['rpe'].mean() if ex['rpe'].notna().any() else 0
-        }
+# --- Streamlit Setup & Styling ---
+st.set_page_config(page_title="Gym Tracker", layout="wide")
+st.markdown(
+    '''<style>
+    .date-header { background:#1f2937; padding:0.5rem; border-radius:5px; color:#fff; text-align:center; }
+    button[type="submit"] { background:#3b82f6; color:#fff; }
+    </style>''', unsafe_allow_html=True
+)
 
-    def clean_sample_data(self):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        patterns = [
-            "Warm up set, felt good","Working weight","Heavy set, good depth",
-            "Full range of motion","Great leg session! Gym was quiet, felt strong.",
-            "Finished with leg press, good pump"
-        ]
-        deleted = 0
-        for p in patterns:
-            cursor.execute('DELETE FROM workouts WHERE set_notes LIKE ? OR workout_notes LIKE ?', (f'%{p}%', f'%{p}%'))
-            deleted += cursor.rowcount
-        cursor.execute('DELETE FROM workouts WHERE exercise="Hack Squat" AND weight IN (80.0,90.0,100.0) AND reps IN (12,10,8)')
-        deleted += cursor.rowcount
-        cursor.execute('DELETE FROM workouts WHERE exercise="Leg Press" AND weight IN (150.0,170.0) AND reps IN (15,12)')
-        deleted += cursor.rowcount
-        conn.commit()
-        conn.close()
-        return f"✅ Removed {deleted} fake data entries" if deleted > 0 else "✅ No fake data found"
+# Initialize
+def get_tracker():
+    if 'tracker' not in st.session_state:
+        st.session_state.tracker = GymTracker()
+    return st.session_state.tracker
 
-    def reset_all_data(self):
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM workouts')
-        conn.commit()
-        conn.close()
-        return "🚨 ALL WORKOUT DATA DELETED"
+# --- Page: Quick Log ---
+def quick_log_page():
+    st.header("Quick Log")
+    tracker = get_tracker()
+    log_date = st.date_input("Date", value=date.today())
+    ds = log_date.strftime('%Y-%m-%d')
 
-# --- Streamlit App Setup & Styling ---
-st.set_page_config(page_title="💪 Beast Mode Gym Tracker", page_icon="💪", layout="wide")
+    st.markdown(f'<div class="date-header">{log_date.strftime("%A, %B %d, %Y")}</div>', unsafe_allow_html=True)
+    exercise = st.text_input("Exercise", value="Bench Press")
+    with st.form("log_form", clear_on_submit=True):
+        reps = st.number_input("Reps", min_value=1, value=5)
+        weight = st.number_input("Weight (kg)", min_value=0.0, value=50.0)
+        rpe = st.selectbox("RPE", options=[None,6,7,8,9,10], index=1)
+        notes = st.text_input("Notes")
+        submitted = st.form_submit_button("Log Set")
+        if submitted:
+            tracker.log_workout(ds, exercise, [{'reps':reps,'weight':weight,'rpe':rpe,'set_notes':notes}])
+            st.success("Logged!")
 
-st.markdown("""
-<style>
-  .stApp { background-color: #0e1117; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-  .main-header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 1.5rem; border-radius: 12px; text-align: center; font-size: 1.8rem; font-weight: 600; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(59,130,246,0.3); }
-  .stButton > button[type="submit"] { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); border: 1px solid #3b82f6; color:white; height:3.5rem; font-weight:600; }
-  .stButton > button[type="submit"]:hover { background: linear-gradient(135deg,#1d4ed8 0%,#2563eb 100%); box-shadow:0 4px 16px rgba(59,130,246,0.4); }
-</style>
-""", unsafe_allow_html=True)
+    df = tracker.get_data()
+    if not df.empty:
+        st.write(df)
 
-# Initialize session state
-if 'tracker' not in st.session_state:
-    st.session_state.tracker = GymTracker()
-if 'last_exercise' not in st.session_state:
-    st.session_state.last_exercise = 'Bench Press'
-if 'last_reps' not in st.session_state:
-    st.session_state.last_reps = 8
-if 'last_weight' not in st.session_state:
-    st.session_state.last_weight = 0.0
-if 'last_rpe' not in st.session_state:
-    st.session_state.last_rpe = 8
+# --- Page: Progress ---
+def progress_page():
+    st.header("Progress")
+    tracker = get_tracker()
+    df = tracker.get_data()
+    if df.empty:
+        st.info("No data logged yet.")
+        return
+    exercises = df['exercise'].unique().tolist()
+    ex = st.selectbox("Select exercise", exercises)
+    dfx = df[df['exercise']==ex]
+    fig = go.Figure()
+    last = dfx.groupby('date')['weight'].max().reset_index()
+    fig.add_trace(go.Scatter(x=last['date'], y=last['weight'], mode='lines+markers'))
+    fig.update_layout(title=f'{ex} max weight over time', xaxis_title='Date', yaxis_title='Weight')
+    st.plotly_chart(fig, use_container_width=True)
 
-# Define page functions
+# --- Main ---
+def main():
+    st.sidebar.title("Menu")
+    page = st.sidebar.radio("Go to", ["Quick Log","Progress"])
+    if page=="Quick Log": quick_log_page()
+    else: progress_page()
 
-def enhanced_quick_log_page():
-    st.header("⚡ Quick Log")
-    log_date = st.date_input("📅 Select Date", value=date.today())
-    date_str = log_date.strftime('%Y-%m-%d')
-    if log_date == date.today():
-        st.markdown(f"<div class=\"main-header\">🔥 TODAY: {log_date.strftime('%A, %B %d, %Y')}<```
+if __name__ == '__main__':
+    main()
+```
