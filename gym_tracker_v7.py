@@ -681,13 +681,11 @@ st.set_page_config(
 # 🎨 ULTRA-CLEAN MOBILE CSS - High Contrast & Simple
 st.markdown("""
 <style>
-    /* Ultra-clean dark theme */
     .stApp {
         background-color: #000000;
         color: #ffffff;
     }
     
-    /* Simple, readable header */
     .main-header {
         font-size: 2rem;
         font-weight: bold;
@@ -699,7 +697,6 @@ st.markdown("""
         border-radius: 8px;
     }
     
-    /* Ultra-clean buttons */
     .stButton > button {
         width: 100% !important;
         height: 3rem !important;
@@ -716,7 +713,6 @@ st.markdown("""
         background-color: #555555 !important;
     }
     
-    /* Primary button - simple blue */
     .stButton > button[kind="primary"] {
         background-color: #0066cc !important;
         border: 2px solid #0066cc !important;
@@ -729,7 +725,6 @@ st.markdown("""
         background-color: #0052a3 !important;
     }
     
-    /* Simple date header */
     .date-header {
         background-color: #222222;
         color: #ffffff;
@@ -742,7 +737,6 @@ st.markdown("""
         border: 1px solid #444444;
     }
     
-    /* Ultra-clean cards */
     .workout-card {
         background-color: #111111;
         padding: 1rem;
@@ -761,7 +755,6 @@ st.markdown("""
         color: #ffffff;
     }
     
-    /* High contrast stats cards */
     .stats-card {
         background-color: #222222;
         color: #ffffff;
@@ -774,7 +767,6 @@ st.markdown("""
         border: 1px solid #444444;
     }
     
-    /* Ultra-readable set items */
     .set-item {
         background-color: #222222;
         padding: 0.75rem;
@@ -785,7 +777,6 @@ st.markdown("""
         font-size: 0.9rem;
     }
     
-    /* High contrast inputs */
     .stSelectbox > div > div {
         font-size: 1rem !important;
         padding: 0.5rem !important;
@@ -824,7 +815,6 @@ st.markdown("""
         border: 2px solid #666666 !important;
     }
     
-    /* Simple delete buttons */
     .stButton button[title*="Delete"], .stButton button[aria-label*="Delete"] {
         background-color: #cc0000 !important;
         color: #ffffff !important;
@@ -835,7 +825,6 @@ st.markdown("""
         height: 2rem !important;
     }
     
-    /* Simple notes section */
     .notes-section {
         background-color: #111111;
         padding: 0.75rem;
@@ -847,7 +836,6 @@ st.markdown("""
         border: 1px solid #333333;
     }
     
-    /* Ultra-clean tabs */
     .stTabs [data-baseweb="tab-list"] {
         gap: 2px;
     }
@@ -868,7 +856,6 @@ st.markdown("""
         border: 1px solid #0066cc !important;
     }
     
-    /* High contrast messages */
     .stSuccess {
         background-color: #006600 !important;
         color: #ffffff !important;
@@ -905,7 +892,6 @@ st.markdown("""
         border: 1px solid #0088ff !important;
     }
     
-    /* Simple form styling */
     .stForm {
         background-color: #111111;
         padding: 1rem;
@@ -914,7 +900,6 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* Mobile responsive */
     @media (max-width: 768px) {
         .main-header {
             font-size: 1.5rem;
@@ -931,14 +916,12 @@ st.markdown("""
         }
     }
     
-    /* Simple progress bars */
     .stProgress > div > div > div {
         background-color: #0066cc !important;
         border-radius: 2px !important;
         height: 0.5rem !important;
     }
     
-    /* Simple expander */
     .streamlit-expanderHeader {
         background-color: #222222 !important;
         color: #ffffff !important;
@@ -949,7 +932,6 @@ st.markdown("""
         border: 1px solid #444444 !important;
     }
     
-    /* Simple metrics */
     [data-testid="metric-container"] {
         background-color: #222222;
         border-radius: 4px;
