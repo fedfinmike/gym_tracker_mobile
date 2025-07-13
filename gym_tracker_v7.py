@@ -11,10 +11,10 @@ import json
 import time
 import os
 
-# ===== MODERN GYM TRACKER V8 - PRO DESIGN EDITION =====
+# ===== ULTRA-READABLE GYM TRACKER V8 - MAXIMUM CONTRAST EDITION =====
 class GymTracker:
     def __init__(self, db_name='gym_tracker_MASTER.db'):
-        """Initialize Modern Gym Tracker - Pro Design Edition"""
+        """Initialize Ultra-Readable Gym Tracker - Maximum Contrast Edition"""
         self.db_name = db_name
         self.init_database()
         self.migrate_old_data()
@@ -639,20 +639,22 @@ st.markdown("""
     }
     
     .stButton > button[kind="primary"] {
-        background: #2563eb;
-        border: 2px solid #2563eb;
+        background: #1d4ed8;
+        border: 2px solid #1d4ed8;
         color: #ffffff;
         font-weight: 700;
         height: 3.5rem;
         font-size: 1rem;
-        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        box-shadow: 0 3px 10px rgba(29, 78, 216, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     .stButton > button[kind="primary"]:hover {
-        background: #1d4ed8;
-        border-color: #1d4ed8;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        background: #1e40af;
+        border-color: #1e40af;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(29, 78, 216, 0.5);
     }
     
     .workout-card {
@@ -665,19 +667,122 @@ st.markdown("""
         color: #1a1a1a;
     }
     
+    /* Enhanced visual hierarchy */
     .exercise-card {
         background: #f8f9fa;
-        padding: 1.25rem;
-        border-radius: 8px;
-        margin: 0.75rem 0;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 1rem 0;
         border: 2px solid #e9ecef;
         color: #1a1a1a;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
     
     .exercise-card:hover {
         border-color: #2563eb;
-        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        transform: translateY(-2px);
+    }
+    
+    /* Improved form styling */
+    .stForm {
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 2px solid #e9ecef;
+        margin: 1.5rem 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    /* Better section separation */
+    .section-header {
+        color: #1d4ed8;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin: 2rem 0 1rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+    }
+    
+    .section-header::before {
+        content: '';
+        width: 4px;
+        height: 20px;
+        background: #1d4ed8;
+        border-radius: 2px;
+        margin-right: 0.75rem;
+    }
+    
+    /* Enhanced date header */
+    .date-header {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        color: #1e40af;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 1.5rem 0;
+        border: 2px solid #bfdbfe;
+        letter-spacing: -0.02em;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+    
+    /* Improved stats cards */
+    .stats-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        color: #1a1a1a;
+        padding: 1.25rem;
+        border-radius: 10px;
+        text-align: center;
+        margin: 0.5rem;
+        border: 2px solid #e9ecef;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .stats-card:hover {
+        border-color: #2563eb;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    
+    /* Enhanced input styling */
+    .stNumberInput > div > div > input {
+        background: #ffffff !important;
+        color: #1a1a1a !important;
+        border: 2px solid #e9ecef !important;
+        border-radius: 8px !important;
+        font-size: 1.2rem !important;
+        text-align: center !important;
+        font-weight: 700 !important;
+        height: 3.2rem !important;
+        font-family: 'Inter', sans-serif !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .stNumberInput > div > div > input:focus {
+        border-color: #1d4ed8 !important;
+        box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
+    }
+    
+    /* Cleaner selectbox */
+    .stSelectbox > div > div {
+        background: #ffffff !important;
+        color: #1a1a1a !important;
+        border: 2px solid #e9ecef !important;
+        border-radius: 8px !important;
+        font-size: 0.95rem !important;
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 600 !important;
+        min-height: 3rem !important;
     }
     
     .exercise-card.superset {
@@ -856,31 +961,34 @@ st.markdown("""
     }
     
     .stTabs [data-baseweb="tab-list"] {
-        gap: 4px;
+        gap: 6px;
         background: #f8f9fa;
-        padding: 8px;
-        border-radius: 8px;
+        padding: 10px;
+        border-radius: 12px;
         border: 2px solid #e9ecef;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     
     .stTabs [data-baseweb="tab"] {
-        height: 2.75rem;
+        height: 3rem;
         font-size: 0.9rem;
         font-weight: 600;
-        border-radius: 6px;
+        border-radius: 8px;
         background: transparent;
         color: #6b7280;
-        border: 1px solid transparent;
-        transition: all 0.2s ease;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
         font-family: 'Inter', sans-serif;
+        padding: 0 1rem;
     }
     
     .stTabs [aria-selected="true"] {
-        background: #2563eb !important;
+        background: #1d4ed8 !important;
         color: #ffffff !important;
-        border: 1px solid #2563eb !important;
+        border: 2px solid #1d4ed8 !important;
         font-weight: 700 !important;
-        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3) !important;
+        box-shadow: 0 3px 8px rgba(29, 78, 216, 0.3) !important;
+        transform: translateY(-1px) !important;
     }
     
     [data-testid="metric-container"] {
@@ -938,18 +1046,20 @@ st.markdown("""
     .stTextInput > div > div > input[placeholder*="Search"] {
         background: #ffffff !important;
         color: #1a1a1a !important;
-        border: 3px solid #2563eb !important;
-        border-radius: 8px !important;
-        font-size: 1rem !important;
-        padding: 1rem !important;
+        border: 3px solid #1d4ed8 !important;
+        border-radius: 12px !important;
+        font-size: 1.1rem !important;
+        padding: 1.2rem !important;
         font-family: 'Inter', sans-serif !important;
         font-weight: 600 !important;
-        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15) !important;
+        box-shadow: 0 3px 12px rgba(29, 78, 216, 0.2) !important;
+        transition: all 0.3s ease !important;
     }
     
     .stTextInput > div > div > input[placeholder*="Search"]:focus {
-        border-color: #1d4ed8 !important;
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2) !important;
+        border-color: #1e40af !important;
+        box-shadow: 0 0 0 5px rgba(29, 78, 216, 0.25) !important;
+        transform: translateY(-1px) !important;
     }
     
     /* Input focus states */
@@ -981,13 +1091,14 @@ st.markdown("""
         }
         
         .stButton > button {
-            height: 3rem;
-            font-size: 0.85rem;
+            height: 3.2rem;
+            font-size: 0.9rem;
+            margin: 0.3rem 0;
         }
         
         .stButton > button[kind="primary"] {
-            height: 3.25rem;
-            font-size: 0.9rem;
+            height: 3.5rem;
+            font-size: 0.95rem;
         }
         
         .workout-card, .exercise-card {
@@ -1003,50 +1114,114 @@ st.markdown("""
         
         .stTabs [data-baseweb="tab"] {
             font-size: 0.85rem;
-            height: 2.5rem;
+            height: 2.8rem;
         }
         
         .stTextInput > div > div > input[placeholder*="Search"] {
-            font-size: 0.9rem !important;
-            padding: 0.875rem !important;
+            font-size: 1rem !important;
+            padding: 1rem !important;
         }
         
         .stNumberInput > div > div > input {
-            font-size: 1rem !important;
-            height: 2.8rem !important;
+            font-size: 1.1rem !important;
+            height: 3rem !important;
         }
         
         .section-header {
-            font-size: 0.75rem !important;
-            margin: 1.25rem 0 0.5rem 0 !important;
+            font-size: 0.8rem !important;
+            margin: 1.5rem 0 0.75rem 0 !important;
+        }
+        
+        .date-header {
+            font-size: 1.1rem;
+            padding: 1.25rem;
         }
     }
     
-    /* Clean up default Streamlit styles */
+    /* Ultra mobile optimizations */
+    @media (max-width: 480px) {
+        .main-header {
+            font-size: 1.2rem;
+            padding: 1.25rem;
+        }
+        
+        .stButton > button {
+            height: 3rem;
+            font-size: 0.85rem;
+        }
+        
+        .stButton > button[kind="primary"] {
+            height: 3.25rem;
+            font-size: 0.9rem;
+        }
+        
+        .exercise-card {
+            padding: 1rem;
+        }
+        
+        .stats-card {
+            font-size: 0.8rem;
+            padding: 0.875rem;
+        }
+    }
+    
+    /* Professional spacing and polish */
     .main .block-container {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
         max-width: 100%;
     }
     
-    /* Hide Streamlit menu and footer */
+    /* Hide Streamlit branding for clean look */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    .stDeployButton {visibility: hidden;}
     
-    /* Better contrast for readability */
+    /* Better contrast for all text */
     h1, h2, h3, h4, h5, h6 {
         color: #1a1a1a !important;
         font-weight: 700 !important;
+        line-height: 1.2 !important;
     }
     
-    p, div, span {
+    p, div, span, label {
         color: #1a1a1a !important;
+        line-height: 1.5 !important;
     }
     
-    /* Override any remaining dark elements */
+    /* Enhanced metric styling */
+    [data-testid="metric-container"] div[data-testid="metric-value"] {
+        color: #1d4ed8 !important;
+        font-size: 1.8rem !important;
+        font-weight: 800 !important;
+        font-family: 'Inter', sans-serif !important;
+    }
+    
+    /* Improved alert boxes */
+    .stSuccess, .stError, .stWarning, .stInfo {
+        border-radius: 10px !important;
+        padding: 1.25rem !important;
+        font-weight: 600 !important;
+        margin: 1rem 0 !important;
+    }
+    
+    /* Better form labels */
+    .stFormSubmitButton > button {
+        height: 3.5rem !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+    
+    /* Enhanced overall styling */
     * {
         box-sizing: border-box;
+    }
+    
+    .stApp > div:first-child {
+        padding: 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -2210,9 +2385,6 @@ def main():
     
     # Header
     st.markdown('<div class="main-header">💪 Ultra-Readable Gym Tracker</div>', unsafe_allow_html=True)
-    
-    # Success message
-    st.success("✅ **Ultra-Readable Design** - Clean white theme, perfect contrast, 500+ exercises!")
     
     # Main navigation tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
