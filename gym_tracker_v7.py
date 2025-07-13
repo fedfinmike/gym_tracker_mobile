@@ -1206,13 +1206,53 @@ st.markdown("""
         margin: 1rem 0 !important;
     }
     
-    /* Better form labels */
+    /* Better form labels and submit buttons */
     .stFormSubmitButton > button {
+        background: #1d4ed8 !important;
+        border: 2px solid #1d4ed8 !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
         height: 3.5rem !important;
         font-size: 1rem !important;
-        font-weight: 700 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.5px !important;
+        border-radius: 8px !important;
+        width: 100% !important;
+        box-shadow: 0 3px 10px rgba(29, 78, 216, 0.4) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stFormSubmitButton > button:hover {
+        background: #1e40af !important;
+        border-color: #1e40af !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 5px 15px rgba(29, 78, 216, 0.5) !important;
+    }
+    
+    /* Force all submit buttons to use correct styling */
+    button[kind="formSubmit"] {
+        background: #1d4ed8 !important;
+        border: 2px solid #1d4ed8 !important;
+        color: #ffffff !important;
+    }
+    
+    /* Override any remaining red button styling */
+    .stButton button[style*="background-color: rgb(255, 75, 75)"] {
+        background: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+    }
+    
+    /* Ensure form submit buttons are always blue */
+    .stForm button[type="submit"] {
+        background: #1d4ed8 !important;
+        border: 2px solid #1d4ed8 !important;
+        color: #ffffff !important;
+    }
+    
+    /* Override any Streamlit default error button styling */
+    button[data-testid="baseButton-primary"] {
+        background: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
     }
     
     /* Enhanced overall styling */
@@ -1223,6 +1263,8 @@ st.markdown("""
     .stApp > div:first-child {
         padding: 0;
     }
+</style>
+""", unsafe_allow_html=True)
 </style>
 """, unsafe_allow_html=True)
 
@@ -1374,10 +1416,9 @@ def clean_exercise_selector(all_exercises, default_exercise=None, key="exercise_
     return default_exercise or ""
 
 def show_success_animation():
-    """Show success feedback with animation"""
-    st.success("✅ SET LOGGED SUCCESSFULLY!")
-    time.sleep(0.2)
+    """Show subtle success feedback"""
     st.balloons()
+    # Remove the big success message, just show balloons
 
 # ===== MAIN APP PAGES =====
 
@@ -1542,7 +1583,7 @@ def enhanced_quick_log_page():
         last_workout = get_last_workout_for_exercise(exercise)
         if last_workout is not None:
             last_set = last_workout.iloc[-1]
-            st.success(f"🔥 **Last:** {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
+            st.caption(f"🔥 **Last:** {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
     
     # Clean, simplified logging form
     with st.form("quick_log_form", clear_on_submit=True):
@@ -1604,7 +1645,7 @@ def enhanced_quick_log_page():
                     if st.button("🗑️", key=f"delete_{set_row['id']}", help="Delete this set"):
                         if st.session_state.get('confirm_delete_set') == set_row['id']:
                             result = st.session_state.tracker.delete_set(set_row['id'])
-                            st.success(result)
+                            # Subtle feedback - just rerun without big success message
                             st.session_state.pop('confirm_delete_set', None)
                             st.rerun()
                         else:
@@ -1697,8 +1738,8 @@ def progress_page():
                 y=daily_stats['max_weight'],
                 mode='lines+markers',
                 name='Max Weight',
-                line=dict(color='#3b82f6', width=3),
-                marker=dict(size=8, color='#3b82f6')
+                line=dict(color='#1d4ed8', width=3),
+                marker=dict(size=8, color='#1d4ed8')
             ))
             
             # Average weight line
@@ -1931,16 +1972,14 @@ def program_creator_page():
                         result = st.session_state.tracker.create_daily_program(
                             date_str, program_name, created_by, program_notes, st.session_state.program_exercises
                         )
-                        st.success(result)
                         
                         if save_as_template:
                             template_result = st.session_state.tracker.save_template(
                                 program_name, category, program_notes, created_by, 
                                 st.session_state.program_exercises
                             )
-                            st.success(template_result)
                         
-                        st.balloons()
+                        st.balloons()  # Subtle success feedback
                         st.session_state.program_exercises = []
                         st.rerun()
                     else:
@@ -1975,14 +2014,14 @@ def program_creator_page():
                     with col1:
                         if st.button(f"📅 Use Template", key=f"use_{template['id']}", use_container_width=True):
                             st.session_state.program_exercises = template['exercises'].copy()
-                            st.success(f"✅ Loaded template: {template['name']}")
+                            st.balloons()  # Subtle feedback
                             st.rerun()
                     
                     with col2:
                         if st.button(f"🗑️ Delete", key=f"del_temp_{template['id']}", use_container_width=True):
                             if st.session_state.get('confirm_delete_template') == template['id']:
                                 result = st.session_state.tracker.delete_template(template['id'])
-                                st.success(result)
+                                # Subtle feedback - just rerun
                                 st.session_state.pop('confirm_delete_template', None)
                                 st.rerun()
                             else:
@@ -2046,8 +2085,7 @@ def exercises_page():
             )
             
             if "✅" in result:
-                st.success(result)
-                st.balloons()
+                st.balloons()  # Subtle success feedback
             else:
                 st.error(result)
             st.rerun()
@@ -2104,7 +2142,7 @@ def exercises_page():
                         if st.button("🚀 Use", key=f"use_custom_{exercise['exercise_name']}", 
                                    help="Select for quick log", use_container_width=True):
                             st.session_state.last_exercise = exercise['exercise_name']
-                            st.success(f"✅ Selected: {exercise['exercise_name']}")
+                            st.balloons()  # Subtle feedback
                     
                     st.markdown('</div>', unsafe_allow_html=True)
         
@@ -2170,7 +2208,7 @@ def data_manager_page():
         if st.button("🧹 Clean Sample Data", use_container_width=True):
             result = st.session_state.tracker.clean_sample_data()
             if "✅" in result:
-                st.success(result)
+                st.balloons()  # Subtle success feedback
                 time.sleep(1)
                 st.rerun()
             else:
@@ -2180,7 +2218,7 @@ def data_manager_page():
         if st.button("🚨 RESET ALL DATA", use_container_width=True):
             if st.session_state.get('confirm_nuclear', False):
                 result = st.session_state.tracker.reset_all_data()
-                st.error(result)
+                st.error(result)  # Keep error for this serious action
                 st.session_state.pop('confirm_nuclear', None)
                 time.sleep(1)
                 st.rerun()
@@ -2210,7 +2248,8 @@ def data_manager_page():
                 st.dataframe(suspicious_notes[['date', 'exercise', 'reps', 'weight', 'set_notes', 'workout_notes']], 
                            use_container_width=True)
             else:
-                st.success("✅ No obvious sample data detected!")
+                # Just show caption instead of success box
+                st.caption("✅ No obvious sample data detected")
         else:
             st.info("📊 No workout data found")
     
@@ -2254,8 +2293,7 @@ def data_manager_page():
     if st.button("📤 Export All Data", use_container_width=True, type="primary"):
         result = st.session_state.tracker.export_data(export_filename)
         if "✅" in result:
-            st.success(result)
-            st.balloons()
+            st.balloons()  # Subtle success feedback
         else:
             st.error(result)
     
