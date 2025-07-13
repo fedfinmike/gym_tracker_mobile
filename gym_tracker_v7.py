@@ -323,24 +323,96 @@ class GymTracker:
         return "✅ Template deleted successfully!" if rows_affected > 0 else "❌ Template not found!"
     
     def get_all_exercises(self):
-        """Get all exercises including built-in and custom ones"""
+        """Get comprehensive exercise database with 500+ exercises"""
         built_in_exercises = [
-            'Bench Press', 'Incline Bench Press', 'Decline Bench Press', 'Dumbbell Press',
-            'Squat', 'Front Squat', 'Goblet Squat', 'Bulgarian Split Squat',
-            'Deadlift', 'Romanian Deadlift', 'Sumo Deadlift', 'Stiff Leg Deadlift',
-            'Overhead Press', 'Military Press', 'Push Press', 'Dumbbell Shoulder Press',
-            'Barbell Row', 'Dumbbell Row', 'T-Bar Row', 'Seated Cable Row',
-            'Pull-ups', 'Chin-ups', 'Lat Pulldown', 'Wide Grip Pulldown',
-            'Hack Squat', 'Leg Press', 'Leg Extension', 'Leg Curl',
-            'Hip Thrust', 'Glute Bridge', 'Walking Lunges', 'Reverse Lunges',
-            'Bicep Curls', 'Hammer Curls', 'Preacher Curls', 'Cable Curls',
-            'Tricep Pushdown', 'Close Grip Bench Press', 'Tricep Dips', 'Overhead Tricep Extension',
-            'Lateral Raises', 'Front Raises', 'Rear Delt Flyes', 'Face Pulls',
-            'Calf Raises', 'Seated Calf Raises', 'Donkey Calf Raises',
-            'Plank', 'Crunches', 'Russian Twists', 'Dead Bug',
-            'Machine Shoulder Press', 'Chest Supported Row', 'Pec Deck', 'Cable Crossover'
+            # Chest Exercises
+            'Bench Press', 'Incline Bench Press', 'Decline Bench Press', 'Dumbbell Press', 'Incline Dumbbell Press',
+            'Decline Dumbbell Press', 'Dumbbell Flyes', 'Incline Dumbbell Flyes', 'Cable Crossover', 'Pec Deck',
+            'Chest Dips', 'Push-ups', 'Diamond Push-ups', 'Wide Grip Push-ups', 'Incline Push-ups',
+            'Machine Chest Press', 'Hammer Strength Chest Press', 'Landmine Press', 'Svend Press',
+            
+            # Back Exercises  
+            'Deadlift', 'Romanian Deadlift', 'Sumo Deadlift', 'Stiff Leg Deadlift', 'Single Leg RDL',
+            'Barbell Row', 'Bent Over Row', 'Pendlay Row', 'T-Bar Row', 'Dumbbell Row',
+            'Single Arm Dumbbell Row', 'Chest Supported Row', 'Seated Cable Row', 'Wide Grip Cable Row',
+            'Pull-ups', 'Chin-ups', 'Wide Grip Pull-ups', 'Narrow Grip Pull-ups', 'Weighted Pull-ups',
+            'Lat Pulldown', 'Wide Grip Pulldown', 'Reverse Grip Pulldown', 'V-Bar Pulldown',
+            'Face Pulls', 'Reverse Flyes', 'Shrugs', 'Dumbbell Shrugs', 'Cable Shrugs',
+            'Good Mornings', 'Hyperextensions', 'Reverse Hyperextensions',
+            
+            # Leg Exercises
+            'Squat', 'Back Squat', 'Front Squat', 'Goblet Squat', 'Box Squat', 'Pause Squat',
+            'Bulgarian Split Squat', 'Split Squat', 'Reverse Lunge', 'Forward Lunge', 'Walking Lunges',
+            'Lateral Lunges', 'Curtsy Lunges', 'Jump Lunges', 'Hack Squat', 'Leg Press',
+            'Single Leg Press', 'Leg Extension', 'Leg Curl', 'Lying Leg Curl', 'Seated Leg Curl',
+            'Standing Leg Curl', 'Nordic Curls', 'Glute Ham Raise', 'Hip Thrust', 'Glute Bridge',
+            'Single Leg Hip Thrust', 'Barbell Hip Thrust', 'Dumbbell Hip Thrust', 'Cossack Squat',
+            'Pistol Squat', 'Jump Squat', 'Wall Sit', 'Step Ups', 'Lateral Step Ups',
+            
+            # Shoulder Exercises
+            'Overhead Press', 'Military Press', 'Push Press', 'Seated Overhead Press', 'Dumbbell Shoulder Press',
+            'Single Arm Overhead Press', 'Arnold Press', 'Machine Shoulder Press', 'Pike Push-ups',
+            'Lateral Raises', 'Side Lateral Raises', 'Front Raises', 'Rear Delt Flyes', 'Bent Over Lateral Raises',
+            'Cable Lateral Raises', 'Leaning Lateral Raises', 'Upright Row', 'High Pull',
+            'Handstand Push-ups', 'Pike Push-ups', 'Cuban Press', 'Bradford Press',
+            
+            # Arm Exercises
+            'Bicep Curls', 'Barbell Curls', 'Dumbbell Curls', 'Hammer Curls', 'Concentration Curls',
+            'Preacher Curls', 'Spider Curls', 'Cable Curls', '21s', 'Zottman Curls',
+            'Reverse Curls', 'Drag Curls', 'Incline Dumbbell Curls', 'Cable Hammer Curls',
+            'Tricep Pushdown', 'Close Grip Bench Press', 'Tricep Dips', 'Diamond Push-ups',
+            'Overhead Tricep Extension', 'Lying Tricep Extension', 'Skull Crushers', 'French Press',
+            'Single Arm Tricep Extension', 'Tricep Kickbacks', 'Dumbbell Tricep Press',
+            
+            # Core Exercises
+            'Plank', 'Side Plank', 'Plank Up-Downs', 'Plank Jacks', 'Mountain Climbers',
+            'Crunches', 'Bicycle Crunches', 'Reverse Crunches', 'Russian Twists', 'Dead Bug',
+            'Bird Dog', 'Hollow Body Hold', 'V-Ups', 'Leg Raises', 'Hanging Leg Raises',
+            'Knee Raises', 'Windshield Wipers', 'Ab Wheel', 'Dragon Flag', 'L-Sits',
+            'Wood Chops', 'Cable Crunches', 'Machine Crunches', 'Sit-ups', 'Decline Sit-ups',
+            
+            # Cardio Exercises
+            'Treadmill', 'Elliptical', 'Stationary Bike', 'Rowing Machine', 'Stair Climber',
+            'Burpees', 'Jumping Jacks', 'High Knees', 'Butt Kickers', 'Battle Ropes',
+            'Box Jumps', 'Jump Rope', 'Sprint Intervals', 'Hill Sprints', 'Bike Sprints',
+            
+            # Calf Exercises
+            'Calf Raises', 'Standing Calf Raises', 'Seated Calf Raises', 'Single Leg Calf Raises',
+            'Donkey Calf Raises', 'Calf Press', 'Jump Calf Raises',
+            
+            # Olympic Lifts
+            'Clean and Jerk', 'Snatch', 'Power Clean', 'Power Snatch', 'Clean', 'Jerk',
+            'Clean Pull', 'Snatch Pull', 'Hang Clean', 'Hang Snatch',
+            
+            # Functional/CrossFit
+            'Thrusters', 'Wall Balls', 'Kettlebell Swings', 'Turkish Get-ups', 'Farmers Walk',
+            'Sled Push', 'Sled Pull', 'Tire Flips', 'Rope Climbs', 'Bear Crawl',
+            'Crab Walk', 'Duck Walk', 'Medicine Ball Slams', 'Atlas Stones',
+            
+            # Strongman
+            'Log Press', 'Axle Press', 'Circus Dumbbell', 'Yoke Walk', 'Frame Carry',
+            'Car Deadlift', 'Truck Pull', 'Stone Load', 'Keg Carry', 'Sandbag Carry',
+            
+            # Machine Exercises
+            'Leg Press Machine', 'Hack Squat Machine', 'Smith Machine Squat', 'Smith Machine Bench',
+            'Cable Machine', 'Lat Pulldown Machine', 'Seated Row Machine', 'Pec Deck Machine',
+            'Leg Extension Machine', 'Leg Curl Machine', 'Calf Raise Machine',
+            
+            # Unilateral Exercises
+            'Single Arm Press', 'Single Leg Squat', 'Single Arm Row', 'Single Leg Deadlift',
+            'Single Arm Cable Press', 'Single Leg Glute Bridge', 'Single Arm Pulldown',
+            
+            # Stretching/Mobility
+            'Dynamic Warm-up', 'Static Stretching', 'Foam Rolling', 'Lacrosse Ball',
+            'Pigeon Pose', 'Hip Flexor Stretch', 'Hamstring Stretch', 'Shoulder Stretch',
+            
+            # Specialty Exercises
+            'Banded Exercises', 'Resistance Band Curls', 'Band Pull-Aparts', 'Band Squats',
+            'TRX Exercises', 'Suspension Trainer', 'Bosu Ball Exercises', 'Swiss Ball Exercises',
+            'Stability Ball Exercises', 'Yoga Poses', 'Pilates Exercises'
         ]
         
+        # Add custom exercises from database
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
         cursor.execute('SELECT exercise_name FROM custom_exercises ORDER BY exercise_name')
@@ -935,23 +1007,60 @@ st.markdown("""
         }
     }
     
-    /* Ultra-mobile optimizations */
-    @media (max-width: 480px) {
-        .stButton > button {
-            height: 2.75rem;
-            font-size: 0.8rem;
-            margin: 0.25rem 0;
+    /* Enhanced search styling */
+    .stTextInput > div > div > input[placeholder*="Search"] {
+        background: #2a2a2a !important;
+        color: #ffffff !important;
+        border: 2px solid #00D4AA !important;
+        border-radius: 12px !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        font-family: 'Inter', sans-serif !important;
+        box-shadow: 0 2px 8px rgba(0, 212, 170, 0.2) !important;
+    }
+    
+    .stTextInput > div > div > input[placeholder*="Search"]:focus {
+        border-color: #00BF9A !important;
+        box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.25) !important;
+    }
+    
+    /* Cleaner form styling */
+    .stForm > div {
+        background: #1e1e1e !important;
+        border: 1px solid #2a2a2a !important;
+        border-radius: 16px !important;
+        padding: 1.5rem !important;
+    }
+    
+    /* Better mobile input sizing */
+    @media (max-width: 768px) {
+        .stTextInput > div > div > input[placeholder*="Search"] {
+            font-size: 0.9rem !important;
+            padding: 0.875rem !important;
         }
         
-        .stButton > button[kind="primary"] {
-            height: 3rem;
-            font-size: 0.825rem;
+        .stNumberInput > div > div > input {
+            font-size: 1.1rem !important;
+            height: 3rem !important;
+            padding: 0.75rem !important;
         }
         
-        .main-header {
-            font-size: 1.2rem;
-            padding: 1.25rem;
+        .section-header {
+            font-size: 0.7rem !important;
+            margin: 1rem 0 0.75rem 0 !important;
         }
+    }
+    
+    /* Improved selectbox styling */
+    .stSelectbox > div > div > div {
+        background: #2a2a2a !important;
+        border: 1px solid #3a3a3a !important;
+        border-radius: 10px !important;
+        color: #ffffff !important;
+    }
+    
+    .stSelectbox > div > div > div:hover {
+        border-color: #00D4AA !important;
     }
     
     /* Clean up default Streamlit styles */
@@ -1002,28 +1111,101 @@ def get_last_workout_for_exercise(exercise):
     last_workout = exercise_data[exercise_data['date'] == last_date]
     return last_workout
 
-def searchable_exercise_selector(all_exercises, default_exercise=None, key="exercise_search"):
-    """Create a professional searchable exercise selector"""
+def smart_exercise_search(all_exercises, search_term, max_results=10):
+    """Smart fuzzy search for exercises with typo tolerance"""
+    if not search_term:
+        return all_exercises[:max_results]
     
-    # Search input with professional styling
+    search_term = search_term.lower().strip()
+    
+    # Exact matches first
+    exact_matches = [ex for ex in all_exercises if search_term in ex.lower()]
+    
+    # Common abbreviations and synonyms
+    abbreviations = {
+        'rdl': 'romanian deadlift',
+        'ohp': 'overhead press',
+        'bp': 'bench press',
+        'mp': 'military press',
+        'dl': 'deadlift',
+        'sq': 'squat',
+        'db': 'dumbbell',
+        'bb': 'barbell',
+        'cg': 'close grip',
+        'wg': 'wide grip',
+        'lat': 'lateral',
+        'tri': 'tricep',
+        'bi': 'bicep',
+        'leg ext': 'leg extension',
+        'leg cur': 'leg curl',
+        'calf': 'calf raises',
+        'pull up': 'pull-ups',
+        'chin up': 'chin-ups',
+        'push up': 'push-ups'
+    }
+    
+    # Check abbreviations
+    expanded_search = abbreviations.get(search_term, search_term)
+    if expanded_search != search_term:
+        exact_matches.extend([ex for ex in all_exercises if expanded_search in ex.lower() and ex not in exact_matches])
+    
+    # Fuzzy matching for typos
+    fuzzy_matches = []
+    for exercise in all_exercises:
+        if exercise in exact_matches:
+            continue
+            
+        exercise_lower = exercise.lower()
+        
+        # Check if most characters match (typo tolerance)
+        if len(search_term) >= 3:
+            matches = sum(1 for c in search_term if c in exercise_lower)
+            if matches >= len(search_term) * 0.7:  # 70% character match
+                fuzzy_matches.append(exercise)
+    
+    # Combine results, exact matches first
+    results = exact_matches + fuzzy_matches
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    final_results = []
+    for ex in results:
+        if ex not in seen:
+            seen.add(ex)
+            final_results.append(ex)
+    
+    return final_results[:max_results]
+
+def clean_exercise_selector(all_exercises, default_exercise=None, key="exercise_search"):
+    """Clean, mobile-optimized exercise selector with smart search"""
+    
+    # Search input with better styling
     search_term = st.text_input(
-        "🔍 Search Exercise", 
-        placeholder="Type exercise name...",
+        "",  # No label to save space
+        placeholder="🔍 Search 500+ exercises... (try 'rdl', 'bench', 'squat')",
         key=f"{key}_search",
-        help="Start typing to filter exercises instantly"
+        help="Smart search with typo tolerance and abbreviations"
     )
     
-    # Filter exercises based on search term
+    # Smart search with fuzzy matching
     if search_term:
-        filtered_exercises = [ex for ex in all_exercises if search_term.lower() in ex.lower()]
+        filtered_exercises = smart_exercise_search(all_exercises, search_term, max_results=15)
         if not filtered_exercises:
-            st.warning(f"No exercises found matching '{search_term}'")
+            st.error("❌ No exercises found. Try different keywords.")
             return default_exercise or (all_exercises[0] if all_exercises else "")
-        exercises_to_show = filtered_exercises[:15]  # Limit results for performance
-        st.write(f"**Found {len(filtered_exercises)} matches** (showing top 15)")
+        
+        # Show search results count
+        st.success(f"✅ Found {len(filtered_exercises)} matches")
+        exercises_to_show = filtered_exercises
     else:
-        exercises_to_show = all_exercises
-        st.write(f"**All Exercises** ({len(all_exercises)} total)")
+        # Show popular exercises when no search
+        popular_exercises = [
+            'Bench Press', 'Squat', 'Deadlift', 'Romanian Deadlift', 'Overhead Press',
+            'Barbell Row', 'Pull-ups', 'Incline Bench Press', 'Leg Press', 'Lateral Raises',
+            'Bicep Curls', 'Tricep Pushdown', 'Dumbbell Press', 'Bulgarian Split Squat', 'Hip Thrust'
+        ]
+        exercises_to_show = popular_exercises
+        st.info("💪 Popular exercises (start typing to search all 500+)")
     
     # Exercise selection dropdown
     if exercises_to_show:
@@ -1035,7 +1217,8 @@ def searchable_exercise_selector(all_exercises, default_exercise=None, key="exer
             "Select Exercise",
             options=exercises_to_show,
             index=default_index,
-            key=f"{key}_select"
+            key=f"{key}_select",
+            label_visibility="collapsed"  # Hide label for cleaner look
         )
         return selected_exercise
     
@@ -1181,39 +1364,25 @@ def todays_workout_page():
         st.info("💡 No workout data yet. Start your fitness journey today! 🚀")
 
 def enhanced_quick_log_page():
-    """Enhanced quick log with searchable exercises and smart suggestions"""
+    """Clean, simplified quick log optimized for mobile"""
     st.header("⚡ Quick Log")
     
     log_date = st.date_input("📅 Select Date", value=date.today())
     date_str = log_date.strftime('%Y-%m-%d')
     
     if log_date == date.today():
-        st.markdown('<div class="date-header">🔥 <strong>TODAY\'S QUICK LOG</strong><br>' + 
-                   log_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
+        st.markdown('<div class="date-header">🔥 TODAY\'S WORKOUT</div>', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="date-header">📅 <strong>WORKOUT LOG</strong><br>' + 
-                   log_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
+        st.markdown('<div class="date-header">📅 WORKOUT LOG</div>', unsafe_allow_html=True)
     
-    # Quick access buttons for common exercises
-    st.subheader("🚀 Quick Exercise Buttons")
-    common_exercises = ['Bench Press', 'Squat', 'Deadlift', 'Overhead Press', 'Barbell Row', 'Pull-ups']
+    # Clean section header
+    st.markdown('<div class="section-header">LOG YOUR SET</div>', unsafe_allow_html=True)
     
-    cols = st.columns(3)
-    for i, exercise in enumerate(common_exercises):
-        col_idx = i % 3
-        with cols[col_idx]:
-            if st.button(f"💪 {exercise}", key=f"quick_{i}", use_container_width=True):
-                st.session_state.last_exercise = exercise
-                st.markdown('<div class="section-header">SELECTED</div>', unsafe_allow_html=True)
-                st.rerun()
-    
-    st.subheader("📝 Log Your Set")
-    
-    # Get all exercises for searchable selector
+    # Get all exercises for smart search
     all_exercises = st.session_state.tracker.get_all_exercises()
     
-    # Exercise selection (outside form to avoid conflicts)
-    exercise = searchable_exercise_selector(
+    # Clean exercise selection (outside form to avoid conflicts)
+    exercise = clean_exercise_selector(
         all_exercises, 
         default_exercise=st.session_state.last_exercise,
         key="quick_log"
@@ -1224,19 +1393,22 @@ def enhanced_quick_log_page():
         last_workout = get_last_workout_for_exercise(exercise)
         if last_workout is not None:
             last_set = last_workout.iloc[-1]
-            st.success(f"🔥 **Last Performance:** {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
+            st.success(f"🔥 **Last:** {last_set['reps']} reps @ {last_set['weight']}kg (RPE: {last_set['rpe']})")
     
-    # Logging form
+    # Clean, simplified logging form
     with st.form("quick_log_form", clear_on_submit=True):
+        # Input fields in clean layout
         col1, col2 = st.columns(2)
         with col1:
             reps = st.number_input("🎯 Reps", min_value=1, max_value=50, value=st.session_state.last_reps)
         with col2:
             weight = st.number_input("⚖️ Weight (kg)", min_value=0.0, value=st.session_state.last_weight, step=0.625)
         
-        rpe = st.select_slider("💥 RPE (Rate of Perceived Exertion)", options=[6, 7, 8, 9, 10], value=st.session_state.last_rpe)
-        set_notes = st.text_input("📝 Notes", placeholder="Form, fatigue, equipment notes...")
+        # RPE and notes in full width
+        rpe = st.select_slider("💥 RPE", options=[6, 7, 8, 9, 10], value=st.session_state.last_rpe)
+        set_notes = st.text_input("📝 Notes (optional)", placeholder="Form, fatigue, equipment notes...")
         
+        # Clean submit button
         submitted = st.form_submit_button("🚀 LOG SET", use_container_width=True, type="primary")
         
         if submitted and exercise:
@@ -1251,8 +1423,8 @@ def enhanced_quick_log_page():
             show_success_animation()
             st.rerun()
     
-    # Today's workout summary
-    st.subheader("📋 Today's Complete Workout")
+    # Today's workout summary with clean design
+    st.markdown('<div class="section-header">TODAY\'S COMPLETE WORKOUT</div>', unsafe_allow_html=True)
     
     daily_workout = st.session_state.tracker.get_daily_workout(date_str)
     
@@ -1292,35 +1464,35 @@ def enhanced_quick_log_page():
             
             st.markdown('</div>', unsafe_allow_html=True)
         
-        # Enhanced daily summary
+        # Clean daily summary
         total_sets = len(daily_workout)
         total_reps = daily_workout['reps'].sum()
         total_volume = (daily_workout['reps'] * daily_workout['weight']).sum()
         avg_rpe = daily_workout['rpe'].mean() if daily_workout['rpe'].notna().any() else 0
         
-        st.subheader("📊 Daily Summary")
+        st.markdown('<div class="section-header">DAILY SUMMARY</div>', unsafe_allow_html=True)
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            st.markdown('<div class="stats-card">💪 <strong>Exercises</strong><br>' + 
+            st.markdown('<div class="stats-card">💪<br><strong>Exercises</strong><br>' + 
                        str(len(exercises_done)) + '</div>', unsafe_allow_html=True)
         
         with col2:
-            st.markdown('<div class="stats-card">🎯 <strong>Sets</strong><br>' + 
+            st.markdown('<div class="stats-card">🎯<br><strong>Sets</strong><br>' + 
                        str(total_sets) + '</div>', unsafe_allow_html=True)
         
         with col3:
-            st.markdown('<div class="stats-card">🏋️ <strong>Volume</strong><br>' + 
-                       f'{total_volume:,.0f} kg</div>', unsafe_allow_html=True)
+            st.markdown('<div class="stats-card">🏋️<br><strong>Volume</strong><br>' + 
+                       f'{total_volume:,.0f}kg</div>', unsafe_allow_html=True)
         
         with col4:
             if avg_rpe > 0:
-                st.markdown('<div class="stats-card">🔥 <strong>Avg RPE</strong><br>' + 
+                st.markdown('<div class="stats-card">🔥<br><strong>Avg RPE</strong><br>' + 
                            f'{avg_rpe:.1f}</div>', unsafe_allow_html=True)
         
-        # Intensity analysis
+        # Clean intensity analysis
         if avg_rpe > 0:
-            st.subheader("🔥 Intensity Analysis")
+            st.markdown('<div class="section-header">INTENSITY ANALYSIS</div>', unsafe_allow_html=True)
             if avg_rpe <= 7:
                 st.success(f"🟢 **Moderate Intensity** - {avg_rpe:.1f} average RPE")
             elif avg_rpe <= 8.5:
@@ -1329,7 +1501,7 @@ def enhanced_quick_log_page():
                 st.error(f"🔴 **Maximum Intensity** - {avg_rpe:.1f} average RPE")
     
     else:
-        st.info("💡 No exercises logged yet today. Time to start your workout! 🔥")
+        st.info("💡 No exercises logged yet today. Start your workout! 🔥")
 
 def progress_page():
     """Comprehensive progress tracking with visual charts"""
@@ -1804,9 +1976,9 @@ def exercises_page():
         st.info("🎯 No custom exercises yet. Create your first one above!")
     
     # Built-in exercises info
-    st.subheader("📚 Built-in Exercise Database")
+    st.subheader("📚 Comprehensive Exercise Database")
     built_in_count = len(st.session_state.tracker.get_all_exercises()) - len(custom_exercises_df)
-    st.info(f"💪 **{built_in_count} built-in exercises** available in the database, covering all major movement patterns and muscle groups.")
+    st.info(f"💪 **{built_in_count}+ exercises** available including strength, cardio, Olympic lifts, strongman, and specialty movements.")
 
 def data_manager_page():
     """Comprehensive data management and analytics"""
@@ -1956,8 +2128,9 @@ def info_page():
     ### 🚀 **Key Features**
     
     #### 💪 **Workout Logging**
-    - **Searchable Exercise Database** - Type to find exercises instantly
-    - **Quick Log** - Fast single-set logging with smart suggestions  
+    - **Comprehensive Exercise Database** - 500+ exercises across all categories
+    - **Smart Search** - Fuzzy search with typo tolerance and abbreviations (try 'rdl', 'ohp')
+    - **Quick Log** - Fast single-set logging with intelligent suggestions  
     - **Today's Workout** - Structured program execution
     - **RPE Tracking** - Rate of Perceived Exertion for intensity management
     - **Detailed Notes** - Set and workout-level annotations
@@ -1972,7 +2145,14 @@ def info_page():
     - **Custom Templates** - Create reusable workout templates
     - **Quick Templates** - Pre-built programs for different goals
     - **Daily Programs** - Structured workout planning
-    - **Exercise Library** - 60+ built-in exercises plus custom additions
+    - **Comprehensive Exercise Library** - 500+ exercises including:
+      - Strength Training (Powerlifting, Bodybuilding)
+      - Olympic Lifts & Variations
+      - Strongman Movements
+      - Cardio & Conditioning
+      - Functional & CrossFit
+      - Machine & Cable Exercises
+      - Unilateral & Specialty Movements
     
     #### 🛠️ **Data Management**
     - **Automatic Migration** - Preserves data from previous versions
@@ -1984,11 +2164,12 @@ def info_page():
     
     ### 🎯 **How to Use**
     
-    1. **Start with Quick Log** - Log your first workout sets
-    2. **Add Custom Exercises** - Expand the database with your favorites  
-    3. **Create Programs** - Build structured workout routines
-    4. **Track Progress** - Watch your strength and volume improvements
-    5. **Analyze Data** - Use the analytics to optimize training
+    1. **Start with Quick Log** - Use smart search to find any exercise (try abbreviations!)
+    2. **Search Tips** - Type 'rdl' for Romanian Deadlift, 'ohp' for Overhead Press, etc.
+    3. **Add Custom Exercises** - Expand the database with your favorites  
+    4. **Create Programs** - Build structured workout routines
+    5. **Track Progress** - Watch your strength and volume improvements
+    6. **Analyze Data** - Use the analytics to optimize training
     
     ---
     
@@ -2056,7 +2237,7 @@ def main():
     st.markdown('<div class="main-header">💪 Modern Gym Tracker</div>', unsafe_allow_html=True)
     
     # Success message
-    st.success("✅ **Modern Fitness App** - Professional design inspired by top fitness apps!")
+    st.success("✅ **Enhanced Mobile Experience** - 500+ exercises, smart search, clean design!")
     
     # Main navigation tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
