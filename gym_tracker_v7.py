@@ -58,7 +58,7 @@ class GymTracker:
                     continue
         
         if migrated_any:
-            st.success("✅ Previous workout data migrated successfully!")
+            st.caption("✅ Previous workout data migrated successfully!")
         
     def init_database(self):
         """Create all database tables"""
@@ -284,32 +284,6 @@ class GymTracker:
         
         return template_list
 
-    def load_template(self, template_id):
-        """Load a specific template and update last_used"""
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        
-        cursor.execute('UPDATE workout_templates SET last_used = CURRENT_TIMESTAMP WHERE id = ?', (template_id,))
-        
-        cursor.execute('SELECT * FROM workout_templates WHERE id = ?', (template_id,))
-        template = cursor.fetchone()
-        conn.commit()
-        conn.close()
-        
-        if template:
-            return {
-                'id': template[0],
-                'name': template[1],
-                'category': template[2],
-                'description': template[3],
-                'created_by': template[4],
-                'exercises': json.loads(template[5]),
-                'is_public': bool(template[6]),
-                'created_at': template[7],
-                'last_used': template[8]
-            }
-        return None
-
     def delete_template(self, template_id):
         """Delete a workout template"""
         conn = sqlite3.connect(self.db_name)
@@ -450,19 +424,6 @@ class GymTracker:
             conn.close()
             return pd.DataFrame()
     
-    def get_exercise_list(self):
-        """Get list of exercises that have been logged"""
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-        try:
-            cursor.execute('SELECT DISTINCT exercise FROM workouts ORDER BY exercise')
-            exercises = [row[0] for row in cursor.fetchall()]
-            conn.close()
-            return exercises
-        except:
-            conn.close()
-            return []
-    
     def get_exercise_stats(self, exercise):
         """Get comprehensive stats for an exercise"""
         df = self.get_data()
@@ -493,11 +454,11 @@ class GymTracker:
         }
     
     def clean_sample_data(self):
-        """Aggressively remove ALL sample/fake data"""
+        """Remove obvious sample/fake data"""
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
         
-        # Target specific fake data patterns from previous conversations
+        # Target specific fake data patterns
         fake_patterns = [
             "Warm up set, felt good",
             "Working weight", 
@@ -509,14 +470,12 @@ class GymTracker:
         ]
         
         deleted_count = 0
-        
-        # Remove by notes patterns
         for pattern in fake_patterns:
             cursor.execute('DELETE FROM workouts WHERE set_notes LIKE ? OR workout_notes LIKE ?', 
                           (f'%{pattern}%', f'%{pattern}%'))
             deleted_count += cursor.rowcount
         
-        # Remove specific fake workout combinations (the exact ones from screenshots)
+        # Remove specific fake workout combinations
         cursor.execute('''DELETE FROM workouts WHERE 
                          exercise = 'Hack Squat' AND weight IN (80.0, 90.0, 100.0) AND reps IN (12, 10, 8)''')
         deleted_count += cursor.rowcount
@@ -525,35 +484,20 @@ class GymTracker:
                          exercise = 'Leg Press' AND weight IN (150.0, 170.0) AND reps IN (15, 12)''')
         deleted_count += cursor.rowcount
         
-        # Remove any remaining suspicious patterns
-        cursor.execute('''DELETE FROM workouts WHERE 
-                         (exercise = 'Hack Squat' AND rpe = 7 AND weight = 80.0) OR
-                         (exercise = 'Hack Squat' AND rpe = 8 AND weight = 90.0) OR
-                         (exercise = 'Hack Squat' AND rpe = 9 AND weight = 100.0) OR
-                         (exercise = 'Leg Press' AND rpe = 7 AND weight = 150.0) OR
-                         (exercise = 'Leg Press' AND rpe = 8 AND weight = 170.0)''')
-        deleted_count += cursor.rowcount
-        
         conn.commit()
         conn.close()
         
-        if deleted_count > 0:
-            return f"✅ Removed {deleted_count} fake data entries - refresh to see changes!"
-        else:
-            return "✅ No fake data found to clean"
+        return f"✅ Removed {deleted_count} fake data entries" if deleted_count > 0 else "✅ No fake data found"
     
     def reset_all_data(self):
-        """Nuclear option - delete all workout data but keep templates and exercises"""
+        """Nuclear option - delete all workout data"""
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
-        
         cursor.execute('DELETE FROM workouts')
         cursor.execute('DELETE FROM daily_programs')
-        
         conn.commit()
         conn.close()
-        
-        return "🚨 ALL WORKOUT DATA DELETED - Templates and custom exercises preserved"
+        return "🚨 ALL WORKOUT DATA DELETED"
 
     def export_data(self, export_file='gym_backup.json'):
         """Export all data to JSON for backup"""
@@ -584,7 +528,7 @@ class GymTracker:
         except Exception as e:
             return f"❌ Export failed: {str(e)}"
 
-# ===== STREAMLIT APP SETUP =====
+# Streamlit App Setup
 st.set_page_config(
     page_title="💪 Ultra-Readable Gym Tracker",
     page_icon="💪",
@@ -592,7 +536,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Ultra-Simple & Readable Theme - Maximum Contrast
+# Clean, readable CSS theme
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -638,23 +582,26 @@ st.markdown("""
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
-    .stButton > button[kind="primary"] {
-        background: #1d4ed8;
-        border: 2px solid #1d4ed8;
-        color: #ffffff;
-        font-weight: 700;
-        height: 3.5rem;
-        font-size: 1rem;
-        box-shadow: 0 3px 10px rgba(29, 78, 216, 0.4);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+    .stFormSubmitButton > button {
+        background: #1d4ed8 !important;
+        border: 2px solid #1d4ed8 !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        height: 3.5rem !important;
+        font-size: 1rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        border-radius: 8px !important;
+        width: 100% !important;
+        box-shadow: 0 3px 10px rgba(29, 78, 216, 0.4) !important;
+        transition: all 0.3s ease !important;
     }
     
-    .stButton > button[kind="primary"]:hover {
-        background: #1e40af;
-        border-color: #1e40af;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(29, 78, 216, 0.5);
+    .stFormSubmitButton > button:hover {
+        background: #1e40af !important;
+        border-color: #1e40af !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 5px 15px rgba(29, 78, 216, 0.5) !important;
     }
     
     .workout-card {
@@ -667,7 +614,6 @@ st.markdown("""
         color: #1a1a1a;
     }
     
-    /* Enhanced visual hierarchy */
     .exercise-card {
         background: #f8f9fa;
         padding: 1.5rem;
@@ -685,17 +631,52 @@ st.markdown("""
         transform: translateY(-2px);
     }
     
-    /* Improved form styling */
-    .stForm {
-        background: #ffffff;
-        padding: 2rem;
-        border-radius: 12px;
+    .stats-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        color: #1a1a1a;
+        padding: 1.25rem;
+        border-radius: 10px;
+        text-align: center;
+        margin: 0.5rem;
         border: 2px solid #e9ecef;
-        margin: 1.5rem 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
     
-    /* Better section separation */
+    .stats-card:hover {
+        border-color: #2563eb;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    
+    .set-item {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 0.5rem 0;
+        border-left: 4px solid #2563eb;
+        color: #1a1a1a;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: 1px solid #e9ecef;
+    }
+    
+    .date-header {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        color: #1e40af;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 1.5rem 0;
+        border: 2px solid #bfdbfe;
+        letter-spacing: -0.02em;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+    
     .section-header {
         color: #1d4ed8;
         font-size: 0.85rem;
@@ -718,150 +699,6 @@ st.markdown("""
         margin-right: 0.75rem;
     }
     
-    /* Enhanced date header */
-    .date-header {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        color: #1e40af;
-        padding: 1.5rem;
-        border-radius: 12px;
-        text-align: center;
-        font-size: 1.2rem;
-        font-weight: 700;
-        margin: 1.5rem 0;
-        border: 2px solid #bfdbfe;
-        letter-spacing: -0.02em;
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
-    }
-    
-    /* Improved stats cards */
-    .stats-card {
-        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-        color: #1a1a1a;
-        padding: 1.25rem;
-        border-radius: 10px;
-        text-align: center;
-        margin: 0.5rem;
-        border: 2px solid #e9ecef;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        font-size: 0.9rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .stats-card:hover {
-        border-color: #2563eb;
-        transform: translateY(-3px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    }
-    
-    /* Enhanced input styling */
-    .stNumberInput > div > div > input {
-        background: #ffffff !important;
-        color: #1a1a1a !important;
-        border: 2px solid #e9ecef !important;
-        border-radius: 8px !important;
-        font-size: 1.2rem !important;
-        text-align: center !important;
-        font-weight: 700 !important;
-        height: 3.2rem !important;
-        font-family: 'Inter', sans-serif !important;
-        transition: all 0.2s ease !important;
-    }
-    
-    .stNumberInput > div > div > input:focus {
-        border-color: #1d4ed8 !important;
-        box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
-    }
-    
-    /* Cleaner selectbox */
-    .stSelectbox > div > div {
-        background: #ffffff !important;
-        color: #1a1a1a !important;
-        border: 2px solid #e9ecef !important;
-        border-radius: 8px !important;
-        font-size: 0.95rem !important;
-        font-family: 'Inter', sans-serif !important;
-        font-weight: 600 !important;
-        min-height: 3rem !important;
-    }
-    
-    .exercise-card.superset {
-        border-left: 4px solid #2563eb;
-    }
-    
-    .exercise-card.exercise-group {
-        border-left: 4px solid #dc2626;
-    }
-    
-    .exercise-card.cardio {
-        border-left: 4px solid #f59e0b;
-    }
-    
-    .stats-card {
-        background: #f8f9fa;
-        color: #1a1a1a;
-        padding: 1.125rem;
-        border-radius: 8px;
-        text-align: center;
-        margin: 0.5rem;
-        border: 2px solid #e9ecef;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        font-size: 0.9rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    }
-    
-    .stats-card:hover {
-        border-color: #2563eb;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-    
-    .set-item {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-radius: 6px;
-        margin: 0.5rem 0;
-        border-left: 4px solid #2563eb;
-        color: #1a1a1a;
-        font-size: 0.9rem;
-        font-weight: 500;
-        border: 1px solid #e9ecef;
-    }
-    
-    .date-header {
-        background: #eff6ff;
-        color: #1e40af;
-        padding: 1.25rem;
-        border-radius: 8px;
-        text-align: center;
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin: 1rem 0;
-        border: 2px solid #bfdbfe;
-        letter-spacing: -0.02em;
-    }
-    
-    .section-header {
-        color: #2563eb;
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin: 1.5rem 0 0.5rem 0;
-        display: flex;
-        align-items: center;
-    }
-    
-    .section-header::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background: #2563eb;
-        border-radius: 50%;
-        margin-right: 0.5rem;
-    }
-    
     .exercise-title {
         font-size: 1.1rem;
         font-weight: 700;
@@ -881,9 +718,10 @@ st.markdown("""
         color: #1a1a1a !important;
         border: 2px solid #e9ecef !important;
         border-radius: 8px !important;
-        font-size: 0.9rem !important;
+        font-size: 0.95rem !important;
         font-family: 'Inter', sans-serif !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
+        min-height: 3rem !important;
     }
     
     .stNumberInput > div > div > input {
@@ -891,11 +729,17 @@ st.markdown("""
         color: #1a1a1a !important;
         border: 2px solid #e9ecef !important;
         border-radius: 8px !important;
-        font-size: 1.1rem !important;
+        font-size: 1.2rem !important;
         text-align: center !important;
         font-weight: 700 !important;
-        height: 3rem !important;
+        height: 3.2rem !important;
         font-family: 'Inter', sans-serif !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .stNumberInput > div > div > input:focus {
+        border-color: #1d4ed8 !important;
+        box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
     }
     
     .stTextInput > div > div > input {
@@ -918,46 +762,6 @@ st.markdown("""
         padding: 0.75rem !important;
         font-family: 'Inter', sans-serif !important;
         font-weight: 500 !important;
-    }
-    
-    .stSuccess {
-        background: #f0fdf4 !important;
-        color: #166534 !important;
-        border: 2px solid #22c55e !important;
-        border-radius: 8px !important;
-        padding: 1rem !important;
-        font-size: 0.9rem !important;
-        font-weight: 600 !important;
-    }
-    
-    .stError {
-        background: #fef2f2 !important;
-        color: #dc2626 !important;
-        border: 2px solid #ef4444 !important;
-        border-radius: 8px !important;
-        padding: 1rem !important;
-        font-size: 0.9rem !important;
-        font-weight: 600 !important;
-    }
-    
-    .stWarning {
-        background: #fffbeb !important;
-        color: #d97706 !important;
-        border: 2px solid #f59e0b !important;
-        border-radius: 8px !important;
-        padding: 1rem !important;
-        font-size: 0.9rem !important;
-        font-weight: 600 !important;
-    }
-    
-    .stInfo {
-        background: #eff6ff !important;
-        color: #2563eb !important;
-        border: 2px solid #3b82f6 !important;
-        border-radius: 8px !important;
-        padding: 1rem !important;
-        font-size: 0.9rem !important;
-        font-weight: 600 !important;
     }
     
     .stTabs [data-baseweb="tab-list"] {
@@ -1008,41 +812,12 @@ st.markdown("""
     }
     
     [data-testid="metric-container"] div[data-testid="metric-value"] {
-        color: #2563eb !important;
-        font-size: 1.6rem !important;
+        color: #1d4ed8 !important;
+        font-size: 1.8rem !important;
         font-weight: 800 !important;
         font-family: 'Inter', sans-serif !important;
     }
     
-    .stForm {
-        background: #ffffff;
-        padding: 1.5rem;
-        border-radius: 8px;
-        border: 2px solid #e9ecef;
-        margin: 1rem 0;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-    
-    .stExpander {
-        background: #ffffff;
-        border: 2px solid #e9ecef;
-        border-radius: 8px;
-        margin: 0.5rem 0;
-    }
-    
-    .streamlit-expanderHeader {
-        background: #f8f9fa !important;
-        color: #1a1a1a !important;
-        font-size: 0.95rem !important;
-        font-weight: 600 !important;
-        border-radius: 6px !important;
-        padding: 1rem !important;
-        font-family: 'Inter', sans-serif !important;
-        letter-spacing: -0.01em !important;
-        border-bottom: 1px solid #e9ecef !important;
-    }
-    
-    /* Enhanced search input */
     .stTextInput > div > div > input[placeholder*="Search"] {
         background: #ffffff !important;
         color: #1a1a1a !important;
@@ -1062,28 +837,22 @@ st.markdown("""
         transform: translateY(-1px) !important;
     }
     
-    /* Input focus states */
-    .stSelectbox > div > div:focus-within {
-        border-color: #2563eb !important;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    .stDeployButton {visibility: hidden;}
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: #1a1a1a !important;
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
     }
     
-    .stNumberInput > div > div > input:focus {
-        border-color: #2563eb !important;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+    p, div, span, label {
+        color: #1a1a1a !important;
+        line-height: 1.5 !important;
     }
     
-    .stTextInput > div > div > input:focus {
-        border-color: #2563eb !important;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
-    }
-    
-    .stTextArea > div > div > textarea:focus {
-        border-color: #2563eb !important;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
-    }
-    
-    /* Mobile optimizations */
     @media (max-width: 768px) {
         .main-header {
             font-size: 1.4rem;
@@ -1096,9 +865,9 @@ st.markdown("""
             margin: 0.3rem 0;
         }
         
-        .stButton > button[kind="primary"] {
-            height: 3.5rem;
-            font-size: 0.95rem;
+        .stFormSubmitButton > button {
+            height: 3.5rem !important;
+            font-size: 0.95rem !important;
         }
         
         .workout-card, .exercise-card {
@@ -1126,145 +895,7 @@ st.markdown("""
             font-size: 1.1rem !important;
             height: 3rem !important;
         }
-        
-        .section-header {
-            font-size: 0.8rem !important;
-            margin: 1.5rem 0 0.75rem 0 !important;
-        }
-        
-        .date-header {
-            font-size: 1.1rem;
-            padding: 1.25rem;
-        }
     }
-    
-    /* Ultra mobile optimizations */
-    @media (max-width: 480px) {
-        .main-header {
-            font-size: 1.2rem;
-            padding: 1.25rem;
-        }
-        
-        .stButton > button {
-            height: 3rem;
-            font-size: 0.85rem;
-        }
-        
-        .stButton > button[kind="primary"] {
-            height: 3.25rem;
-            font-size: 0.9rem;
-        }
-        
-        .exercise-card {
-            padding: 1rem;
-        }
-        
-        .stats-card {
-            font-size: 0.8rem;
-            padding: 0.875rem;
-        }
-    }
-    
-    /* Professional spacing and polish */
-    .main .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
-        max-width: 100%;
-    }
-    
-    /* Hide Streamlit branding for clean look */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    .stDeployButton {visibility: hidden;}
-    
-    /* Better contrast for all text */
-    h1, h2, h3, h4, h5, h6 {
-        color: #1a1a1a !important;
-        font-weight: 700 !important;
-        line-height: 1.2 !important;
-    }
-    
-    p, div, span, label {
-        color: #1a1a1a !important;
-        line-height: 1.5 !important;
-    }
-    
-    /* Enhanced metric styling */
-    [data-testid="metric-container"] div[data-testid="metric-value"] {
-        color: #1d4ed8 !important;
-        font-size: 1.8rem !important;
-        font-weight: 800 !important;
-        font-family: 'Inter', sans-serif !important;
-    }
-    
-    /* Improved alert boxes */
-    .stSuccess, .stError, .stWarning, .stInfo {
-        border-radius: 10px !important;
-        padding: 1.25rem !important;
-        font-weight: 600 !important;
-        margin: 1rem 0 !important;
-    }
-    
-    /* Better form labels and submit buttons */
-    .stFormSubmitButton > button {
-        background: #1d4ed8 !important;
-        border: 2px solid #1d4ed8 !important;
-        color: #ffffff !important;
-        font-weight: 700 !important;
-        height: 3.5rem !important;
-        font-size: 1rem !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        border-radius: 8px !important;
-        width: 100% !important;
-        box-shadow: 0 3px 10px rgba(29, 78, 216, 0.4) !important;
-        transition: all 0.3s ease !important;
-    }
-    
-    .stFormSubmitButton > button:hover {
-        background: #1e40af !important;
-        border-color: #1e40af !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 5px 15px rgba(29, 78, 216, 0.5) !important;
-    }
-    
-    /* Force all submit buttons to use correct styling */
-    button[kind="formSubmit"] {
-        background: #1d4ed8 !important;
-        border: 2px solid #1d4ed8 !important;
-        color: #ffffff !important;
-    }
-    
-    /* Override any remaining red button styling */
-    .stButton button[style*="background-color: rgb(255, 75, 75)"] {
-        background: #1d4ed8 !important;
-        border-color: #1d4ed8 !important;
-    }
-    
-    /* Ensure form submit buttons are always blue */
-    .stForm button[type="submit"] {
-        background: #1d4ed8 !important;
-        border: 2px solid #1d4ed8 !important;
-        color: #ffffff !important;
-    }
-    
-    /* Override any Streamlit default error button styling */
-    button[data-testid="baseButton-primary"] {
-        background: #1d4ed8 !important;
-        border-color: #1d4ed8 !important;
-    }
-    
-    /* Enhanced overall styling */
-    * {
-        box-sizing: border-box;
-    }
-    
-    .stApp > div:first-child {
-        padding: 0;
-    }
-</style>
-""", unsafe_allow_html=True)
 </style>
 """, unsafe_allow_html=True)
 
@@ -1385,8 +1016,8 @@ def clean_exercise_selector(all_exercises, default_exercise=None, key="exercise_
             st.error("❌ No exercises found. Try different keywords.")
             return default_exercise or (all_exercises[0] if all_exercises else "")
         
-        # Show search results count
-        st.success(f"✅ Found {len(filtered_exercises)} matches")
+        # Show search results count quietly
+        st.caption(f"Found {len(filtered_exercises)} matches")
         exercises_to_show = filtered_exercises
     else:
         # Show popular exercises when no search
@@ -1396,7 +1027,7 @@ def clean_exercise_selector(all_exercises, default_exercise=None, key="exercise_
             'Bicep Curls', 'Tricep Pushdown', 'Dumbbell Press', 'Bulgarian Split Squat', 'Hip Thrust'
         ]
         exercises_to_show = popular_exercises
-        st.info("💪 Popular exercises (start typing to search all 500+)")
+        st.caption("💪 Popular exercises (start typing to search all 500+)")
     
     # Exercise selection dropdown
     if exercises_to_show:
@@ -1415,13 +1046,7 @@ def clean_exercise_selector(all_exercises, default_exercise=None, key="exercise_
     
     return default_exercise or ""
 
-def show_success_animation():
-    """Show subtle success feedback"""
-    st.balloons()
-    # Remove the big success message, just show balloons
-
-# ===== MAIN APP PAGES =====
-
+# App Pages
 def todays_workout_page():
     """Today's workout with program support"""
     st.header("🔥 Today's Workout")
@@ -1430,11 +1055,9 @@ def todays_workout_page():
     date_str = selected_date.strftime('%Y-%m-%d')
     
     if selected_date == date.today():
-        st.markdown('<div class="date-header">🔥 <strong>TODAY\'S WORKOUT</strong><br>' + 
-                   selected_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
+        st.markdown('<div class="date-header">🔥 <strong>TODAY\'S WORKOUT</strong></div>', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="date-header">📅 <strong>WORKOUT REVIEW</strong><br>' + 
-                   selected_date.strftime('%A, %B %d, %Y') + '</div>', unsafe_allow_html=True)
+        st.markdown('<div class="date-header">📅 <strong>WORKOUT REVIEW</strong></div>', unsafe_allow_html=True)
     
     # Check for daily program
     program = st.session_state.tracker.get_daily_program(date_str)
@@ -1445,12 +1068,12 @@ def todays_workout_page():
         
         col1, col2 = st.columns(2)
         with col1:
-            st.write(f"**👨‍⚕️ Created by:** {program['created_by']}")
+            st.write(f"**Created by:** {program['created_by']}")
         with col2:
-            st.write(f"**📅 Created:** {program['created_at'][:10]}")
+            st.write(f"**Created:** {program['created_at'][:10]}")
         
         if program['program_notes']:
-            st.write(f"**📝 Notes:** {program['program_notes']}")
+            st.write(f"**Notes:** {program['program_notes']}")
         
         st.markdown('</div>', unsafe_allow_html=True)
         
@@ -1474,7 +1097,6 @@ def todays_workout_page():
             target_sets = exercise_info.get('sets', 3)
             target_reps = exercise_info.get('reps', 10)
             exercise_notes = exercise_info.get('notes', '')
-            rest_time = exercise_info.get('rest', 90)
             
             is_completed = exercise_name in completed_exercises
             status_emoji = "✅" if is_completed else "🔥"
@@ -1509,18 +1131,18 @@ def todays_workout_page():
                     rpe = st.select_slider("💥 RPE", options=[6, 7, 8, 9, 10], value=8, key=f"rpe_{i}")
                     set_notes = st.text_input("📝 Notes", placeholder="Form, fatigue, equipment...", key=f"set_notes_{i}")
                     
-                    if st.form_submit_button(f"🚀 LOG SET", use_container_width=True, type="primary"):
+                    if st.form_submit_button(f"🚀 LOG SET", use_container_width=True):
                         result = st.session_state.tracker.log_workout(
                             date_str, exercise_name, 
                             [{'reps': reps, 'weight': weight, 'rpe': rpe, 'set_notes': set_notes}], ""
                         )
-                        show_success_animation()
+                        st.balloons()
                         st.rerun()
     
     else:
-        st.info("📋 No program set for today. Use 'Quick Log' for freestyle training or create a program in the Templates tab!")
+        st.info("📋 No program set for today. Use 'Quick Log' for freestyle training!")
     
-    # Today's workout summary
+    # Today's summary
     st.subheader("📊 Today's Summary")
     
     df = st.session_state.tracker.get_data()
@@ -1528,26 +1150,20 @@ def todays_workout_page():
         today_data = df[df['date'] == date_str]
         
         if not today_data.empty:
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3 = st.columns(3)
             
             with col1:
-                st.markdown('<div class="stats-card">💪 <strong>Exercises</strong><br>' + 
+                st.markdown('<div class="stats-card">💪<br><strong>Exercises</strong><br>' + 
                            str(len(today_data['exercise'].unique())) + '</div>', unsafe_allow_html=True)
             
             with col2:
-                st.markdown('<div class="stats-card">🎯 <strong>Sets</strong><br>' + 
+                st.markdown('<div class="stats-card">🎯<br><strong>Sets</strong><br>' + 
                            str(len(today_data)) + '</div>', unsafe_allow_html=True)
             
             with col3:
                 volume = (today_data['reps'] * today_data['weight']).sum()
-                st.markdown('<div class="stats-card">🏋️ <strong>Volume</strong><br>' + 
+                st.markdown('<div class="stats-card">🏋️<br><strong>Volume</strong><br>' + 
                            f'{volume:,.0f} kg</div>', unsafe_allow_html=True)
-            
-            with col4:
-                avg_rpe = today_data['rpe'].mean() if today_data['rpe'].notna().any() else 0
-                if avg_rpe > 0:
-                    st.markdown('<div class="stats-card">🔥 <strong>Avg RPE</strong><br>' + 
-                               f'{avg_rpe:.1f}</div>', unsafe_allow_html=True)
         else:
             st.info("💡 No exercises logged yet today. Time to get started! 🔥")
     else:
@@ -1599,7 +1215,7 @@ def enhanced_quick_log_page():
         set_notes = st.text_input("📝 Notes (optional)", placeholder="Form, fatigue, equipment notes...")
         
         # Clean submit button
-        submitted = st.form_submit_button("🚀 LOG SET", use_container_width=True, type="primary")
+        submitted = st.form_submit_button("🚀 LOG SET", use_container_width=True)
         
         if submitted and exercise:
             st.session_state.tracker.quick_log(exercise, reps, weight, rpe, set_notes, "", date_str)
@@ -1610,7 +1226,7 @@ def enhanced_quick_log_page():
             st.session_state.last_weight = weight
             st.session_state.last_rpe = rpe
             
-            show_success_animation()
+            st.balloons()
             st.rerun()
     
     # Today's workout summary with clean design
@@ -1628,7 +1244,7 @@ def enhanced_quick_log_page():
             max_weight = exercise_sets['weight'].max()
             avg_rpe = exercise_sets['rpe'].mean()
             
-            st.markdown('<div class="exercise-card superset">', unsafe_allow_html=True)
+            st.markdown('<div class="exercise-card">', unsafe_allow_html=True)
             st.markdown(f'<div class="exercise-title">{exercise_name}</div>', unsafe_allow_html=True)
             st.markdown(f'<div class="exercise-subtitle">{len(exercise_sets)} sets • {total_volume:.0f}kg volume • {max_weight}kg max • {avg_rpe:.1f} avg RPE</div>', unsafe_allow_html=True)
             
@@ -1645,7 +1261,6 @@ def enhanced_quick_log_page():
                     if st.button("🗑️", key=f"delete_{set_row['id']}", help="Delete this set"):
                         if st.session_state.get('confirm_delete_set') == set_row['id']:
                             result = st.session_state.tracker.delete_set(set_row['id'])
-                            # Subtle feedback - just rerun without big success message
                             st.session_state.pop('confirm_delete_set', None)
                             st.rerun()
                         else:
@@ -1656,12 +1271,11 @@ def enhanced_quick_log_page():
         
         # Clean daily summary
         total_sets = len(daily_workout)
-        total_reps = daily_workout['reps'].sum()
         total_volume = (daily_workout['reps'] * daily_workout['weight']).sum()
         avg_rpe = daily_workout['rpe'].mean() if daily_workout['rpe'].notna().any() else 0
         
         st.markdown('<div class="section-header">DAILY SUMMARY</div>', unsafe_allow_html=True)
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3 = st.columns(3)
         
         with col1:
             st.markdown('<div class="stats-card">💪<br><strong>Exercises</strong><br>' + 
@@ -1674,45 +1288,28 @@ def enhanced_quick_log_page():
         with col3:
             st.markdown('<div class="stats-card">🏋️<br><strong>Volume</strong><br>' + 
                        f'{total_volume:,.0f}kg</div>', unsafe_allow_html=True)
-        
-        with col4:
-            if avg_rpe > 0:
-                st.markdown('<div class="stats-card">🔥<br><strong>Avg RPE</strong><br>' + 
-                           f'{avg_rpe:.1f}</div>', unsafe_allow_html=True)
-        
-        # Clean intensity analysis
-        if avg_rpe > 0:
-            st.markdown('<div class="section-header">INTENSITY ANALYSIS</div>', unsafe_allow_html=True)
-            if avg_rpe <= 7:
-                st.success(f"🟢 **Moderate Intensity** - {avg_rpe:.1f} average RPE")
-            elif avg_rpe <= 8.5:
-                st.warning(f"🟡 **High Intensity** - {avg_rpe:.1f} average RPE")
-            else:
-                st.error(f"🔴 **Maximum Intensity** - {avg_rpe:.1f} average RPE")
     
     else:
         st.info("💡 No exercises logged yet today. Start your workout! 🔥")
 
 def progress_page():
-    """Comprehensive progress tracking with visual charts"""
-    st.header("📈 Progress Tracking")
+    """Progress tracking page"""
+    st.header("📈 Progress")
     
     df = st.session_state.tracker.get_data()
     
     if df.empty:
-        st.warning("No workout data yet. Start logging workouts to see your progress! 🚀")
+        st.warning("No workout data yet. Start logging to see progress! 🚀")
         return
     
-    # Exercise selection for detailed analysis
-    available_exercises = sorted(df['exercise'].unique())
-    selected_exercise = st.selectbox("🏋️ Choose Exercise for Analysis", available_exercises)
+    available_exercises = df['exercise'].unique()
+    selected_exercise = st.selectbox("🏋️ Choose Exercise", available_exercises)
     
     stats = st.session_state.tracker.get_exercise_stats(selected_exercise)
     
     if stats:
-        st.subheader(f"📊 {selected_exercise} - Detailed Statistics")
+        st.subheader(f"📊 {selected_exercise} Statistics")
         
-        # Key metrics
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
@@ -1725,7 +1322,7 @@ def progress_page():
             st.metric("💥 Avg RPE", f"{stats['avg_rpe']:.1f}")
         
         # Weight progression chart
-        st.subheader("📈 Weight Progression Over Time")
+        st.subheader("📈 Weight Progression")
         
         daily_stats = stats['daily_stats']
         
@@ -1800,49 +1397,9 @@ def progress_page():
         
         else:
             st.info("📊 Need more data points to show progression charts. Keep logging workouts!")
-    
-    # Overall workout statistics
-    st.subheader("📊 Overall Training Statistics")
-    
-    total_workouts = len(df['date'].unique())
-    total_volume = (df['reps'] * df['weight']).sum()
-    total_sets = len(df)
-    avg_rpe = df['rpe'].mean() if df['rpe'].notna().any() else 0
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.metric("📅 Total Workout Days", total_workouts)
-    with col2:
-        st.metric("🎯 Total Sets", f"{total_sets:,}")
-    with col3:
-        st.metric("🏋️ Total Volume", f"{total_volume:,.0f} kg")
-    with col4:
-        if avg_rpe > 0:
-            st.metric("💥 Overall Avg RPE", f"{avg_rpe:.1f}")
-    
-    # Recent activity
-    st.subheader("🔥 Recent Activity")
-    
-    recent_data = df.head(10)[['date', 'exercise', 'reps', 'weight', 'rpe']]
-    recent_data['date'] = recent_data['date'].dt.strftime('%Y-%m-%d')
-    recent_data['volume'] = recent_data['reps'] * recent_data['weight']
-    
-    st.dataframe(
-        recent_data[['date', 'exercise', 'reps', 'weight', 'rpe', 'volume']], 
-        use_container_width=True,
-        column_config={
-            'date': 'Date',
-            'exercise': 'Exercise',
-            'reps': 'Reps',
-            'weight': 'Weight (kg)',
-            'rpe': 'RPE',
-            'volume': 'Volume (kg)'
-        }
-    )
 
 def program_creator_page():
-    """Comprehensive program creator with templates"""
+    """Program creator with templates"""
     st.header("📋 Program Creator")
     
     create_tab, templates_tab = st.tabs(["🆕 Create Program", "📚 Templates"])
@@ -1855,69 +1412,62 @@ def program_creator_page():
         
         col1, col2 = st.columns(2)
         with col1:
-            category = st.selectbox("Category", ["Upper Body", "Lower Body", "Full Body", "Push", "Pull", "Legs", "Custom"])
+            category = st.selectbox("Category", ["Upper Body", "Lower Body", "Full Body", "Custom"])
         with col2:
-            created_by = st.selectbox("Created By", ["Personal Trainer", "Myself", "AI Assistant"])
+            created_by = st.selectbox("Created By", ["Personal Trainer", "Myself"])
         
-        program_notes = st.text_area("Program Description", placeholder="Session goals, focus areas, intensity notes...")
+        program_notes = st.text_area("Description", placeholder="Session goals, focus areas...")
         save_as_template = st.checkbox("💾 Save as Template", value=True)
         
-        # Quick template buttons
-        st.subheader("🚀 Quick Templates")
-        
-        col1, col2, col3, col4 = st.columns(4)
+        # Quick templates
+        st.write("**Quick Templates:**")
+        col1, col2, col3 = st.columns(3)
         
         with col1:
-            if st.button("💪 Upper Power", use_container_width=True):
+            if st.button("💪 Upper Body", use_container_width=True):
                 st.session_state.program_exercises = [
-                    {'exercise': 'Bench Press', 'sets': 4, 'reps': 5, 'rest': 180, 'notes': 'Heavy compound movement'},
-                    {'exercise': 'Overhead Press', 'sets': 3, 'reps': 6, 'rest': 150, 'notes': 'Strict form'},
-                    {'exercise': 'Barbell Row', 'sets': 3, 'reps': 6, 'rest': 150, 'notes': 'Control the negative'},
-                    {'exercise': 'Pull-ups', 'sets': 3, 'reps': 8, 'rest': 120, 'notes': 'Add weight if needed'}
+                    {'exercise': 'Bench Press', 'sets': 4, 'reps': 6, 'rest': 120},
+                    {'exercise': 'Overhead Press', 'sets': 3, 'reps': 8, 'rest': 90},
+                    {'exercise': 'Barbell Row', 'sets': 3, 'reps': 8, 'rest': 90}
                 ]
                 st.rerun()
         
         with col2:
-            if st.button("🦵 Lower Power", use_container_width=True):
+            if st.button("🦵 Lower Body", use_container_width=True):
                 st.session_state.program_exercises = [
-                    {'exercise': 'Squat', 'sets': 4, 'reps': 5, 'rest': 180, 'notes': 'Deep, controlled reps'},
-                    {'exercise': 'Romanian Deadlift', 'sets': 3, 'reps': 6, 'rest': 150, 'notes': 'Feel the stretch'},
-                    {'exercise': 'Leg Press', 'sets': 3, 'reps': 10, 'rest': 120, 'notes': 'Full range of motion'},
-                    {'exercise': 'Calf Raises', 'sets': 4, 'reps': 15, 'rest': 60, 'notes': 'Pause at the top'}
+                    {'exercise': 'Squat', 'sets': 4, 'reps': 8, 'rest': 120},
+                    {'exercise': 'Romanian Deadlift', 'sets': 3, 'reps': 10, 'rest': 90},
+                    {'exercise': 'Leg Press', 'sets': 3, 'reps': 12, 'rest': 90}
                 ]
                 st.rerun()
         
         with col3:
             if st.button("🔄 Full Body", use_container_width=True):
                 st.session_state.program_exercises = [
-                    {'exercise': 'Squat', 'sets': 3, 'reps': 8, 'rest': 120, 'notes': 'Compound foundation'},
-                    {'exercise': 'Bench Press', 'sets': 3, 'reps': 8, 'rest': 120, 'notes': 'Upper body power'},
-                    {'exercise': 'Barbell Row', 'sets': 3, 'reps': 8, 'rest': 120, 'notes': 'Back strength'},
-                    {'exercise': 'Overhead Press', 'sets': 2, 'reps': 10, 'rest': 90, 'notes': 'Shoulder stability'}
-                ]
-                st.rerun()
-        
-        with col4:
-            if st.button("🔥 High Volume", use_container_width=True):
-                st.session_state.program_exercises = [
-                    {'exercise': 'Leg Press', 'sets': 4, 'reps': 15, 'rest': 90, 'notes': 'High rep burn'},
-                    {'exercise': 'Incline Bench Press', 'sets': 4, 'reps': 12, 'rest': 90, 'notes': 'Upper chest focus'},
-                    {'exercise': 'Lat Pulldown', 'sets': 4, 'reps': 12, 'rest': 90, 'notes': 'Wide grip'},
-                    {'exercise': 'Leg Curl', 'sets': 3, 'reps': 15, 'rest': 60, 'notes': 'Hamstring isolation'}
+                    {'exercise': 'Squat', 'sets': 3, 'reps': 8, 'rest': 120},
+                    {'exercise': 'Bench Press', 'sets': 3, 'reps': 8, 'rest': 120},
+                    {'exercise': 'Barbell Row', 'sets': 3, 'reps': 8, 'rest': 120}
                 ]
                 st.rerun()
         
         # Add exercises to program
-        st.subheader("🏋️ Add Exercises to Program")
+        st.subheader("🏋️ Add Exercises")
         
         all_exercises = st.session_state.tracker.get_all_exercises()
         
-        with st.expander("➕ Add Exercise", expanded=True):
-            # Exercise selection
-            exercise_name = searchable_exercise_selector(all_exercises, key="program_creator")
+        with st.expander("➕ Add Exercise to Program", expanded=True):
             
-            # Exercise details form
-            with st.form("add_exercise_program"):
+            # Exercise selection outside of any form
+            st.markdown("**🏋️ Select Exercise:**")
+            exercise_name = clean_exercise_selector(
+                all_exercises, 
+                key="program_creator"
+            )
+            
+            # Form for exercise details
+            with st.form("add_exercise_to_program"):
+                st.markdown("**📊 Exercise Details:**")
+                
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     sets = st.number_input("Sets", min_value=1, max_value=10, value=3)
@@ -1926,9 +1476,9 @@ def program_creator_page():
                 with col3:
                     rest_time = st.number_input("Rest (sec)", min_value=30, max_value=300, value=90, step=15)
                 
-                exercise_notes = st.text_input("Exercise Notes", placeholder="Form cues, intensity, tempo...")
+                exercise_notes = st.text_input("Exercise Notes", placeholder="Form cues, focus points...")
                 
-                submitted = st.form_submit_button("➕ Add to Program", use_container_width=True, type="primary")
+                submitted = st.form_submit_button("➕ Add Exercise", use_container_width=True)
                 
                 if submitted and exercise_name:
                     new_exercise = {
@@ -1939,7 +1489,7 @@ def program_creator_page():
                         'notes': exercise_notes
                     }
                     st.session_state.program_exercises.append(new_exercise)
-                    st.success(f"✅ Added {exercise_name} to program")
+                    st.balloons()
                     st.rerun()
         
         # Show current program
@@ -1979,7 +1529,7 @@ def program_creator_page():
                                 st.session_state.program_exercises
                             )
                         
-                        st.balloons()  # Subtle success feedback
+                        st.balloons()
                         st.session_state.program_exercises = []
                         st.rerun()
                     else:
@@ -2014,108 +1564,61 @@ def program_creator_page():
                     with col1:
                         if st.button(f"📅 Use Template", key=f"use_{template['id']}", use_container_width=True):
                             st.session_state.program_exercises = template['exercises'].copy()
-                            st.balloons()  # Subtle feedback
+                            st.balloons()
                             st.rerun()
                     
                     with col2:
                         if st.button(f"🗑️ Delete", key=f"del_temp_{template['id']}", use_container_width=True):
                             if st.session_state.get('confirm_delete_template') == template['id']:
                                 result = st.session_state.tracker.delete_template(template['id'])
-                                # Subtle feedback - just rerun
                                 st.session_state.pop('confirm_delete_template', None)
                                 st.rerun()
                             else:
                                 st.session_state.confirm_delete_template = template['id']
                                 st.warning("⚠️ Tap again to confirm deletion")
         else:
-            st.info("📋 No templates found. Create your first template in the Create Program tab!")
+            st.info("📋 No templates found. Create your first one!")
 
 def exercises_page():
-    """Exercise management with enhanced features"""
+    """Exercise management page"""
     st.header("➕ Exercise Manager")
     
     st.subheader("🆕 Add Custom Exercise")
     
     with st.form("add_exercise_form", clear_on_submit=True):
-        exercise_name = st.text_input("Exercise Name", placeholder="e.g., Cable Crossover High to Low")
+        exercise_name = st.text_input("Exercise Name", placeholder="e.g., Cable Crossover")
         
         col1, col2 = st.columns(2)
         with col1:
             category = st.selectbox("Category", [
-                "Chest", "Back", "Shoulders", "Arms", "Legs", "Core", "Cardio", "Full Body", "Other"
+                "Chest", "Back", "Shoulders", "Arms", "Legs", "Core", "Cardio", "Other"
             ])
         with col2:
-            difficulty = st.selectbox("Difficulty Level", ["Beginner", "Intermediate", "Advanced", "Expert"])
+            difficulty = st.selectbox("Difficulty", ["Beginner", "Intermediate", "Advanced"])
         
-        description = st.text_area("Description", placeholder="Setup instructions, form cues, tips...", height=100)
+        description = st.text_area("Description", placeholder="Form cues, setup instructions...")
         
-        # Exercise characteristics
-        st.markdown("**🏷️ Exercise Characteristics:**")
-        col1, col2 = st.columns(2)
-        with col1:
-            compound = st.checkbox("Compound Movement")
-            machine = st.checkbox("Machine Exercise")
-            bodyweight = st.checkbox("Bodyweight")
-        with col2:
-            isolation = st.checkbox("Isolation Exercise")
-            free_weight = st.checkbox("Free Weight")
-            cable = st.checkbox("Cable Exercise")
-        
-        submitted = st.form_submit_button("➕ Create Exercise", use_container_width=True, type="primary")
+        submitted = st.form_submit_button("➕ Add Exercise", use_container_width=True)
         
         if submitted and exercise_name.strip():
-            # Build characteristics list
-            characteristics = []
-            if compound: characteristics.append("Compound")
-            if isolation: characteristics.append("Isolation")
-            if machine: characteristics.append("Machine")
-            if free_weight: characteristics.append("Free Weight")
-            if cable: characteristics.append("Cable")
-            if bodyweight: characteristics.append("Bodyweight")
-            
-            # Build full description
-            full_description = description.strip()
-            if characteristics:
-                full_description += f"\n\nCharacteristics: {', '.join(characteristics)}"
-            if difficulty != "Beginner":
-                full_description += f"\nDifficulty: {difficulty}"
-            
-            result = st.session_state.tracker.add_custom_exercise(
-                exercise_name.strip(), category, full_description
-            )
+            full_description = f"{description}\nDifficulty: {difficulty}" if description else f"Difficulty: {difficulty}"
+            result = st.session_state.tracker.add_custom_exercise(exercise_name.strip(), category, full_description)
             
             if "✅" in result:
-                st.balloons()  # Subtle success feedback
+                st.balloons()
             else:
                 st.error(result)
             st.rerun()
     
-    st.subheader("🌟 Your Custom Exercise Library")
+    st.subheader("🌟 Your Custom Exercises")
     
-    custom_exercises_df = st.session_state.tracker.get_custom_exercises()
+    custom_exercises = st.session_state.tracker.get_custom_exercises()
     
-    if not custom_exercises_df.empty:
-        # Search functionality
-        search_term = st.text_input(
-            "🔍 Search Your Exercises", 
-            placeholder="Search by name, category, or description..."
-        )
-        
-        if search_term:
-            filtered_df = custom_exercises_df[
-                custom_exercises_df['exercise_name'].str.contains(search_term, case=False) |
-                custom_exercises_df['category'].str.contains(search_term, case=False) |
-                custom_exercises_df['description'].str.contains(search_term, case=False, na=False)
-            ]
-        else:
-            filtered_df = custom_exercises_df
-        
-        # Group by category
-        for category in filtered_df['category'].unique():
-            category_exercises = filtered_df[filtered_df['category'] == category]
+    if not custom_exercises.empty:
+        for category in custom_exercises['category'].unique():
+            category_exercises = custom_exercises[custom_exercises['category'] == category]
             
-            with st.expander(f"📂 {category} ({len(category_exercises)} exercises)", expanded=len(filtered_df) <= 10):
-                
+            with st.expander(f"📂 {category} ({len(category_exercises)} exercises)"):
                 for _, exercise in category_exercises.iterrows():
                     st.markdown('<div class="workout-card">', unsafe_allow_html=True)
                     
@@ -2125,16 +1628,7 @@ def exercises_page():
                         st.markdown(f"**🌟 {exercise['exercise_name']}**")
                         
                         if exercise['description']:
-                            # Parse characteristics if they exist
-                            desc_parts = exercise['description'].split('\n\nCharacteristics:')
-                            main_desc = desc_parts[0]
-                            
-                            if main_desc:
-                                st.write(f"💡 *{main_desc}*")
-                            
-                            if len(desc_parts) > 1:
-                                characteristics = desc_parts[1].split('\n')[0]
-                                st.markdown(f"🏷️ **Characteristics:** {characteristics}")
+                            st.write(f"💡 {exercise['description']}")
                         
                         st.caption(f"📅 Added: {exercise['created_at'][:10]}")
                     
@@ -2142,41 +1636,26 @@ def exercises_page():
                         if st.button("🚀 Use", key=f"use_custom_{exercise['exercise_name']}", 
                                    help="Select for quick log", use_container_width=True):
                             st.session_state.last_exercise = exercise['exercise_name']
-                            st.balloons()  # Subtle feedback
+                            st.balloons()
                     
                     st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Exercise library statistics
-        st.subheader("📊 Exercise Library Stats")
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            st.metric("Total Custom Exercises", len(custom_exercises_df))
-        with col2:
-            st.metric("Categories", len(custom_exercises_df['category'].unique()))
-        with col3:
-            if not custom_exercises_df.empty:
-                most_common_category = custom_exercises_df['category'].value_counts().index[0]
-                st.metric("Most Common Category", most_common_category)
-    
     else:
-        st.info("🎯 No custom exercises yet. Create your first one above!")
+        st.info("🎯 No custom exercises yet. Add your first one above!")
     
     # Built-in exercises info
     st.subheader("📚 Comprehensive Exercise Database")
-    built_in_count = len(st.session_state.tracker.get_all_exercises()) - len(custom_exercises_df)
+    built_in_count = len(st.session_state.tracker.get_all_exercises()) - len(custom_exercises)
     st.info(f"💪 **{built_in_count}+ exercises** available including strength, cardio, Olympic lifts, strongman, and specialty movements.")
 
 def data_manager_page():
-    """Comprehensive data management and analytics"""
+    """Data management page"""
     st.header("💾 Data Manager")
     
-    # Data overview
     df = st.session_state.tracker.get_data()
     templates = st.session_state.tracker.get_templates()
     custom_exercises = st.session_state.tracker.get_custom_exercises()
     
-    st.subheader("📊 Your Data Overview")
+    st.subheader("📊 Data Overview")
     
     col1, col2, col3, col4 = st.columns(4)
     
@@ -2186,21 +1665,16 @@ def data_manager_page():
     
     with col2:
         exercise_count = len(df['exercise'].unique()) if not df.empty else 0
-        st.metric("📝 Unique Exercises", exercise_count)
+        st.metric("📝 Exercises", exercise_count)
     
     with col3:
         st.metric("📋 Templates", len(templates))
     
     with col4:
         custom_count = len(custom_exercises) if not custom_exercises.empty else 0
-        st.metric("⭐ Custom Exercises", custom_count)
+        st.metric("⭐ Custom", custom_count)
     
-    # Data cleaning section
-    st.subheader("🧹 Data Cleaning & Maintenance")
-    
-    st.markdown('<div class="workout-card">', unsafe_allow_html=True)
-    st.write("**🧹 Clean Sample/Fake Data**")
-    st.write("Remove any sample data that may have been accidentally created during testing:")
+    st.subheader("🧹 Data Cleaning")
     
     col1, col2 = st.columns(2)
     
@@ -2208,7 +1682,7 @@ def data_manager_page():
         if st.button("🧹 Clean Sample Data", use_container_width=True):
             result = st.session_state.tracker.clean_sample_data()
             if "✅" in result:
-                st.balloons()  # Subtle success feedback
+                st.balloons()
                 time.sleep(1)
                 st.rerun()
             else:
@@ -2218,7 +1692,7 @@ def data_manager_page():
         if st.button("🚨 RESET ALL DATA", use_container_width=True):
             if st.session_state.get('confirm_nuclear', False):
                 result = st.session_state.tracker.reset_all_data()
-                st.error(result)  # Keep error for this serious action
+                st.error(result)
                 st.session_state.pop('confirm_nuclear', None)
                 time.sleep(1)
                 st.rerun()
@@ -2226,20 +1700,16 @@ def data_manager_page():
                 st.session_state.confirm_nuclear = True
                 st.warning("⚠️ Tap again to DELETE ALL workout data!")
     
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Debug section
-    if st.button("🔍 Show Recent Data (Debug)", use_container_width=True):
+    if st.button("🔍 Show Current Data (Debug)", use_container_width=True):
         if not df.empty:
-            st.subheader("🔍 Recent Workout Data")
+            st.subheader("🔍 Current Workout Data")
             
             recent_data = df.head(20)[['date', 'exercise', 'reps', 'weight', 'rpe', 'set_notes', 'workout_notes']]
             recent_data['date'] = recent_data['date'].dt.strftime('%Y-%m-%d')
             st.dataframe(recent_data, use_container_width=True)
             
-            # Check for suspicious patterns
             suspicious_notes = df[
-                df['set_notes'].str.contains('Warm up set|Working weight|Heavy set|felt good', case=False, na=False) |
+                df['set_notes'].str.contains('Warm up set|Working weight|Heavy set', case=False, na=False) |
                 df['workout_notes'].str.contains('Great leg session|Finished with leg press', case=False, na=False)
             ]
             
@@ -2248,59 +1718,45 @@ def data_manager_page():
                 st.dataframe(suspicious_notes[['date', 'exercise', 'reps', 'weight', 'set_notes', 'workout_notes']], 
                            use_container_width=True)
             else:
-                # Just show caption instead of success box
                 st.caption("✅ No obvious sample data detected")
         else:
             st.info("📊 No workout data found")
     
-    # Analytics section
     if not df.empty:
-        st.subheader("📈 Training Analytics")
+        st.subheader("📈 Analytics")
         
         total_volume = (df['reps'] * df['weight']).sum()
         total_days = len(df['date'].unique())
         avg_rpe = df['rpe'].mean() if df['rpe'].notna().any() else 0
-        first_workout = df['date'].min().strftime('%Y-%m-%d')
-        last_workout = df['date'].max().strftime('%Y-%m-%d')
         
         col1, col2, col3 = st.columns(3)
         
         with col1:
             st.metric("🏋️ Total Volume", f"{total_volume:,.0f} kg")
-            st.metric("📅 First Workout", first_workout)
-        
         with col2:
             st.metric("📅 Training Days", total_days)
-            st.metric("📅 Last Workout", last_workout)
-        
         with col3:
             if avg_rpe > 0:
                 st.metric("💥 Average RPE", f"{avg_rpe:.1f}")
-            days_active = (df['date'].max() - df['date'].min()).days + 1
-            if days_active > 0:
-                frequency = total_days / (days_active / 7)
-                st.metric("📊 Weekly Frequency", f"{frequency:.1f} days")
     
-    # Backup and export
     st.subheader("💾 Backup & Export")
     
     st.markdown('<div class="workout-card">', unsafe_allow_html=True)
     st.write("**📤 Export Your Data**")
-    st.write("Create a backup of all your workout data, templates, and custom exercises:")
     
     export_filename = st.text_input("Backup filename", value=f"gym_backup_{date.today().strftime('%Y%m%d')}.json")
     
     if st.button("📤 Export All Data", use_container_width=True, type="primary"):
         result = st.session_state.tracker.export_data(export_filename)
         if "✅" in result:
-            st.balloons()  # Subtle success feedback
+            st.balloons()
         else:
             st.error(result)
     
     st.markdown('</div>', unsafe_allow_html=True)
 
 def info_page():
-    """Information and help page"""
+    """Information page"""
     st.header("ℹ️ About Ultra-Readable Gym Tracker")
     
     st.markdown("""
@@ -2308,116 +1764,21 @@ def info_page():
     
     **Version:** Ultra-Readable v8.0 - Maximum Contrast Edition  
     **Status:** ✅ Perfect Readability, Clean Design, Production-Ready
-    **Design:** Clean white theme with maximum contrast for perfect mobile readability
     
-    ---
+    ### ✨ **Key Features**
     
-    ### 🚀 **Key Features**
-    
-    #### 💪 **Workout Logging**
-    - **Comprehensive Exercise Database** - 500+ exercises across all categories
-    - **Smart Search** - Fuzzy search with typo tolerance and abbreviations (try 'rdl', 'ohp')
-    - **Quick Log** - Fast single-set logging with intelligent suggestions  
-    - **Today's Workout** - Structured program execution
-    - **RPE Tracking** - Rate of Perceived Exertion for intensity management
-    - **Detailed Notes** - Set and workout-level annotations
-    
-    #### 📈 **Progress Tracking**
-    - **Visual Charts** - Weight and volume progression graphs
-    - **Exercise Statistics** - Comprehensive performance metrics
-    - **Training Analytics** - Frequency, volume, and intensity insights
-    - **Recent Activity** - Quick overview of latest workouts
-    
-    #### 📋 **Program Management**
-    - **Custom Templates** - Create reusable workout templates
-    - **Quick Templates** - Pre-built programs for different goals
-    - **Daily Programs** - Structured workout planning
-    - **Comprehensive Exercise Library** - 500+ exercises including:
-      - Strength Training (Powerlifting, Bodybuilding)
-      - Olympic Lifts & Variations
-      - Strongman Movements
-      - Cardio & Conditioning
-      - Functional & CrossFit
-      - Machine & Cable Exercises
-      - Unilateral & Specialty Movements
-    
-    #### 🛠️ **Data Management**
-    - **Automatic Migration** - Preserves data from previous versions
-    - **Data Cleaning** - Remove sample/test data
-    - **Backup/Export** - JSON export for data portability
-    - **Professional Database** - SQLite for reliability and performance
-    
-    ---
-    
-    ### 🎯 **How to Use**
-    
-    1. **Start with Quick Log** - Use smart search to find any exercise (try abbreviations!)
-    2. **Search Tips** - Type 'rdl' for Romanian Deadlift, 'ohp' for Overhead Press, etc.
-    3. **Add Custom Exercises** - Expand the database with your favorites  
-    4. **Create Programs** - Build structured workout routines
-    5. **Track Progress** - Watch your strength and volume improvements
-    6. **Analyze Data** - Use the analytics to optimize training
-    
-    ---
-    
-    ### 📱 **Deployment & Scalability**
-    
-    #### ✅ **24/7 Operation**
-    - **Cloud Hosted** - Runs on Streamlit Cloud servers
-    - **Always Available** - Your laptop can be off, app stays online
-    - **Persistent Data** - All workouts saved permanently in the cloud
-    - **Mobile Optimized** - Works perfectly on phones and tablets
-    
-    #### 📊 **Scalability for Personal Use**
-    - **Unlimited Workouts** - SQLite handles millions of records
-    - **Fast Performance** - Optimized for single-user operation
-    - **Years of Data** - Designed to grow with your fitness journey
-    - **No Usage Limits** - Log as much as you want
-    
-    #### 🔧 **Technical Specifications**
-    - **Database:** SQLite (MASTER database for all versions)
-    - **Backend:** Python with Streamlit framework  
-    - **Charts:** Plotly for interactive visualizations
-    - **Hosting:** Streamlit Cloud (1GB RAM, sufficient for personal use)
-    - **Storage:** Cloud-persistent SQLite database
-    
-    ---
-    
-    ### 🏅 **Best Practices**
-    
-    #### 📝 **Logging Workouts**
-    - **Be Consistent** - Log every set for accurate progress tracking
-    - **Use RPE** - Rate 6-10 for intensity management
-    - **Add Notes** - Record form cues, equipment, and feelings
-    - **Review Progress** - Check charts weekly to stay motivated
-    
-    #### 💪 **Program Design**  
-    - **Save Templates** - Create reusable programs for efficiency
-    - **Track Volume** - Monitor total weekly training load
-    - **Progressive Overload** - Gradually increase weight or reps
-    - **Rest Periods** - Follow programmed rest for optimal results
-    
-    #### 🔄 **Data Management**
-    - **Regular Backups** - Export data monthly for safety
-    - **Clean Sample Data** - Remove any test entries
-    - **Review Analytics** - Use insights to optimize training
-    
-    ---
-    
-    ### 📞 **Support & Updates**
+    - **🔍 Smart Search** - 500+ exercises with typo tolerance
+    - **📱 Mobile Optimized** - Perfect readability on any device
+    - **📊 Progress Tracking** - Visual charts and statistics
+    - **📋 Program Creator** - Custom workout templates
+    - **💾 Data Management** - Backup, export, and migration tools
     
     **Current Status:** ✅ **Ultra-Readable & Perfect**  
     **Theme:** Clean white background with blue accents for maximum readability
     **Typography:** Inter font family with perfect contrast ratios
     **Accessibility:** WCAG AAA compliant color contrast for all users
-    **Update Policy:** Continuous improvement with backward compatibility  
-    **Data Safety:** 🔒 All previous versions' data automatically migrated  
-    **Performance:** 🚀 Optimized for speed and reliability
-    
-    **This is your complete, professional-grade fitness tracking solution!** 💪
     """)
 
-# ===== MAIN APPLICATION =====
 def main():
     """Main application entry point"""
     
