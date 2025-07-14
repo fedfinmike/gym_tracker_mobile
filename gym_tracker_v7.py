@@ -258,72 +258,110 @@ class GymTracker:
         return suggestions
     
     def get_quick_stats(self):
-        """Calculate motivational quick stats"""
-        df = self.get_data()
-        if df.empty:
-            return {}
-        
-        today = datetime.now().date()
-        
-        # Calculate workout streak
-        dates = sorted(df['date'].dt.date.unique(), reverse=True)
-        streak = 0
-        for i, workout_date in enumerate(dates):
-            if i == 0:
-                if workout_date == today:
-                    streak = 1
-                elif (today - workout_date).days == 1:
-                    streak = 1
-                else:
-                    break
-            else:
-                prev_date = dates[i-1]
-                if (prev_date - workout_date).days == 1:
-                    streak += 1
-                elif (prev_date - workout_date).days <= 2:  # Allow 1 rest day
-                    streak += 1
-                else:
-                    break
-        
-        # This week's stats
-        week_start = today - timedelta(days=today.weekday())
-        this_week_data = df[df['date'].dt.date >= week_start]
-        weekly_volume = (this_week_data['reps'] * this_week_data['weight']).sum()
-        weekly_workouts = len(this_week_data['date'].dt.date.unique())
-        
-        # Recent PRs (last 30 days)
-        recent_data = df[df['date'] >= (datetime.now() - timedelta(days=30))]
-        recent_prs = []
-        
-        for exercise in recent_data['exercise'].unique():
-            exercise_data = df[df['exercise'] == exercise]
-            if len(exercise_data) > 1:
-                max_weight_recent = recent_data[recent_data['exercise'] == exercise]['weight'].max()
-                max_weight_all_time = exercise_data['weight'].max()
+        """Calculate motivational quick stats with error handling"""
+        try:
+            df = self.get_data()
+            if df.empty:
+                return {
+                    'streak': 0,
+                    'weekly_volume': 0,
+                    'weekly_workouts': 0,
+                    'recent_prs': [],
+                    'total_workouts': 0,
+                    'total_volume': 0
+                }
+            
+            today = datetime.now().date()
+            
+            # Calculate workout streak with error handling
+            try:
+                dates = sorted(df['date'].dt.date.unique(), reverse=True)
+                streak = 0
+                for i, workout_date in enumerate(dates):
+                    if i == 0:
+                        if workout_date == today:
+                            streak = 1
+                        elif (today - workout_date).days == 1:
+                            streak = 1
+                        else:
+                            break
+                    else:
+                        prev_date = dates[i-1]
+                        if (prev_date - workout_date).days == 1:
+                            streak += 1
+                        elif (prev_date - workout_date).days <= 2:  # Allow 1 rest day
+                            streak += 1
+                        else:
+                            break
+            except:
+                streak = 0
+            
+            # This week's stats with error handling
+            try:
+                week_start = today - timedelta(days=today.weekday())
+                this_week_data = df[df['date'].dt.date >= week_start]
+                weekly_volume = float((this_week_data['reps'] * this_week_data['weight']).sum())
+                weekly_workouts = len(this_week_data['date'].dt.date.unique()) if not this_week_data.empty else 0
+            except:
+                weekly_volume = 0
+                weekly_workouts = 0
+            
+            # Recent PRs (last 30 days) with error handling
+            recent_prs = []
+            try:
+                recent_data = df[df['date'] >= (datetime.now() - timedelta(days=30))]
                 
-                if max_weight_recent == max_weight_all_time:
-                    pr_date = recent_data[
-                        (recent_data['exercise'] == exercise) & 
-                        (recent_data['weight'] == max_weight_recent)
-                    ]['date'].max()
-                    recent_prs.append({
-                        'exercise': exercise,
-                        'weight': max_weight_recent,
-                        'date': pr_date.strftime('%Y-%m-%d')
-                    })
-        
-        # Total stats
-        total_workouts = len(df['date'].unique())
-        total_volume = (df['reps'] * df['weight']).sum()
-        
-        return {
-            'streak': streak,
-            'weekly_volume': weekly_volume,
-            'weekly_workouts': weekly_workouts,
-            'recent_prs': recent_prs[:3],  # Top 3 recent PRs
-            'total_workouts': total_workouts,
-            'total_volume': total_volume
-        }
+                if not recent_data.empty:
+                    for exercise in recent_data['exercise'].unique():
+                        try:
+                            exercise_data = df[df['exercise'] == exercise]
+                            if len(exercise_data) > 1:
+                                recent_exercise_data = recent_data[recent_data['exercise'] == exercise]
+                                if not recent_exercise_data.empty:
+                                    max_weight_recent = recent_exercise_data['weight'].max()
+                                    max_weight_all_time = exercise_data['weight'].max()
+                                    
+                                    if max_weight_recent == max_weight_all_time:
+                                        pr_date = recent_exercise_data[
+                                            recent_exercise_data['weight'] == max_weight_recent
+                                        ]['date'].max()
+                                        recent_prs.append({
+                                            'exercise': exercise,
+                                            'weight': float(max_weight_recent),
+                                            'date': pr_date.strftime('%Y-%m-%d')
+                                        })
+                        except:
+                            continue
+            except:
+                recent_prs = []
+            
+            # Total stats with error handling
+            try:
+                total_workouts = len(df['date'].unique())
+                total_volume = float((df['reps'] * df['weight']).sum())
+            except:
+                total_workouts = 0
+                total_volume = 0
+            
+            return {
+                'streak': int(streak),
+                'weekly_volume': weekly_volume,
+                'weekly_workouts': int(weekly_workouts),
+                'recent_prs': recent_prs[:3],  # Top 3 recent PRs
+                'total_workouts': int(total_workouts),
+                'total_volume': total_volume
+            }
+            
+        except Exception as e:
+            # Fallback to empty stats if anything goes wrong
+            return {
+                'streak': 0,
+                'weekly_volume': 0,
+                'weekly_workouts': 0,
+                'recent_prs': [],
+                'total_workouts': 0,
+                'total_volume': 0
+            }
     
     def create_goal(self, goal_name, goal_type, target_value, target_exercise=None, target_date=None):
         """Create a new fitness goal"""
