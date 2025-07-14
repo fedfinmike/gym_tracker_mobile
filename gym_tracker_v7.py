@@ -533,7 +533,7 @@ st.set_page_config(
     page_title="💪 Ultra-Readable Gym Tracker",
     page_icon="💪",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="auto"
 )
 
 # Clean, readable CSS theme
@@ -1358,7 +1358,7 @@ def progress_page():
     stats = st.session_state.tracker.get_exercise_stats(selected_exercise)
     
     if stats:
-        st.subheader(f"📊 {selected_exercise} Statistics")
+        st.markdown(f'<h2 style="font-size: 1.8rem; font-weight: 800; color: #1d4ed8; margin-bottom: 1.25rem;">📊 {selected_exercise} Statistics</h2>', unsafe_allow_html=True)
         
         col1, col2, col3, col4 = st.columns(4)
         
@@ -1372,7 +1372,7 @@ def progress_page():
             st.metric("💥 Avg RPE", f"{stats['avg_rpe']:.1f}")
         
         # Weight progression chart
-        st.subheader("📈 Weight Progression")
+        st.markdown('<h3 style="font-size: 1.4rem; font-weight: 800; color: #374151; margin-bottom: 1rem;">📈 Weight Progression</h3>', unsafe_allow_html=True)
         
         daily_stats = stats['daily_stats']
         
@@ -1419,7 +1419,7 @@ def progress_page():
             st.plotly_chart(fig, use_container_width=True)
             
             # Volume progression chart
-            st.subheader("📦 Volume Progression")
+            st.markdown('<h3 style="font-size: 1.4rem; font-weight: 800; color: #374151; margin-bottom: 1rem;">📦 Volume Progression</h3>', unsafe_allow_html=True)
             
             fig2 = go.Figure()
             fig2.add_trace(go.Scatter(
@@ -1852,11 +1852,11 @@ def main():
     with tab3:
         progress_page()
     
-    # Additional features in sidebar
-    st.sidebar.markdown('<div class="section-header">MORE FEATURES</div>', unsafe_allow_html=True)
+    # Additional features dropdown in main area
+    st.markdown('<div class="section-header">MORE FEATURES</div>', unsafe_allow_html=True)
     
-    additional_feature = st.sidebar.selectbox(
-        "Select Feature:",
+    additional_feature = st.selectbox(
+        "Select Additional Feature:",
         options=["Choose Feature...", "📋 Programs", "➕ Exercises", "💾 Data", "ℹ️ Info"],
         index=0,
         key="additional_features"
