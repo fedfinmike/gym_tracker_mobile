@@ -550,14 +550,15 @@ st.markdown("""
     .main-header {
         background: #2563eb;
         color: #ffffff;
-        padding: 1.8rem;
-        border-radius: 8px;
+        padding: 2rem;
+        border-radius: 12px;
         text-align: center;
-        font-size: 1.6rem;
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         letter-spacing: -0.025em;
+        text-transform: uppercase;
     }
     
     .stButton > button {
@@ -566,10 +567,10 @@ st.markdown("""
         border: 2px solid #e9ecef;
         border-radius: 8px;
         padding: 0.875rem 1.25rem;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         font-weight: 600;
         width: 100%;
-        height: 3.25rem;
+        height: 3.5rem;
         transition: all 0.2s ease;
         font-family: 'Inter', sans-serif;
         letter-spacing: -0.01em;
@@ -666,37 +667,38 @@ st.markdown("""
     .date-header {
         background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
         color: #1e40af;
-        padding: 1.5rem;
-        border-radius: 12px;
+        padding: 2rem;
+        border-radius: 16px;
         text-align: center;
-        font-size: 1.2rem;
-        font-weight: 700;
-        margin: 1.5rem 0;
-        border: 2px solid #bfdbfe;
+        font-size: 1.4rem;
+        font-weight: 800;
+        margin: 2rem 0;
+        border: 3px solid #bfdbfe;
         letter-spacing: -0.02em;
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+        text-transform: uppercase;
     }
     
     .section-header {
         color: #1d4ed8;
-        font-size: 0.85rem;
-        font-weight: 700;
+        font-size: 0.9rem;
+        font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.15em;
-        margin: 2rem 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #e9ecef;
+        letter-spacing: 0.2em;
+        margin: 2.5rem 0 1.5rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 3px solid #e9ecef;
         display: flex;
         align-items: center;
     }
     
     .section-header::before {
         content: '';
-        width: 4px;
-        height: 20px;
+        width: 6px;
+        height: 24px;
         background: #1d4ed8;
-        border-radius: 2px;
-        margin-right: 0.75rem;
+        border-radius: 3px;
+        margin-right: 1rem;
     }
     
     .exercise-title {
@@ -844,8 +846,28 @@ st.markdown("""
     
     h1, h2, h3, h4, h5, h6 {
         color: #1a1a1a !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
         line-height: 1.2 !important;
+        font-family: 'Inter', sans-serif !important;
+        letter-spacing: -0.025em !important;
+    }
+    
+    h1 {
+        font-size: 2.2rem !important;
+        margin-bottom: 1.5rem !important;
+        text-transform: uppercase !important;
+    }
+    
+    h2 {
+        font-size: 1.8rem !important;
+        margin-bottom: 1.25rem !important;
+        color: #1d4ed8 !important;
+    }
+    
+    h3 {
+        font-size: 1.4rem !important;
+        margin-bottom: 1rem !important;
+        color: #374151 !important;
     }
     
     p, div, span, label {
@@ -855,45 +877,73 @@ st.markdown("""
     
     @media (max-width: 768px) {
         .main-header {
-            font-size: 1.4rem;
-            padding: 1.5rem;
+            font-size: 1.6rem;
+            padding: 1.75rem;
+        }
+        
+        h1 {
+            font-size: 1.8rem !important;
+        }
+        
+        h2 {
+            font-size: 1.5rem !important;
+        }
+        
+        h3 {
+            font-size: 1.2rem !important;
         }
         
         .stButton > button {
-            height: 3.2rem;
-            font-size: 0.9rem;
-            margin: 0.3rem 0;
+            height: 3.5rem;
+            font-size: 1rem;
+            margin: 0.4rem 0;
         }
         
         .stFormSubmitButton > button {
-            height: 3.5rem !important;
-            font-size: 0.95rem !important;
+            height: 4rem !important;
+            font-size: 1.1rem !important;
         }
         
         .workout-card, .exercise-card {
-            padding: 1.25rem;
-            margin: 0.75rem 0;
+            padding: 1.5rem;
+            margin: 1rem 0;
         }
         
         .stats-card {
-            margin: 0.25rem;
-            padding: 1rem;
-            font-size: 0.85rem;
+            margin: 0.3rem;
+            padding: 1.25rem;
+            font-size: 0.9rem;
         }
         
         .stTabs [data-baseweb="tab"] {
-            font-size: 0.85rem;
-            height: 2.8rem;
+            font-size: 1rem;
+            height: 3.5rem;
+            padding: 0 1rem;
         }
         
         .stTextInput > div > div > input[placeholder*="Search"] {
-            font-size: 1rem !important;
-            padding: 1rem !important;
+            font-size: 1.1rem !important;
+            padding: 1.25rem !important;
         }
         
         .stNumberInput > div > div > input {
-            font-size: 1.1rem !important;
-            height: 3rem !important;
+            font-size: 1.3rem !important;
+            height: 3.5rem !important;
+        }
+        
+        .section-header {
+            font-size: 0.85rem !important;
+            margin: 2rem 0 1rem 0 !important;
+        }
+        
+        .date-header {
+            font-size: 1.2rem;
+            padding: 1.5rem;
+        }
+        
+        .stSelectbox > div > div {
+            min-height: 3.25rem !important;
+            font-size: 1rem !important;
         }
     }
 </style>
@@ -1782,20 +1832,27 @@ def info_page():
 def main():
     """Main application entry point"""
     
-    # Header
+    # Header with improved typography
     st.markdown('<div class="main-header">💪 Ultra-Readable Gym Tracker</div>', unsafe_allow_html=True)
     
-    # Main navigation tabs
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+    # Simplified main navigation - only 3 core tabs
+    tab1, tab2, tab3 = st.tabs([
         "🔥 Today",
         "⚡ Quick Log", 
-        "📈 Progress", 
-        "📋 Programs",
-        "➕ Exercises",
-        "💾 Data",
-        "ℹ️ Info"
+        "📈 Progress"
     ])
     
+    # Additional features dropdown
+    st.markdown('<div class="section-header">MORE FEATURES</div>', unsafe_allow_html=True)
+    
+    additional_feature = st.selectbox(
+        "Select Additional Feature:",
+        options=["None", "📋 Programs", "➕ Exercises", "💾 Data", "ℹ️ Info"],
+        index=0,
+        key="additional_features"
+    )
+    
+    # Main tab content
     with tab1:
         todays_workout_page()
     
@@ -1805,16 +1862,18 @@ def main():
     with tab3:
         progress_page()
     
-    with tab4:
+    # Additional feature content
+    if additional_feature == "📋 Programs":
+        st.markdown("---")
         program_creator_page()
-    
-    with tab5:
+    elif additional_feature == "➕ Exercises":
+        st.markdown("---")
         exercises_page()
-    
-    with tab6:
+    elif additional_feature == "💾 Data":
+        st.markdown("---")
         data_manager_page()
-    
-    with tab7:
+    elif additional_feature == "ℹ️ Info":
+        st.markdown("---")
         info_page()
 
 # Run the application
