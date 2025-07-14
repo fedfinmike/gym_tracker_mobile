@@ -1929,6 +1929,9 @@ def goals_dashboard_page():
     with create_tab:
         st.subheader("🎯 Create SMART Goal")
         
+        # Get exercises outside the form to avoid conflicts
+        all_exercises = st.session_state.tracker.get_all_exercises()
+        
         with st.form("create_goal_form", clear_on_submit=True):
             st.markdown("**📝 Goal Details**")
             
@@ -1948,33 +1951,61 @@ def goals_dashboard_page():
             with col2:
                 target_value = st.number_input("Target Value", min_value=0.0, value=100.0)
             
+            # Exercise selection for applicable goal types
             if goal_type in ["max_weight", "total_volume", "bodyweight_ratio"]:
-                all_exercises = st.session_state.tracker.get_all_exercises()
-                target_exercise = st.selectbox("Exercise", all_exercises)
+                st.markdown("**🏋️ Select Exercise:**")
+                
+                # Popular exercises for goals
+                popular_goal_exercises = [
+                    'Bench Press', 'Squat', 'Deadlift', 'Overhead Press', 'Romanian Deadlift',
+                    'Barbell Row', 'Pull-ups', 'Incline Bench Press', 'Front Squat', 'Sumo Deadlift',
+                    'Close Grip Bench Press', 'Hip Thrust', 'Bulgarian Split Squat', 'Leg Press'
+                ]
+                
+                target_exercise = st.selectbox(
+                    "Choose Exercise", 
+                    options=popular_goal_exercises,
+                    help="Select from popular exercises for goals, or add custom exercises in Exercise Manager"
+                )
+                
+                # Option to search all exercises
+                if st.checkbox("🔍 Search All 500+ Exercises"):
+                    exercise_search = st.text_input("Search exercises...", placeholder="Type exercise name")
+                    if exercise_search:
+                        filtered = [ex for ex in all_exercises if exercise_search.lower() in ex.lower()]
+                        if filtered:
+                            target_exercise = st.selectbox("Search Results", filtered)
+                        else:
+                            st.warning("No exercises found. Try different keywords.")
             else:
                 target_exercise = None
             
             target_date = st.date_input("Target Date", value=date.today() + timedelta(days=90))
             
             # Goal type explanations
-            if goal_type == "max_weight":
+            if goal_type == "max_weight" and target_exercise:
                 st.info(f"🎯 **Goal:** Lift {target_value}kg for 1 rep on {target_exercise}")
-            elif goal_type == "total_volume":
+            elif goal_type == "total_volume" and target_exercise:
                 st.info(f"🎯 **Goal:** Achieve {target_value:,.0f}kg total volume on {target_exercise}")
             elif goal_type == "workout_frequency":
                 st.info(f"🎯 **Goal:** Complete {target_value} workout sessions by {target_date}")
-            elif goal_type == "bodyweight_ratio":
+            elif goal_type == "bodyweight_ratio" and target_exercise:
                 st.info(f"🎯 **Goal:** Lift {target_value}x bodyweight on {target_exercise}")
             
             submitted = st.form_submit_button("🚀 CREATE GOAL", use_container_width=True)
             
             if submitted and goal_name:
-                result = st.session_state.tracker.create_goal(
-                    goal_name, goal_type, target_value, target_exercise, 
-                    target_date.strftime('%Y-%m-%d')
-                )
-                st.balloons()
-                st.rerun()
+                try:
+                    result = st.session_state.tracker.create_goal(
+                        goal_name, goal_type, target_value, target_exercise, 
+                        target_date.strftime('%Y-%m-%d')
+                    )
+                    st.success(result)
+                    st.balloons()
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error creating goal: {str(e)}")
+                    st.error("Please try again or check your inputs.")
     
     with progress_tab:
         st.subheader("📊 Goal Progress")
