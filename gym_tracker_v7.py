@@ -1099,7 +1099,7 @@ def clean_exercise_selector(all_exercises, default_exercise=None, key="exercise_
 # App Pages
 def todays_workout_page():
     """Today's workout with program support"""
-    st.header("🔥 Today's Workout")
+    st.markdown('<h1 style="font-size: 2.2rem; font-weight: 800; color: #1a1a1a; margin-bottom: 1.5rem; text-transform: uppercase;">🔥 Today\'s Workout</h1>', unsafe_allow_html=True)
     
     selected_date = st.date_input("📅 Workout Date", value=date.today())
     date_str = selected_date.strftime('%Y-%m-%d')
@@ -1193,7 +1193,7 @@ def todays_workout_page():
         st.info("📋 No program set for today. Use 'Quick Log' for freestyle training!")
     
     # Today's summary
-    st.subheader("📊 Today's Summary")
+    st.markdown('<h2 style="font-size: 1.8rem; font-weight: 800; color: #1d4ed8; margin-bottom: 1.25rem; text-transform: uppercase;">📊 Today\'s Summary</h2>', unsafe_allow_html=True)
     
     df = st.session_state.tracker.get_data()
     if not df.empty:
@@ -1221,7 +1221,7 @@ def todays_workout_page():
 
 def enhanced_quick_log_page():
     """Clean, simplified quick log optimized for mobile"""
-    st.header("⚡ Quick Log")
+    st.markdown('<h1 style="font-size: 2.2rem; font-weight: 800; color: #1a1a1a; margin-bottom: 1.5rem; text-transform: uppercase;">⚡ Quick Log</h1>', unsafe_allow_html=True)
     
     log_date = st.date_input("📅 Select Date", value=date.today())
     date_str = log_date.strftime('%Y-%m-%d')
@@ -1344,7 +1344,7 @@ def enhanced_quick_log_page():
 
 def progress_page():
     """Progress tracking page"""
-    st.header("📈 Progress")
+    st.markdown('<h1 style="font-size: 2.2rem; font-weight: 800; color: #1a1a1a; margin-bottom: 1.5rem; text-transform: uppercase;">📈 Progress</h1>', unsafe_allow_html=True)
     
     df = st.session_state.tracker.get_data()
     
@@ -1450,7 +1450,7 @@ def progress_page():
 
 def program_creator_page():
     """Program creator with templates"""
-    st.header("📋 Program Creator")
+    st.markdown('<h1 style="font-size: 2.2rem; font-weight: 800; color: #1a1a1a; margin-bottom: 1.5rem; text-transform: uppercase;">📋 Program Creator</h1>', unsafe_allow_html=True)
     
     create_tab, templates_tab = st.tabs(["🆕 Create Program", "📚 Templates"])
     
@@ -1631,7 +1631,7 @@ def program_creator_page():
 
 def exercises_page():
     """Exercise management page"""
-    st.header("➕ Exercise Manager")
+    st.markdown('<h1 style="font-size: 2.2rem; font-weight: 800; color: #1a1a1a; margin-bottom: 1.5rem; text-transform: uppercase;">➕ Exercise Manager</h1>', unsafe_allow_html=True)
     
     st.subheader("🆕 Add Custom Exercise")
     
@@ -1699,7 +1699,7 @@ def exercises_page():
 
 def data_manager_page():
     """Data management page"""
-    st.header("💾 Data Manager")
+    st.markdown('<h1 style="font-size: 2.2rem; font-weight: 800; color: #1a1a1a; margin-bottom: 1.5rem; text-transform: uppercase;">💾 Data Manager</h1>', unsafe_allow_html=True)
     
     df = st.session_state.tracker.get_data()
     templates = st.session_state.tracker.get_templates()
@@ -1807,7 +1807,7 @@ def data_manager_page():
 
 def info_page():
     """Information page"""
-    st.header("ℹ️ About Ultra-Readable Gym Tracker")
+    st.markdown('<h1 style="font-size: 2.2rem; font-weight: 800; color: #1a1a1a; margin-bottom: 1.5rem; text-transform: uppercase;">ℹ️ About Ultra-Readable Gym Tracker</h1>', unsafe_allow_html=True)
     
     st.markdown("""
     ## 🏆 **Ultra-Readable Fitness Tracking Platform**
@@ -1842,16 +1842,6 @@ def main():
         "📈 Progress"
     ])
     
-    # Additional features dropdown
-    st.markdown('<div class="section-header">MORE FEATURES</div>', unsafe_allow_html=True)
-    
-    additional_feature = st.selectbox(
-        "Select Additional Feature:",
-        options=["None", "📋 Programs", "➕ Exercises", "💾 Data", "ℹ️ Info"],
-        index=0,
-        key="additional_features"
-    )
-    
     # Main tab content
     with tab1:
         todays_workout_page()
@@ -1862,7 +1852,17 @@ def main():
     with tab3:
         progress_page()
     
-    # Additional feature content
+    # Additional features in sidebar
+    st.sidebar.markdown('<div class="section-header">MORE FEATURES</div>', unsafe_allow_html=True)
+    
+    additional_feature = st.sidebar.selectbox(
+        "Select Feature:",
+        options=["Choose Feature...", "📋 Programs", "➕ Exercises", "💾 Data", "ℹ️ Info"],
+        index=0,
+        key="additional_features"
+    )
+    
+    # Show additional feature content if selected
     if additional_feature == "📋 Programs":
         st.markdown("---")
         program_creator_page()
